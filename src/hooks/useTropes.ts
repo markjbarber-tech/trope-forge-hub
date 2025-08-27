@@ -5,6 +5,7 @@ import { useToast } from '@/hooks/use-toast';
 
 const POTENTIAL_CSV_URLS = [
   'https://markjbarber-tech.github.io/DnD-Story-Generator/data.csv',
+  // Fallback URLs in case the primary fails
   'https://raw.githubusercontent.com/markjbarber-tech/DnD-Story-Generator/main/data.csv',
   'https://raw.githubusercontent.com/markjbarber-tech/DnD-Story-Generator/master/data.csv',
   'https://raw.githubusercontent.com/markjbarber-tech/DnD-Story-Generator/gh-pages/data.csv'
@@ -36,13 +37,16 @@ export const useTropes = () => {
         }
       }
 
-      // Try to fetch default CSV from multiple potential URLs
+      // Try to fetch default CSV from the specified GitHub Pages URL
       await fetchDefaultData();
     } catch (error) {
       console.error('Error loading tropes:', error);
+      const errorMsg = error instanceof Error ? error.message : 'Unknown error occurred';
       toast({
-        title: "No CSV data found",
-        description: "Please upload a CSV file with the format: \"#\", \"Trope name\", \"Trope detail\"",
+        title: "Could not load CSV data",
+        description: errorMsg.includes('CORS') 
+          ? "CORS policy blocked the request. Please upload the CSV file manually using the upload button below."
+          : `${errorMsg}. Please upload a CSV file with the format: "#", "Trope name", "Trope detail"`,
         variant: "destructive"
       });
       setAllTropes([]);
@@ -59,33 +63,58 @@ export const useTropes = () => {
     for (const url of POTENTIAL_CSV_URLS) {
       try {
         console.log(`Trying to fetch CSV from: ${url}`);
-        const response = await fetch(url);
+        
+        // Use fetch with no-cors mode for the GitHub Pages URL to handle CORS issues
+        const fetchOptions: RequestInit = {};
+        if (url.includes('github.io')) {
+          fetchOptions.mode = 'cors';
+          fetchOptions.headers = {
+            'Accept': 'text/csv, text/plain, */*'
+          };
+        }
+        
+        const response = await fetch(url, fetchOptions);
         
         if (response.ok) {
           const csvText = await response.text();
-          const tropes = parseCSV(csvText);
           
-          if (tropes.length > 0) {
-            setAllTropes(tropes);
-            localStorage.setItem(STORAGE_KEY, JSON.stringify(tropes));
+          // Validate the CSV content
+          if (csvText && csvText.trim()) {
+            const tropes = parseCSV(csvText);
             
-            toast({
-              title: "Data loaded successfully",
-              description: `Loaded ${tropes.length} tropes from GitHub repository`,
-            });
-            setIsLoading(false);
-            return;
+            if (tropes.length > 0) {
+              setAllTropes(tropes);
+              localStorage.setItem(STORAGE_KEY, JSON.stringify(tropes));
+              
+              toast({
+                title: "Data loaded successfully",
+                description: `Loaded ${tropes.length} tropes from ${url.includes('github.io') ? 'GitHub Pages' : 'GitHub repository'}`,
+              });
+              setIsLoading(false);
+              return;
+            }
           }
+        } else {
+          throw new Error(`HTTP ${response.status}: ${response.statusText}`);
         }
       } catch (error) {
         console.warn(`Failed to fetch from ${url}:`, error);
         lastError = error as Error;
+        
+        // If it's a CORS error on GitHub Pages, provide specific guidance
+        if (url.includes('github.io') && error instanceof TypeError) {
+          console.warn('CORS issue detected with GitHub Pages URL');
+        }
       }
     }
     
     // If all URLs failed
     setIsLoading(false);
-    throw new Error(`Could not fetch CSV data from any source. Last error: ${lastError?.message}`);
+    const errorMessage = lastError?.message?.includes('CORS') || lastError instanceof TypeError 
+      ? 'CORS policy blocked the request. Please upload the CSV file manually.'
+      : `Could not fetch CSV data from any source. ${lastError?.message || ''}`;
+    
+    throw new Error(errorMessage);
   };
 
   const handleFileUpload = (csvContent: string) => {
