@@ -1,14 +1,16 @@
 const CACHE_NAME = 'dnd-generator-v1';
+// Ensure assets are cached relative to the app's scope (supports subpath hosting like GitHub Pages)
+const BASE_PATH = new URL(self.registration.scope).pathname.replace(/\/$/, '') + '/';
 const STATIC_ASSETS = [
-  '/',
-  '/index.html',
-  '/manifest.json',
-  '/icon-192.png',
-  '/icon-256.png', 
-  '/icon-512.png'
+  BASE_PATH,
+  `${BASE_PATH}index.html`,
+  `${BASE_PATH}manifest.json`,
+  `${BASE_PATH}icon-192.png`,
+  `${BASE_PATH}icon-256.png`, 
+  `${BASE_PATH}icon-512.png`
 ];
 
-const DATA_URL = 'https://markjbarber-tech.github.io/DnD-Story-Generator/data.csv';
+const DATA_URL = 'https://raw.githubusercontent.com/markjbarber-tech/DnD-Story-Generator/main/Data.csv';
 
 // Install event - cache static assets
 self.addEventListener('install', (event) => {
