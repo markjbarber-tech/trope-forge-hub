@@ -2,6 +2,7 @@ import Papa from 'papaparse';
 import { Trope } from '@/types/trope';
 
 const CSV_URL = 'https://markjbarber-tech.github.io/DnD-Story-Generator/data.csv';
+const FALLBACK_CSV_URL = '/data.csv'; // Local fallback
 
 // Normalize headers for case-insensitive matching
 const normalizeHeader = (header: string): string => {
@@ -107,6 +108,24 @@ export const fetchTropeData = async (): Promise<Trope[]> => {
     console.warn('Raw GitHub method also failed:', error);
   }
 
+  // If all methods fail, try local fallback CSV
+  console.log('All remote methods failed, trying local fallback...');
+  try {
+    const response = await fetch(FALLBACK_CSV_URL);
+    if (response.ok) {
+      const csvText = await response.text();
+      if (csvText.length > 100) {
+        const tropes = parseTropeCSV(csvText);
+        if (tropes.length > 6) {
+          console.log(`Local fallback method succeeded! Got ${tropes.length} tropes`);
+          return tropes;
+        }
+      }
+    }
+  } catch (error) {
+    console.warn('Local fallback method also failed:', error);
+  }
+  
   // Last resort: return fallback data but with warning
   console.warn('All fetch methods failed, using fallback data');
   throw new Error(`Network error: ${lastError?.message || 'Unable to fetch CSV data'}. Using demo tropes.`);
