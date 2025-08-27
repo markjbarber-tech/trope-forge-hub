@@ -4,18 +4,46 @@ export const parseCSV = (csvText: string): Trope[] => {
   const lines = csvText.split('\n').filter(line => line.trim());
   const tropes: Trope[] = [];
 
-  // Skip header row
-  for (let i = 1; i < lines.length; i++) {
-    const line = lines[i];
+  if (lines.length === 0) {
+    throw new Error('CSV file is empty');
+  }
+
+  // Skip header row if it exists
+  const startIndex = lines[0].toLowerCase().includes('trope') || lines[0].includes('#') ? 1 : 0;
+  
+  for (let i = startIndex; i < lines.length; i++) {
+    const line = lines[i].trim();
+    if (!line) continue;
+    
     const parts = parseCSVLine(line);
     
+    // Ensure we have at least 3 columns (ID, Name, Detail)
     if (parts.length >= 3) {
-      tropes.push({
-        id: parts[0] || `trope-${i}`,
-        name: parts[1] || 'Unknown Trope',
-        detail: parts[2] || 'No details available'
-      });
+      const id = parts[0]?.trim() || `trope-${i}`;
+      const name = parts[1]?.trim() || 'Unknown Trope';
+      const detail = parts[2]?.trim() || 'No details available';
+      
+      // Only add if we have actual content
+      if (name && name !== 'Unknown Trope' && detail && detail !== 'No details available') {
+        tropes.push({ id, name, detail });
+      }
+    } else if (parts.length === 2) {
+      // Handle case where there's no ID column
+      const name = parts[0]?.trim() || 'Unknown Trope';
+      const detail = parts[1]?.trim() || 'No details available';
+      
+      if (name && detail) {
+        tropes.push({
+          id: `trope-${i}`,
+          name,
+          detail
+        });
+      }
     }
+  }
+
+  if (tropes.length === 0) {
+    throw new Error('No valid trope data found in CSV');
   }
 
   return tropes;
@@ -32,21 +60,33 @@ const parseCSVLine = (line: string): string[] => {
     
     if (char === '"') {
       if (inQuotes && nextChar === '"') {
+        // Handle escaped quotes
         current += '"';
         i++; // Skip next quote
       } else {
+        // Toggle quote state
         inQuotes = !inQuotes;
       }
     } else if (char === ',' && !inQuotes) {
-      result.push(current.trim());
+      // End of field
+      result.push(current);
       current = '';
     } else {
       current += char;
     }
   }
   
-  result.push(current.trim());
-  return result;
+  // Add the last field
+  result.push(current);
+  
+  // Clean up fields - remove surrounding quotes and trim
+  return result.map(field => {
+    let cleaned = field.trim();
+    if (cleaned.startsWith('"') && cleaned.endsWith('"')) {
+      cleaned = cleaned.slice(1, -1);
+    }
+    return cleaned;
+  });
 };
 
 export const generateRandomTropes = (tropes: Trope[], count: number): Trope[] => {
