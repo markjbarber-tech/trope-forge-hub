@@ -11,14 +11,10 @@ export const useTropeGenerator = () => {
   const [isInitialLoad, setIsInitialLoad] = useState(true);
   const { toast } = useToast();
 
-  // Load trope data on app start
-  useEffect(() => {
-    loadTropeData();
-  }, []);
-
   const loadTropeData = useCallback(async () => {
     setIsLoading(true);
     try {
+      console.log('Starting trope data load...');
       const tropes = await fetchTropeData();
       setAllTropes(tropes);
       
@@ -30,9 +26,15 @@ export const useTropeGenerator = () => {
       console.log(`Loaded ${tropes.length} tropes:`, tropes.slice(0, 3));
     } catch (error) {
       console.error('Failed to load trope data:', error);
+      
+      // Show more specific error message
+      const errorMessage = error instanceof Error 
+        ? error.message 
+        : "Network error - using fallback data";
+        
       toast({
-        title: "Loading Failed",
-        description: error instanceof Error ? error.message : "Failed to load trope data",
+        title: "Using Fallback Data",
+        description: errorMessage + ". Some demo tropes are available.",
         variant: "destructive",
       });
     } finally {
@@ -40,6 +42,12 @@ export const useTropeGenerator = () => {
       setIsInitialLoad(false);
     }
   }, [toast]);
+
+  // Load trope data on app start - this is the key fix
+  useEffect(() => {
+    console.log('Component mounted, loading trope data...');
+    loadTropeData();
+  }, [loadTropeData]);
 
   const generateTropes = useCallback(() => {
     if (allTropes.length === 0) {

@@ -19,8 +19,10 @@ export const fetchTropeData = async (): Promise<Trope[]> => {
     
     const response = await fetch(CSV_URL, {
       method: 'GET',
+      mode: 'cors',
       headers: {
         'Accept': 'text/csv,text/plain,*/*',
+        'Cache-Control': 'no-cache',
       },
     });
 
@@ -34,7 +36,37 @@ export const fetchTropeData = async (): Promise<Trope[]> => {
     return parseTropeCSV(csvText);
   } catch (error) {
     console.error('Failed to fetch CSV data:', error);
-    throw new Error(`Failed to load trope data: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    
+    // Try alternative approaches for CORS issues
+    if (error instanceof TypeError && error.message.includes('fetch')) {
+      console.log('Attempting to fetch via proxy...');
+      return await fetchViaProxy();
+    }
+    
+    throw new Error(`Failed to load trope data: ${error instanceof Error ? error.message : 'Network error'}`);
+  }
+};
+
+// Alternative fetch method for CORS issues
+const fetchViaProxy = async (): Promise<Trope[]> => {
+  try {
+    // Try using a CORS proxy as fallback
+    const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(CSV_URL)}`;
+    const response = await fetch(proxyUrl);
+    
+    if (!response.ok) {
+      throw new Error(`Proxy fetch failed: ${response.status}`);
+    }
+    
+    const data = await response.json();
+    const csvText = data.contents;
+    
+    console.log('CSV data received via proxy, length:', csvText.length);
+    return parseTropeCSV(csvText);
+  } catch (error) {
+    console.error('Proxy fetch also failed:', error);
+    // Return fallback data if all else fails
+    return getFallbackData();
   }
 };
 
@@ -127,4 +159,40 @@ export const generateRandomTropes = (allTropes: Trope[], count: number): Trope[]
   }
   
   return shuffled.slice(0, Math.min(count, shuffled.length));
+};
+
+// Fallback data in case all network requests fail
+const getFallbackData = (): Trope[] => {
+  return [
+    {
+      id: 'fallback-1',
+      name: 'The Chosen One',
+      detail: 'A character who is prophesied or destined to save the world, defeat evil, or accomplish some other great task. Often reluctant at first, they must grow into their role and accept their destiny.'
+    },
+    {
+      id: 'fallback-2', 
+      name: 'The Mentor',
+      detail: 'An older, wiser character who guides and teaches the hero. Often has a mysterious past and may sacrifice themselves to help the hero succeed.'
+    },
+    {
+      id: 'fallback-3',
+      name: 'Ancient Evil Returns',
+      detail: 'A powerful evil force that was defeated or sealed away long ago has returned to threaten the world once more. The heroes must discover how it was defeated before.'
+    },
+    {
+      id: 'fallback-4',
+      name: 'Unlikely Alliance',
+      detail: 'Former enemies or unlikely companions must work together to face a greater threat. Their differences create tension but ultimately make them stronger.'
+    },
+    {
+      id: 'fallback-5',
+      name: 'Lost Artifact',
+      detail: 'A powerful magical item has been lost, stolen, or broken. The heroes must find it, recover its pieces, or prevent it from falling into the wrong hands.'
+    },
+    {
+      id: 'fallback-6',
+      name: 'Betrayal from Within',
+      detail: 'Someone the heroes trusted reveals themselves to be working for the enemy, or is forced to betray the party due to blackmail, mind control, or other circumstances.'
+    }
+  ];
 };
