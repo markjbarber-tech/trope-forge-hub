@@ -1,15 +1,17 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { AppHeader } from '@/components/AppHeader';
 import { TropeGenerator } from '@/components/TropeGenerator';
 import { TropeDisplay } from '@/components/TropeDisplay';
 import { ExportPanel } from '@/components/ExportPanel';
 import { useTropeGenerator } from '@/hooks/useTropeGenerator';
 import { useKeyboardShortcuts } from '@/hooks/useKeyboardShortcuts';
-import { exportTropesToText, exportDnDCampaignTemplate } from '@/utils/exportUtils';
+import { exportTropesToText } from '@/utils/exportUtils';
 
 export const DnDGenerator = () => {
   const [isOnline, setIsOnline] = useState(navigator.onLine);
   const [loadTime, setLoadTime] = useState<string>('');
+  const navigate = useNavigate();
 
   const {
     allTropes,
@@ -43,11 +45,16 @@ export const DnDGenerator = () => {
     }
   }, [allTropes.length, isLoading]);
 
+  const handleExportTemplate = () => {
+    if (generatedTropes.length === 0) return;
+    navigate('/campaign-template', { state: { tropes: generatedTropes } });
+  };
+
   // Keyboard shortcuts
   useKeyboardShortcuts({
     onGenerate: generateTropes,
     onExportTropes: () => exportTropesToText(generatedTropes),
-    onExportTemplate: () => exportDnDCampaignTemplate(generatedTropes),
+    onExportTemplate: handleExportTemplate,
   });
 
   return (
@@ -68,14 +75,20 @@ export const DnDGenerator = () => {
               totalTropes={allTropes.length}
             />
             
+            {/* Show tropes first, then export options */}
+            <div className="lg:hidden">
+              <TropeDisplay tropes={generatedTropes} />
+            </div>
+            
             <ExportPanel
               tropes={generatedTropes}
               disabled={isLoading}
+              onExportTemplate={handleExportTemplate}
             />
           </div>
 
-          {/* Main Content - Trope Display */}
-          <div className="lg:col-span-3">
+          {/* Main Content - Trope Display (desktop only) */}
+          <div className="hidden lg:block lg:col-span-3">
             <TropeDisplay tropes={generatedTropes} />
           </div>
         </div>

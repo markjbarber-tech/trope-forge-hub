@@ -8,9 +8,10 @@ import { useToast } from '@/hooks/use-toast';
 interface ExportPanelProps {
   tropes: Trope[];
   disabled?: boolean;
+  onExportTemplate?: () => void;
 }
 
-export const ExportPanel = ({ tropes, disabled = false }: ExportPanelProps) => {
+export const ExportPanel = ({ tropes, disabled = false, onExportTemplate }: ExportPanelProps) => {
   const { toast } = useToast();
   const hasNoTropes = tropes.length === 0;
 
@@ -36,10 +37,14 @@ export const ExportPanel = ({ tropes, disabled = false }: ExportPanelProps) => {
     if (hasNoTropes) return;
     
     try {
-      exportDnDCampaignTemplate(tropes);
+      if (onExportTemplate) {
+        onExportTemplate();
+      } else {
+        exportDnDCampaignTemplate(tropes);
+      }
       toast({
         title: "Template Generated",
-        description: "D&D campaign template downloaded",
+        description: "D&D campaign template created successfully",
       });
     } catch (error) {
       toast({
