@@ -8,39 +8,69 @@ export const parseCSV = (csvText: string): Trope[] => {
     throw new Error('CSV file is empty');
   }
 
-  // Skip header row if it exists
-  const startIndex = lines[0].toLowerCase().includes('trope') || lines[0].includes('#') ? 1 : 0;
+  console.log('Parsing CSV with', lines.length, 'lines');
+  console.log('First few lines:', lines.slice(0, 3));
+
+  // Parse header to identify column positions
+  const headerLine = lines[0];
+  const headerParts = parseCSVLine(headerLine);
+  console.log('Header parts:', headerParts);
   
-  for (let i = startIndex; i < lines.length; i++) {
+  // Find column indices
+  let idColumnIndex = -1;
+  let nameColumnIndex = -1;
+  let detailColumnIndex = -1;
+  
+  headerParts.forEach((header, index) => {
+    const cleanHeader = header.toLowerCase().trim();
+    if (cleanHeader.includes('#') || cleanHeader.includes('id') || cleanHeader.includes('number')) {
+      idColumnIndex = index;
+    } else if (cleanHeader.includes('trope name') || cleanHeader.includes('name')) {
+      nameColumnIndex = index;
+    } else if (cleanHeader.includes('trope detail') || cleanHeader.includes('detail')) {
+      detailColumnIndex = index;
+    }
+  });
+  
+  console.log('Column indices - ID:', idColumnIndex, 'Name:', nameColumnIndex, 'Detail:', detailColumnIndex);
+  
+  // If we can't find proper headers, assume standard order: ID, Name, Detail
+  if (nameColumnIndex === -1 || detailColumnIndex === -1) {
+    console.log('Headers not found, using standard order: [ID, Name, Detail]');
+    idColumnIndex = 0;
+    nameColumnIndex = 1;
+    detailColumnIndex = 2;
+  }
+  
+  // Parse data rows (skip header)
+  for (let i = 1; i < lines.length; i++) {
     const line = lines[i].trim();
     if (!line) continue;
     
     const parts = parseCSVLine(line);
+    console.log(`Row ${i} parts:`, parts);
     
-    // Ensure we have at least 3 columns (ID, Name, Detail)
-    if (parts.length >= 3) {
-      const id = parts[0]?.trim() || `trope-${i}`;
-      const name = parts[1]?.trim() || 'Unknown Trope';
-      const detail = parts[2]?.trim() || 'No details available';
-      
-      // Only add if we have actual content
-      if (name && name !== 'Unknown Trope' && detail && detail !== 'No details available') {
-        tropes.push({ id, name, detail });
-      }
-    } else if (parts.length === 2) {
-      // Handle case where there's no ID column
-      const name = parts[0]?.trim() || 'Unknown Trope';
-      const detail = parts[1]?.trim() || 'No details available';
-      
-      if (name && detail) {
-        tropes.push({
-          id: `trope-${i}`,
-          name,
-          detail
-        });
-      }
+    // Ensure we have enough columns
+    if (parts.length <= Math.max(nameColumnIndex, detailColumnIndex)) {
+      console.warn(`Row ${i} doesn't have enough columns:`, parts);
+      continue;
+    }
+    
+    const id = (idColumnIndex >= 0 && parts[idColumnIndex]) ? parts[idColumnIndex].trim() : `trope-${i}`;
+    const name = parts[nameColumnIndex]?.trim() || '';
+    const detail = parts[detailColumnIndex]?.trim() || '';
+    
+    console.log(`Row ${i} - ID: "${id}", Name: "${name}", Detail: "${detail}"`);
+    
+    // Only add if we have both name and detail
+    if (name && detail && name !== 'Unknown Trope' && detail !== 'No details available') {
+      tropes.push({ id, name, detail });
+    } else {
+      console.warn(`Row ${i} skipped - missing name or detail:`, { name, detail });
     }
   }
+
+  console.log('Parsed tropes:', tropes.length, tropes.slice(0, 3));
 
   if (tropes.length === 0) {
     throw new Error('No valid trope data found in CSV');
