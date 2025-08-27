@@ -41,7 +41,7 @@ export const TropeCard = ({ trope }: TropeCardProps) => {
       {isDetailVisible && (
         <CardContent className="pt-0">
           <div className="bg-secondary/20 rounded-lg p-4 border border-border/30">
-            <p className="text-foreground/90 leading-relaxed">
+            <p className="text-foreground/90 leading-relaxed whitespace-pre-wrap">
               {trope.detail}
             </p>
           </div>

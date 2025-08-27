@@ -26,34 +26,33 @@ export const useTropes = () => {
 
   const loadTropes = async () => {
     try {
-      // Try to load from localStorage first
+      // Requirement: fetch default CSV on load and store to localStorage
+      await fetchDefaultData();
+    } catch (error) {
+      // Fallback to cached data if available
       const stored = localStorage.getItem(STORAGE_KEY);
       if (stored) {
         const tropes = JSON.parse(stored);
-        if (tropes.length > 0) {
+        if (Array.isArray(tropes) && tropes.length > 0) {
           setAllTropes(tropes);
           setIsLoading(false);
+          toast({ title: 'Loaded cached data', description: `Using ${tropes.length} locally cached tropes` });
           return;
         }
       }
-
-      // Try to fetch default CSV from the specified GitHub Pages URL
-      await fetchDefaultData();
-    } catch (error) {
-      console.error('Error loading tropes:', error);
+      console.error('Error loading tropes and no cache available:', error);
       const errorMsg = error instanceof Error ? error.message : 'Unknown error occurred';
       toast({
-        title: "Could not load CSV data",
-        description: errorMsg.includes('CORS') 
-          ? "CORS policy blocked the request. Please upload the CSV file manually using the upload button below."
+        title: 'Could not load CSV data',
+        description: errorMsg.includes('CORS')
+          ? 'CORS policy blocked the request. Please upload the CSV file manually using the upload button below.'
           : `${errorMsg}. Please upload a CSV file with the format: "#", "Trope name", "Trope detail"`,
-        variant: "destructive"
+        variant: 'destructive',
       });
       setAllTropes([]);
       setIsLoading(false);
     }
   };
-
   const fetchDefaultData = async () => {
     setIsLoading(true);
     
