@@ -1,11 +1,18 @@
 import Papa from 'papaparse';
 import { Trope } from '@/types/trope';
+
+const normalizeHeader = (s: string) =>
+  s
+    .replace(/^\uFEFF/, '') // strip BOM if present
+    .trim()
+    .toLowerCase()
+    .replace(/[_-]+/g, ' ')
+    .replace(/\s+/g, ' ');
+
 export const parseCSV = (csvText: string): Trope[] => {
   const result = Papa.parse(csvText, {
     header: true,
-    skipEmptyLines: true,
-    quoteChar: '"',
-    escapeChar: '"',
+    skipEmptyLines: 'greedy',
     dynamicTyping: false,
   });
 
@@ -14,35 +21,46 @@ export const parseCSV = (csvText: string): Trope[] => {
   }
 
   const fields = result.meta.fields || [];
-  const norm = (s: string) => s.trim().toLowerCase();
-
-  const idKey = fields.find(f => ['#', 'id', 'number', 'no.', 'index'].includes(norm(f)))
-    || fields.find(f => norm(f).includes('#') || norm(f).includes('id') || norm(f).includes('number'))
-    || '#';
-  const nameKey = fields.find(f => ['trope name', 'name', 'trope'].includes(norm(f)))
-    || fields.find(f => norm(f).includes('trope') && norm(f).includes('name'))
-    || fields.find(f => norm(f).includes('name'));
-  const detailKey = fields.find(f => ['trope detail', 'detail', 'description'].includes(norm(f)))
-    || fields.find(f => norm(f).includes('trope') && norm(f).includes('detail'))
-    || fields.find(f => norm(f).includes('detail'));
-
-  if (!nameKey || !detailKey) {
-    throw new Error('CSV headers must include "Trope name" and "Trope detail" columns.');
+  if (fields.length === 0) {
+    throw new Error('No headers found in CSV.');
   }
+
+  // Build normalized -> original header map
+  const headerMap = new Map<string, string>();
+  for (const f of fields) {
+    headerMap.set(normalizeHeader(f), f);
+  }
+
+  // Strict, exact header resolution
+  const idHeader = headerMap.get('#') || headerMap.get('number') || headerMap.get('no .') || null;
+  const nameHeader = headerMap.get('trope name');
+  const detailHeader = headerMap.get('trope detail');
+
+  if (!nameHeader || !detailHeader) {
+    throw new Error('CSV headers must include "Trope name" and "Trope detail" columns (case-insensitive).');
+  }
+
+  console.log('Detected headers:', {
+    idHeader: idHeader || '(auto-generated)',
+    nameHeader,
+    detailHeader,
+    allHeaders: fields,
+  });
 
   const rows = (result.data as Record<string, unknown>[]) || [];
 
   const tropes: Trope[] = [];
   rows.forEach((row, idx) => {
-    const rawId = idKey ? row[idKey] : undefined;
-    const rawName = row[nameKey];
-    const rawDetail = row[detailKey];
+    const rawId = idHeader ? row[idHeader] : undefined;
+    const rawName = row[nameHeader];
+    const rawDetail = row[detailHeader];
 
     // Preserve exact cell text; only normalize Windows line endings
-    const id = (rawId != null && rawId !== '') ? String(rawId) : `trope-${idx + 1}`;
+    const id = rawId != null && rawId !== '' ? String(rawId) : `trope-${idx + 1}`;
     const name = rawName == null ? '' : String(rawName).replace(/\r\n?/g, '\n');
     const detail = rawDetail == null ? '' : String(rawDetail).replace(/\r\n?/g, '\n');
 
+    // Only accept rows with both name and detail from the same row
     if (name && detail) {
       tropes.push({ id, name, detail });
     }
@@ -54,7 +72,6 @@ export const parseCSV = (csvText: string): Trope[] => {
 
   return tropes;
 };
-
 
 export const generateRandomTropes = (tropes: Trope[], count: number): Trope[] => {
   const shuffled = [...tropes].sort(() => Math.random() - 0.5);
