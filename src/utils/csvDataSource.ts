@@ -2,7 +2,7 @@ import Papa from 'papaparse';
 import { Trope } from '@/types/trope';
 
 const CSV_URL = 'https://markjbarber-tech.github.io/DnD-Story-Generator/data.csv';
-const FALLBACK_CSV_URL = '/data.csv'; // Local fallback
+const FALLBACK_CSV_URL = '/Data.csv'; // Local fallback
 
 // Normalize headers for case-insensitive matching
 const normalizeHeader = (header: string): string => {
