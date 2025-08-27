@@ -1,10 +1,14 @@
 import { useState, useEffect } from 'react';
 import { Trope } from '@/types/trope';
 import { parseCSV, generateRandomTropes } from '@/utils/csvParser';
-import { SAMPLE_TROPES } from '@/data/sampleTropes';
 import { useToast } from '@/hooks/use-toast';
 
-const DEFAULT_CSV_URL = 'https://markjbarber-tech.github.io/DnD-Story-Generator/data.csv';
+const POTENTIAL_CSV_URLS = [
+  'https://markjbarber-tech.github.io/DnD-Story-Generator/data.csv',
+  'https://raw.githubusercontent.com/markjbarber-tech/DnD-Story-Generator/main/data.csv',
+  'https://raw.githubusercontent.com/markjbarber-tech/DnD-Story-Generator/master/data.csv',
+  'https://raw.githubusercontent.com/markjbarber-tech/DnD-Story-Generator/gh-pages/data.csv'
+];
 const STORAGE_KEY = 'dnd-tropes-data';
 
 export const useTropes = () => {
@@ -32,58 +36,56 @@ export const useTropes = () => {
         }
       }
 
-      // Try to fetch default CSV, but fallback to sample data
-      try {
-        await fetchDefaultData();
-      } catch (error) {
-        console.warn('Could not fetch default data, using sample tropes:', error);
-        // Use sample data as fallback
-        setAllTropes(SAMPLE_TROPES);
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(SAMPLE_TROPES));
-        toast({
-          title: "Using sample data",
-          description: `Loaded ${SAMPLE_TROPES.length} sample tropes. Upload your own CSV file to use custom data.`,
-        });
-        setIsLoading(false);
-      }
+      // Try to fetch default CSV from multiple potential URLs
+      await fetchDefaultData();
     } catch (error) {
       console.error('Error loading tropes:', error);
       toast({
-        title: "Error loading data", 
-        description: "Could not load tropes data. Please try uploading a CSV file.",
+        title: "No CSV data found",
+        description: "Please upload a CSV file with the format: \"#\", \"Trope name\", \"Trope detail\"",
         variant: "destructive"
       });
+      setAllTropes([]);
       setIsLoading(false);
     }
   };
 
   const fetchDefaultData = async () => {
-    try {
-      setIsLoading(true);
-      const response = await fetch(DEFAULT_CSV_URL);
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+    setIsLoading(true);
+    
+    let lastError: Error | null = null;
+    
+    // Try each potential URL
+    for (const url of POTENTIAL_CSV_URLS) {
+      try {
+        console.log(`Trying to fetch CSV from: ${url}`);
+        const response = await fetch(url);
+        
+        if (response.ok) {
+          const csvText = await response.text();
+          const tropes = parseCSV(csvText);
+          
+          if (tropes.length > 0) {
+            setAllTropes(tropes);
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(tropes));
+            
+            toast({
+              title: "Data loaded successfully",
+              description: `Loaded ${tropes.length} tropes from GitHub repository`,
+            });
+            setIsLoading(false);
+            return;
+          }
+        }
+      } catch (error) {
+        console.warn(`Failed to fetch from ${url}:`, error);
+        lastError = error as Error;
       }
-      const csvText = await response.text();
-      const tropes = parseCSV(csvText);
-      
-      setAllTropes(tropes);
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(tropes));
-      
-      toast({
-        title: "Data loaded",
-        description: `Loaded ${tropes.length} tropes from default source`,
-      });
-    } catch (error) {
-      console.error('Error fetching default data:', error);
-      toast({
-        title: "Error fetching data",
-        description: "Could not load default tropes. Please upload a CSV file.",
-        variant: "destructive"
-      });
-    } finally {
-      setIsLoading(false);
     }
+    
+    // If all URLs failed
+    setIsLoading(false);
+    throw new Error(`Could not fetch CSV data from any source. Last error: ${lastError?.message}`);
   };
 
   const handleFileUpload = (csvContent: string) => {
