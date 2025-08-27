@@ -14,60 +14,102 @@ const normalizeHeader = (header: string): string => {
 };
 
 export const fetchTropeData = async (): Promise<Trope[]> => {
-  try {
-    console.log('Fetching CSV data from:', CSV_URL);
-    
-    const response = await fetch(CSV_URL, {
+  console.log('Fetching CSV data from:', CSV_URL);
+  
+  // Try multiple approaches to fetch the CSV data
+  const fetchMethods = [
+    // Method 1: Direct fetch
+    () => fetch(CSV_URL, {
       method: 'GET',
       mode: 'cors',
       headers: {
         'Accept': 'text/csv,text/plain,*/*',
         'Cache-Control': 'no-cache',
       },
-    });
-
-    if (!response.ok) {
-      throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-    }
-
-    const csvText = await response.text();
-    console.log('CSV data received, length:', csvText.length);
-
-    return parseTropeCSV(csvText);
-  } catch (error) {
-    console.error('Failed to fetch CSV data:', error);
+    }),
     
-    // Try alternative approaches for CORS issues
-    if (error instanceof TypeError && error.message.includes('fetch')) {
-      console.log('Attempting to fetch via proxy...');
-      return await fetchViaProxy();
-    }
+    // Method 2: CORS Anywhere proxy
+    () => fetch(`https://cors-anywhere.herokuapp.com/${CSV_URL}`, {
+      headers: { 'X-Requested-With': 'XMLHttpRequest' }
+    }),
     
-    throw new Error(`Failed to load trope data: ${error instanceof Error ? error.message : 'Network error'}`);
+    // Method 3: AllOrigins proxy
+    () => fetch(`https://api.allorigins.win/get?url=${encodeURIComponent(CSV_URL)}`),
+    
+    // Method 4: CORS.sh proxy
+    () => fetch(`https://cors.sh/${CSV_URL}`, {
+      headers: { 'x-cors-api-key': 'temp_key' }
+    }),
+    
+    // Method 5: JSONProxy
+    () => fetch(`https://jsonp.afeld.me/?url=${encodeURIComponent(CSV_URL)}`),
+  ];
+
+  let lastError: Error | null = null;
+
+  for (let i = 0; i < fetchMethods.length; i++) {
+    try {
+      console.log(`Trying fetch method ${i + 1}...`);
+      const response = await fetchMethods[i]();
+      
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+      }
+
+      let csvText: string;
+      
+      // Handle different response formats
+      if (i === 2) { // AllOrigins returns JSON
+        const data = await response.json();
+        csvText = data.contents;
+      } else {
+        csvText = await response.text();
+      }
+
+      console.log(`Method ${i + 1} succeeded! CSV length:`, csvText.length);
+      
+      if (csvText.length < 100) {
+        throw new Error('CSV data too short, might be an error page');
+      }
+
+      const tropes = parseTropeCSV(csvText);
+      console.log(`Successfully parsed ${tropes.length} tropes`);
+      
+      if (tropes.length > 6) { // Only accept if we got more than fallback data
+        return tropes;
+      } else {
+        throw new Error('Parsed data seems incomplete');
+      }
+      
+    } catch (error) {
+      console.warn(`Fetch method ${i + 1} failed:`, error);
+      lastError = error instanceof Error ? error : new Error('Unknown error');
+      continue;
+    }
   }
-};
 
-// Alternative fetch method for CORS issues
-const fetchViaProxy = async (): Promise<Trope[]> => {
+  // If all methods fail, try one more direct approach without CORS
+  console.log('All proxy methods failed, trying raw GitHub content...');
   try {
-    // Try using a CORS proxy as fallback
-    const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(CSV_URL)}`;
-    const response = await fetch(proxyUrl);
-    
-    if (!response.ok) {
-      throw new Error(`Proxy fetch failed: ${response.status}`);
+    const rawUrl = CSV_URL.replace('github.io', 'githubusercontent.com').replace('/blob/', '/');
+    const response = await fetch(rawUrl);
+    if (response.ok) {
+      const csvText = await response.text();
+      if (csvText.length > 100) {
+        const tropes = parseTropeCSV(csvText);
+        if (tropes.length > 6) {
+          console.log(`Raw GitHub method succeeded! Got ${tropes.length} tropes`);
+          return tropes;
+        }
+      }
     }
-    
-    const data = await response.json();
-    const csvText = data.contents;
-    
-    console.log('CSV data received via proxy, length:', csvText.length);
-    return parseTropeCSV(csvText);
   } catch (error) {
-    console.error('Proxy fetch also failed:', error);
-    // Return fallback data if all else fails
-    return getFallbackData();
+    console.warn('Raw GitHub method also failed:', error);
   }
+
+  // Last resort: return fallback data but with warning
+  console.warn('All fetch methods failed, using fallback data');
+  throw new Error(`Network error: ${lastError?.message || 'Unable to fetch CSV data'}. Using demo tropes.`);
 };
 
 export const parseTropeCSV = (csvText: string): Trope[] => {
@@ -162,7 +204,7 @@ export const generateRandomTropes = (allTropes: Trope[], count: number): Trope[]
 };
 
 // Fallback data in case all network requests fail
-const getFallbackData = (): Trope[] => {
+export const getFallbackData = (): Trope[] => {
   return [
     {
       id: 'fallback-1',

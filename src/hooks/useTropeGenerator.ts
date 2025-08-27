@@ -23,18 +23,18 @@ export const useTropeGenerator = () => {
         description: `Successfully loaded ${tropes.length} tropes from CSV`,
       });
       
-      console.log(`Loaded ${tropes.length} tropes:`, tropes.slice(0, 3));
+      console.log(`Loaded ${tropes.length} tropes from CSV`);
     } catch (error) {
-      console.error('Failed to load trope data:', error);
+      console.error('Failed to load CSV, using fallback data:', error);
       
-      // Show more specific error message
-      const errorMessage = error instanceof Error 
-        ? error.message 
-        : "Network error - using fallback data";
-        
+      // Import and use fallback data directly
+      const { getFallbackData } = await import('@/utils/csvDataSource');
+      const fallbackTropes = getFallbackData();
+      setAllTropes(fallbackTropes);
+      
       toast({
-        title: "Using Fallback Data",
-        description: errorMessage + ". Some demo tropes are available.",
+        title: "Using Demo Data",
+        description: `Network error. Loaded ${fallbackTropes.length} demo tropes instead.`,
         variant: "destructive",
       });
     } finally {
