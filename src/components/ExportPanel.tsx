@@ -188,9 +188,13 @@ Would you like this exported as:
 
 ✨ *Generated with the D&D Single-Arc Campaign Builder Template*`;
     } else {
-      return `# 🚀 ONE-SHOT OR SIDE QUEST ADVENTURE GENERATOR (AUTO-EXECUTE)
+      return `# 🎯 PROMPT ENGINEERED TEMPLATE: ONE-SHOT OR SIDE QUEST ADVENTURE (1–10 Tropes, Auto-Execute)
 
-You are a creative **D&D one-shot or side quest generator**.  
+---
+
+🧠 SYSTEM INSTRUCTIONS (FOR CHATGPT):
+
+You are a creative **D&D one-shot or side quest generator**.
 
 Your input is a table of **1–10 story tropes**. Each trope includes:  
 - A **trope name**  
@@ -201,11 +205,11 @@ For any trope that does **not** include a description, you must:
 2. Summarize the trope's meaning and dramatic function in a few sentences  
 3. Cite the source used  
 
-Then, using **all trope details**, immediately generate a **compact, engaging adventure** suitable for:  
+Then, using **all trope details**, immediately generate a **compact, engaging one-shot or side quest** suitable for:  
 - A **one-shot (3–6 hours of play)**  
 - OR a **side quest** that fits within a broader campaign  
 
-The adventure should reflect a **lower scale of epicness**: focus on local consequences, intimate mysteries, personal stakes, or self-contained magical events.  
+The story should focus on **local consequences, intimate mysteries, personal stakes, or self-contained magical events.**  
 
 ---
 
@@ -217,67 +221,75 @@ ${tropeTable}
 
 ---
 
-### 🧾 OUTPUT FORMAT (ONE-SHOT / SIDE QUEST STRUCTURE)
-
-When the trope table is provided, immediately output the following structure:  
+🧾 **OUTPUT FORMAT (ONE-SHOT / SIDE QUEST STRUCTURE)**  
 
 ---
 
 ## 🧙‍♂️ ADVENTURE TITLE AND PREMISE  
+
 **Title:**  
 [Short, evocative title.]  
 
 **Summary:**  
-[1 paragraph showing how the selected tropes combine into the plot, tone, and central problem.]  
+[1–2 paragraphs summarizing the adventure. Explain each trope by weaving it into the context of the story's danger, mystery, or transformation. Do not mention "tropes" directly.]  
 
 ---
 
 ## 🎣 ADVENTURE HOOKS  
-[2–3 ways the party might become involved in the quest.]  
+
+[List at least 3 hooks that draw the PCs into the quest.]  
 
 ---
 
-## 🗺️ MAIN LOCATION(S)  
+## 🦹 BIG BAD EVIL GUY (BBEG) & HENCHMEN  
+
+- **BBEG Name:**  
+  *Summary:* Who they are, their goals, and why they are dangerous.  
+  *Key Powers / Style:* Signature abilities, tactics, and personality.  
+
+- **Henchmen / Lieutenants:**  
+  [List 1–2 henchmen or supporting villains with summaries.]  
+
+- **Supporting Monsters:**  
+  [List thematic monsters or creatures that appear alongside the villains.]  
+
+---
+
+## 🗺️ MAIN LOCATIONS  
+
+[Describe at least 4 important locations where the adventure takes place.]  
+
 - **Name:**  
   *Description:*  
   *Why it matters:*  
-  *Relevant Tropes:*  
 
 ---
 
 ## 🎭 MAJOR NPCs  
-[Describe 2–3 important NPCs with roles, wants, how to roleplay them, and connection to tropes.]  
+
+[Describe 2–3 supporting NPCs. Each should have motives, personality, and ties to the events.]  
 
 ---
 
 ## 🎬 CORE SCENES AND CHALLENGES  
-[List 3–4 major scenes. Each should include location, NPCs, conflict, and mystery clues if relevant.]  
+
+[List 3–4 major scenes or situations. Each should include location, NPCs, and central conflict. If mystery, include 3 clues.]  
 
 ---
 
 ## 🎭 REWARD / OUTCOME OPTIONS  
-[2–3 ways the quest may resolve, allowing for different choices or approaches.]  
+
+[Describe 2–3 ways the quest may resolve, allowing for different PC approaches.]  
 
 ---
 
 ## 🌱 RECURRING THEMES  
-[1–2 themes that emerge from the tropes and story.]  
+
+[Summarize 1–2 key themes that run throughout the adventure.]  
 
 ---
 
-## 📌 CUSTOMIZATION INVITE  
-Would you like to tailor this one-shot or side quest to an existing world or campaign?  
-
-If so, please provide:  
-- Key facts about your campaign (major factions, current story arc, tone, known NPCs, etc.)  
-- Whether you want this to connect to the main plot, foreshadow something bigger, or stay standalone  
-- Any known character backgrounds or hooks you'd like to incorporate  
-
-I'll adapt the adventure accordingly.  
-
----
-
-✨ *Generated with the D&D One-Shot / Side Quest Auto-Exec Template*`;
+✨ *Generated with the D&D One-Shot / Side Quest Builder Template*`;
     }
   };
 
