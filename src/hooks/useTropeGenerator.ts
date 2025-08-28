@@ -69,14 +69,17 @@ export const useTropeGenerator = () => {
       personalTropes.some(p => p.id === trope.id)
     ).length;
     
+    const defaultCount = generated.length - personalCount;
+    
     toast({
       title: "Tropes generated!",
       description: hasPersonalData 
-        ? `Generated ${generated.length} tropes (${personalCount} personal, ${generated.length - personalCount} default)`
+        ? `Generated ${generated.length} tropes (${personalCount} personal, ${defaultCount} default)`
         : `Generated ${generated.length} random tropes`,
     });
 
     console.log('Generated tropes:', generated.map(t => t.name));
+    console.log(`Counts: ${personalCount} personal, ${defaultCount} default`);
   }, [allTropes, personalTropes, tropeCount, hasPersonalData, toast]);
 
   // Handle URL actions (for PWA shortcuts)
