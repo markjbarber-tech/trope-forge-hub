@@ -27,7 +27,7 @@ export const AppHeader = ({ isOnline = true }: AppHeaderProps) => {
                 <Dice6 className="h-6 w-6 text-fantasy-purple" />
               </div>
               <div>
-                <h1 className="text-xl font-bold text-fantasy-gold">
+                <h1 className="text-xl font-bold text-white">
                   D&D Story Generator
                 </h1>
                 <p className="text-xs text-muted-foreground">

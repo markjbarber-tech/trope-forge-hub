@@ -56,7 +56,7 @@ export const TropeDisplay = ({ tropes, onRemoveTrope, onAddRandomTrope }: TropeD
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
-        <h2 className="text-2xl font-bold text-fantasy-gold">
+        <h2 className="text-2xl font-bold text-white">
           Generated Tropes
         </h2>
         <div className="flex items-center gap-3">
@@ -110,7 +110,7 @@ export const TropeDisplay = ({ tropes, onRemoveTrope, onAddRandomTrope }: TropeD
                     <Badge variant="secondary" className="text-xs font-mono">
                       {index + 1}
                     </Badge>
-                    <CardTitle className="text-fantasy-gold text-lg font-bold">
+                    <CardTitle className="text-white text-lg font-bold">
                       {trope.name}
                     </CardTitle>
                   </div>

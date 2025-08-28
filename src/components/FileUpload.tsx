@@ -55,7 +55,7 @@ export const FileUpload = ({ onFileUpload, isLoading = false }: FileUploadProps)
   return (
     <Card className="bg-card/80 backdrop-blur-sm border-border/50 shadow-lg">
       <CardHeader>
-        <CardTitle className="text-fantasy-gold flex items-center gap-2">
+        <CardTitle className="text-white flex items-center gap-2">
           <FileText className="h-5 w-5" />
           Data Management
         </CardTitle>

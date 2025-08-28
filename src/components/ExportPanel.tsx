@@ -376,7 +376,7 @@ I'll adapt the adventure accordingly.
   return (
     <Card className="bg-card/90 backdrop-blur-sm border-border/60 shadow-xl">
       <CardHeader>
-        <CardTitle className="text-fantasy-gold flex items-center gap-2">
+        <CardTitle className="text-white flex items-center gap-2">
           <Download className="h-5 w-5" />
           Export Options
         </CardTitle>

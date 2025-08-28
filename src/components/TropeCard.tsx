@@ -15,7 +15,7 @@ export const TropeCard = ({ trope }: TropeCardProps) => {
     <Card className="bg-card/80 backdrop-blur-sm border-border/50 hover:border-fantasy-gold/30 transition-all duration-300 shadow-lg">
       <CardHeader className="pb-3">
         <div className="flex items-center justify-between">
-          <CardTitle className="text-fantasy-gold text-lg font-bold">
+          <CardTitle className="text-white text-lg font-bold">
             {trope.name}
           </CardTitle>
           <Button
