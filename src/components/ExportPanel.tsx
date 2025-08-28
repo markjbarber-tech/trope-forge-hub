@@ -47,164 +47,146 @@ export const ExportPanel = ({ tropes, disabled = false, onExportTemplate }: Expo
     ).join('\n');
 
     if (type === 'campaign') {
-      return `🎯 PROMPT ENGINEERED TEMPLATE: SINGLE-ARC CAMPAIGN BUILDER (1–10 Tropes)
+      return `You are a creative **D&D adventure generator**.  
+
+Your input is a table of **1–10 tropes**. Each trope includes:  
+- A **trope name**  
+- An **optional description of any length**, giving full thematic or narrative detail  
+
+For any trope that does **not** include a description, you must:  
+1. Search the web (e.g., TVTropes.org or Wikipedia)  
+2. Summarize the trope's meaning in a few sentences, incorporating its key narrative elements  
+3. Cite the source used  
+
+Then, use **all trope details** to build a **single-arc campaign-level adventure**.  
+
+This arc should span **multiple sessions** and support **3rd–10th level progression**, with **branching player decisions** but a **cohesive story climax**.  
+
+Your output must include a structured, modular campaign outline with:  
+- World premise  
+- Adventure hooks  
+- Factions and NPCs  
+- Key locations  
+- 4–6 detailed scenes/situations (with clues if applicable)  
+- Major themes  
 
 ---
 
-🧠 SYSTEM INSTRUCTIONS (FOR CHATGPT):
+✅ **INPUT FORMAT (TROPE TABLE)**  
 
-You are a creative D&D adventure generator.
-
-Your input is a table of 1–10 tropes. Each trope includes:
-- A trope name
-- An optional description of any length, giving full thematic or narrative detail
-
-For any trope that does not include a description, you must:
-- Search the web (e.g., TVTropes.org or Wikipedia)
-- Summarize the trope's meaning in a few sentences, incorporating its key narrative elements
-- Cite the source used
-
-Then, use all trope details to build a single-arc campaign-level adventure. This arc should span multiple sessions and support 3rd–10th level progression, with branching player decisions but a cohesive story climax.
-
-Your output must include a structured, modular campaign outline with:
-- World premise
-- Adventure hooks
-- Factions and NPCs
-- Key locations
-- 4–6 detailed scenes/situations (with clues if applicable)
-- Major themes
-
----
-
-✅ INPUT FORMAT (TROPE TABLE)
-
-| # | Trope Name         | Trope Description (optional, any length)                            |
-|---|--------------------|------------------------------------------------------------------------|
+| # | Trope Name | Trope Description (optional, any length) |  
+|---|------------|-------------------------------------------|  
 ${tropeTable}
 
 ---
 
-🧾 OUTPUT FORMAT (D&D SINGLE-ARC CAMPAIGN STRUCTURE)
+🧾 **OUTPUT FORMAT (D&D SINGLE-ARC CAMPAIGN STRUCTURE)**  
 
 ---
 
-🧙‍♂️ CAMPAIGN TITLE AND PREMISE
+## 🧙‍♂️ CAMPAIGN TITLE AND PREMISE  
 
-Title:  
-[A compelling, setting-appropriate campaign title.]
+**Title:**  
+[A compelling, setting-appropriate campaign title.]  
 
-Summary:  
-[1–2 paragraphs summarizing the single main story arc. Clearly show how the tropes drive the central mystery, danger, or transformation in the world.]
-
----
-
-🎣 ADVENTURE HOOKS
-
-[3–5 starting plot hooks that draw players into the world and main arc.]
-
-1.  
-2.  
-3.  
-4.  
-5.
+**Summary:**  
+[1–2 paragraphs summarizing the single main story arc. Clearly show how the tropes drive the central mystery, danger, or transformation in the world.]  
 
 ---
 
-🛡️ FACTIONS AND POWER PLAYERS
+## 🎣 ADVENTURE HOOKS  
 
-[2–4 major factions, organizations, or influential individuals. Each should be tied to 1 or more tropes.]
-
-- Name:  
-  Philosophy / Goals:  
-  Key Figure:  
-  Tropes Represented:  
+[3–5 starting plot hooks that draw players into the world and main arc.]  
 
 ---
 
-🗺️ KEY LOCATIONS
+## 🛡️ FACTIONS AND POWER PLAYERS  
 
-[Describe 3–5 campaign locations. These may evolve as the story progresses.]
+[2–4 major factions, organizations, or influential individuals. Each should be tied to 1 or more tropes.]  
 
-- Location Name:  
-  Description:  
-  Narrative Role:  
-  Unusual Effects / Inhabitants:  
-  Associated Tropes:  
-
----
-
-🎭 IMPORTANT NPCs
-
-[List 3–5 memorable and influential NPCs. Tie each to a trope.]
-
-- Name:  
-  Role in the Story:  
-  Agenda / Secrets:  
-  Relationship to Tropes:  
-  How They Interact with the PCs:  
-  Roleplaying Tips:  
+- **Name:**  
+  *Philosophy / Goals:*  
+  *Key Figure:*  
+  *Tropes Represented:*  
 
 ---
 
-🎬 KEY SCENES AND SITUATIONS
+## 🗺️ KEY LOCATIONS  
 
-[List 4–6 major scenes that define the arc's progression. Each should include location, purpose, major NPCs, conflict or mystery, and optional clues.]
+[Describe 3–5 campaign locations. These may evolve as the story progresses.]  
 
-🔹 Scene 1: [Scene Title]
+- **Location Name:**  
+  *Description:*  
+  *Narrative Role:*  
+  *Unusual Effects / Inhabitants:*  
+  *Associated Tropes:*  
 
-- Location:  
-- Involved NPCs:  
-- Scene Focus / Conflict:  
-  [Describe the core problem or event here. What decision or danger must the PCs confront?]
+---
 
-- If there's a mystery, include 3 clues the PCs may discover:  
+## 🎭 IMPORTANT NPCs  
+
+[List 3–5 memorable and influential NPCs. Tie each to a trope.]  
+
+- **Name:**  
+  *Role in the Story:*  
+  *Agenda / Secrets:*  
+  *Relationship to Tropes:*  
+  *How They Interact with the PCs:*  
+  *Roleplaying Tips:*  
+
+---
+
+## 🎬 KEY SCENES AND SITUATIONS  
+
+[List 4–6 major scenes that define the arc's progression. Each should include location, purpose, major NPCs, conflict or mystery, and optional clues.]  
+
+🔹 **Scene 1: [Scene Title]**  
+- **Location:**  
+- **Involved NPCs:**  
+- **Scene Focus / Conflict:**  
+- **If mystery:**  
   - Clue 1:  
   - Clue 2:  
   - Clue 3:  
 
-🔹 Scene 2: [Scene Title]
-
-- Location:  
-- Involved NPCs:  
-- Scene Focus / Conflict:  
-- Clues (if applicable):  
+🔹 **Scene 2: [Scene Title]**  
+- **Location:**  
+- **Involved NPCs:**  
+- **Scene Focus / Conflict:**  
+- **If mystery:**  
   -  
   -  
   -  
 
-(Repeat up to Scene 6.)
+(Repeat up to Scene 6.)  
 
 ---
 
-🌌 RECURRING THEMES
+## 🌌 RECURRING THEMES  
 
-[List 2–3 deeper philosophical or emotional themes present in the campaign, drawn from the tropes.]
-
-1.  
-2.  
-3.
+[List 2–3 deeper philosophical or emotional themes present in the campaign, drawn from the tropes.]  
 
 ---
 
-🔁 AI BEHAVIOR INSTRUCTIONS:
+🔁 **AI BEHAVIOR INSTRUCTIONS:**  
 
-- Always assume the output must support multi-session play and long-form engagement, but with a single, primary story arc.
-- Incorporate trope details, not just names—reflect their thematic impact across the world, factions, and characters.
-- Write scenes as non-linear but interlinked, allowing players to choose their path while staying within the central arc.
-- If the campaign contains a central mystery, ensure each scene that contributes to it includes 3 discoverable clues.
-
----
-
-💾 EXPORT OPTIONS (OPTIONAL):
-
-Would you like this exported as:
-- \`.txt\` plain text
-- \`.md\` Markdown
-- Google Docs copyable format
+- Always assume the output must support **multi-session play** and **long-form engagement**, but with a **single, primary story arc**.  
+- Incorporate **trope details, not just names**—reflect their thematic impact across the world, factions, and characters.  
+- Write scenes as **non-linear but interlinked**, allowing players to choose their path while staying within the central arc.  
+- If the campaign contains a central **mystery**, ensure each contributing scene includes **3 discoverable clues**.  
 
 ---
 
-*Generated on ${currentDate} using the D&D Story Generator*`;
+💾 **EXPORT OPTIONS (OPTIONAL):**  
+
+Would you like this exported as:  
+- \`.txt\` plain text  
+- \`.md\` Markdown  
+- Google Docs copyable format  
+
+---
+
+✨ *Generated with the D&D Single-Arc Campaign Builder Template*`;
     } else {
       return `# 🚀 ONE-SHOT OR SIDE QUEST ADVENTURE GENERATOR (AUTO-EXECUTE)
 
