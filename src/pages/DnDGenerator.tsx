@@ -5,13 +5,21 @@ import { TropeGenerator } from '@/components/TropeGenerator';
 import { TropeDisplay } from '@/components/TropeDisplay';
 import { ExportPanel } from '@/components/ExportPanel';
 import { PersonalDataManager } from '@/components/PersonalDataManager';
+import { LoreLinksManager } from '@/components/LoreLinksManager';
 import { useTropeGenerator } from '@/hooks/useTropeGenerator';
 import { useKeyboardShortcuts } from '@/hooks/useKeyboardShortcuts';
 import { exportTropesToText } from '@/utils/exportUtils';
 
+interface LoreLink {
+  id: string;
+  title: string;
+  url: string;
+}
+
 export const DnDGenerator = () => {
   const [isOnline, setIsOnline] = useState(navigator.onLine);
   const [loadTime, setLoadTime] = useState<string>('');
+  const [loreLinks, setLoreLinks] = useState<LoreLink[]>([]);
   const navigate = useNavigate();
 
   const {
@@ -96,6 +104,11 @@ export const DnDGenerator = () => {
               isLoading={isLoading}
             />
             
+            <LoreLinksManager
+              loreLinks={loreLinks}
+              onLinksChange={setLoreLinks}
+            />
+            
             {/* Show tropes first, then export options */}
             <div className="lg:hidden">
               <TropeDisplay 
@@ -108,6 +121,7 @@ export const DnDGenerator = () => {
             
             <ExportPanel
               tropes={generatedTropes}
+              loreLinks={loreLinks}
               disabled={isLoading}
               onExportTemplate={handleExportTemplate}
             />

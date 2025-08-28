@@ -8,13 +8,20 @@ import { exportTropesToText, exportDnDCampaignTemplate } from '@/utils/exportUti
 import { useToast } from '@/hooks/use-toast';
 import { useState } from 'react';
 
+interface LoreLink {
+  id: string;
+  title: string;
+  url: string;
+}
+
 interface ExportPanelProps {
   tropes: Trope[];
+  loreLinks?: LoreLink[];
   disabled?: boolean;
   onExportTemplate?: (templateType: 'campaign' | 'oneshot') => void;
 }
 
-export const ExportPanel = ({ tropes, disabled = false, onExportTemplate }: ExportPanelProps) => {
+export const ExportPanel = ({ tropes, loreLinks = [], disabled = false, onExportTemplate }: ExportPanelProps) => {
   const { toast } = useToast();
   const [templateType, setTemplateType] = useState<'campaign' | 'oneshot'>('campaign');
   const [showClipboardMessage, setShowClipboardMessage] = useState(false);
@@ -51,6 +58,22 @@ export const ExportPanel = ({ tropes, disabled = false, onExportTemplate }: Expo
       `| ${index + 1} | ${trope.name} | ${trope.detail || '(No description provided)'} |`
     ).join('\n');
 
+    // Generate lore links section
+    const loreLinkSection = loreLinks.length > 0 ? `
+
+---
+
+📚 **LORE DOCUMENTS TO REFERENCE**
+
+Please reference and incorporate relevant information from these lore documents:
+
+${loreLinks.map((link, index) => `${index + 1}. **${link.title}**  
+   Link: ${link.url}`).join('\n\n')}
+
+*Note: Use these documents to inform world-building, character backgrounds, established lore, and story consistency.*
+
+---` : '';
+
     if (type === 'campaign') {
       return `# 🎯 PROMPT ENGINEERED TEMPLATE: SINGLE-ARC CAMPAIGN BUILDER (1–10 Tropes, Auto-Execute)
 
@@ -80,6 +103,7 @@ This arc should span **multiple sessions** and support **3rd–10th level progre
 | # | Trope Name | Trope Description (optional, any length) |
 |---|------------|-------------------------------------------|
 ${tropeTable}
+${loreLinkSection}
 
 ---
 
@@ -179,6 +203,7 @@ The story should focus on **local consequences, intimate mysteries, personal sta
 | # | Trope Name | Trope Description (optional, any length) |
 |---|------------|-------------------------------------------|
 ${tropeTable}
+${loreLinkSection}
 
 ---
 
