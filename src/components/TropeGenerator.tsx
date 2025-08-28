@@ -94,12 +94,6 @@ export const TropeGenerator = ({
           <Dice6 className="h-6 w-6 mr-2" />
           {isLoading ? 'Loading Data...' : 'Generate Tropes'}
         </Button>
-        
-        <div className="text-xs text-muted-foreground text-center space-y-1">
-          <p>Keyboard shortcuts:</p>
-          <p><kbd className="px-1.5 py-0.5 bg-muted rounded text-xs">Enter</kbd> or <kbd className="px-1.5 py-0.5 bg-muted rounded text-xs">Space</kbd> to generate</p>
-          <p><kbd className="px-1.5 py-0.5 bg-muted rounded text-xs">Ctrl+G</kbd> to generate</p>
-        </div>
       </CardContent>
     </Card>
   );
