@@ -20,19 +20,24 @@ export const ExportPanel = ({ tropes, disabled = false, onExportTemplate }: Expo
   const [showClipboardMessage, setShowClipboardMessage] = useState(false);
   const hasNoTropes = tropes.length === 0;
 
-  const handleExportText = () => {
+  const handleExportTable = () => {
     if (hasNoTropes) return;
     
     try {
-      exportTropesToText(tropes);
+      // Navigate to trope table page with tropes data
+      window.open(`/trope-table?timestamp=${Date.now()}`, '_blank');
+      
+      // Store tropes in sessionStorage for the new window
+      sessionStorage.setItem('tropes-for-table', JSON.stringify(tropes));
+      
       toast({
-        title: "Export Successful",
-        description: "Tropes exported to text file",
+        title: "Table Opened",
+        description: "Tropes table opened in new tab",
       });
     } catch (error) {
       toast({
-        title: "Export Failed",
-        description: "Failed to export tropes to text file",
+        title: "Failed to Open Table",
+        description: "Failed to open tropes table",
         variant: "destructive",
       });
     }
@@ -291,12 +296,12 @@ ${tropeTable}
       <CardContent className="space-y-3">
         <Button
           variant="gold"
-          onClick={handleExportText}
+          onClick={handleExportTable}
           disabled={disabled || hasNoTropes}
           className="w-full justify-start"
         >
           <FileText className="h-4 w-4 mr-2" />
-          Export to Text File
+          View Tropes Table
         </Button>
         
         <div className="space-y-3">
@@ -339,14 +344,6 @@ ${tropeTable}
           <div className="text-xs text-muted-foreground text-center mt-3 p-3 bg-muted/30 rounded-lg">
             <Printer className="h-4 w-4 mx-auto mb-1 opacity-50" />
             Generate some tropes first to enable export options
-          </div>
-        )}
-        
-        {!hasNoTropes && (
-          <div className="text-xs text-muted-foreground space-y-1 mt-3 pt-3 border-t border-border/30">
-            <p>Keyboard shortcuts:</p>
-            <p><kbd className="px-1.5 py-0.5 bg-muted rounded text-xs">Ctrl+P</kbd> Export text</p>
-            <p><kbd className="px-1.5 py-0.5 bg-muted rounded text-xs">Ctrl+T</kbd> Generate template</p>
           </div>
         )}
       </CardContent>
