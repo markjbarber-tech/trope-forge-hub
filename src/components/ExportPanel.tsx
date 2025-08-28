@@ -1,18 +1,22 @@
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
+import { Label } from '@/components/ui/label';
 import { Download, FileText, Scroll, Printer } from 'lucide-react';
 import { Trope } from '@/types/trope';
 import { exportTropesToText, exportDnDCampaignTemplate } from '@/utils/exportUtils';
 import { useToast } from '@/hooks/use-toast';
+import { useState } from 'react';
 
 interface ExportPanelProps {
   tropes: Trope[];
   disabled?: boolean;
-  onExportTemplate?: () => void;
+  onExportTemplate?: (templateType: 'campaign' | 'oneshot') => void;
 }
 
 export const ExportPanel = ({ tropes, disabled = false, onExportTemplate }: ExportPanelProps) => {
   const { toast } = useToast();
+  const [templateType, setTemplateType] = useState<'campaign' | 'oneshot'>('campaign');
   const hasNoTropes = tropes.length === 0;
 
   const handleExportText = () => {
@@ -38,13 +42,13 @@ export const ExportPanel = ({ tropes, disabled = false, onExportTemplate }: Expo
     
     try {
       if (onExportTemplate) {
-        onExportTemplate();
+        onExportTemplate(templateType);
       } else {
         exportDnDCampaignTemplate(tropes);
       }
       toast({
         title: "Template Generated",
-        description: "D&D campaign template created successfully",
+        description: `D&D ${templateType} template created successfully`,
       });
     } catch (error) {
       toast({
@@ -74,15 +78,35 @@ export const ExportPanel = ({ tropes, disabled = false, onExportTemplate }: Expo
           Export to Text File
         </Button>
         
-        <Button
-          variant="parchment"
-          onClick={handleExportTemplate}
-          disabled={disabled || hasNoTropes}
-          className="w-full justify-start"
-        >
-          <Scroll className="h-4 w-4 mr-2" />
-          Generate D&D Template
-        </Button>
+        <div className="space-y-3">
+          <div className="space-y-2">
+            <Label className="text-sm font-medium">Template Type</Label>
+            <RadioGroup 
+              value={templateType} 
+              onValueChange={(value) => setTemplateType(value as 'campaign' | 'oneshot')}
+              className="flex flex-col space-y-2"
+            >
+              <div className="flex items-center space-x-2">
+                <RadioGroupItem value="campaign" id="campaign" />
+                <Label htmlFor="campaign" className="text-sm">Campaign</Label>
+              </div>
+              <div className="flex items-center space-x-2">
+                <RadioGroupItem value="oneshot" id="oneshot" />
+                <Label htmlFor="oneshot" className="text-sm">One Shot</Label>
+              </div>
+            </RadioGroup>
+          </div>
+          
+          <Button
+            variant="parchment"
+            onClick={handleExportTemplate}
+            disabled={disabled || hasNoTropes}
+            className="w-full justify-start"
+          >
+            <Scroll className="h-4 w-4 mr-2" />
+            Generate D&D {templateType === 'campaign' ? 'Campaign' : 'One Shot'} Template
+          </Button>
+        </div>
         
         {hasNoTropes && (
           <div className="text-xs text-muted-foreground text-center mt-3 p-3 bg-muted/30 rounded-lg">

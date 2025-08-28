@@ -45,16 +45,21 @@ export const DnDGenerator = () => {
     }
   }, [allTropes.length, isLoading]);
 
-  const handleExportTemplate = () => {
+  const handleExportTemplate = (templateType: 'campaign' | 'oneshot') => {
     if (generatedTropes.length === 0) return;
-    navigate('/campaign-template', { state: { tropes: generatedTropes } });
+    navigate('/campaign-template', { 
+      state: { 
+        tropes: generatedTropes, 
+        templateType 
+      } 
+    });
   };
 
   // Keyboard shortcuts
   useKeyboardShortcuts({
     onGenerate: generateTropes,
     onExportTropes: () => exportTropesToText(generatedTropes),
-    onExportTemplate: handleExportTemplate,
+    onExportTemplate: () => handleExportTemplate('campaign'),
   });
 
   return (
