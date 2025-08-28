@@ -82,8 +82,8 @@ const TropeTable = () => {
         <div className="flex items-center justify-between mb-6">
           <Button 
             onClick={() => navigate('/')} 
-            variant="ghost"
-            className="text-white hover:text-mystical-glow"
+            variant="mystical"
+            size="sm"
           >
             <ArrowLeft className="h-4 w-4 mr-2" />
             Back to Generator
