@@ -4,6 +4,7 @@ import { AppHeader } from '@/components/AppHeader';
 import { TropeGenerator } from '@/components/TropeGenerator';
 import { TropeDisplay } from '@/components/TropeDisplay';
 import { ExportPanel } from '@/components/ExportPanel';
+import { PersonalDataManager } from '@/components/PersonalDataManager';
 import { useTropeGenerator } from '@/hooks/useTropeGenerator';
 import { useKeyboardShortcuts } from '@/hooks/useKeyboardShortcuts';
 import { exportTropesToText } from '@/utils/exportUtils';
@@ -19,12 +20,16 @@ export const DnDGenerator = () => {
     tropeCount,
     isLoading,
     isInitialLoad,
+    personalTropes,
+    hasPersonalData,
     setTropeCount,
     generateTropes,
     refreshData,
     removeTrope,
     addRandomTrope,
     addCustomTrope,
+    uploadPersonalData,
+    purgePersonalData
   } = useTropeGenerator();
 
   // Monitor online status
@@ -81,6 +86,14 @@ export const DnDGenerator = () => {
               isLoading={isLoading || isInitialLoad}
               dataLoadTime={loadTime}
               totalTropes={allTropes.length}
+            />
+            
+            <PersonalDataManager
+              personalTropeCount={personalTropes.length}
+              hasPersonalData={hasPersonalData}
+              onPersonalUpload={uploadPersonalData}
+              onPurgePersonalData={purgePersonalData}
+              isLoading={isLoading}
             />
             
             {/* Show tropes first, then export options */}

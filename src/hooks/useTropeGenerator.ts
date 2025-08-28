@@ -1,6 +1,8 @@
 import { useState, useEffect, useCallback } from 'react';
 import { Trope } from '@/types/trope';
-import { fetchTropeData, generateRandomTropes } from '@/utils/csvDataSource';
+import { fetchTropeData } from '@/utils/csvDataSource';
+import { generateMixedTropes } from '@/utils/mixedTropeGenerator';
+import { usePersonalData } from '@/hooks/usePersonalData';
 import { useToast } from '@/hooks/use-toast';
 
 export const useTropeGenerator = () => {
@@ -10,6 +12,7 @@ export const useTropeGenerator = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [isInitialLoad, setIsInitialLoad] = useState(true);
   const { toast } = useToast();
+  const { personalTropes, hasPersonalData, uploadPersonalData, purgePersonalData } = usePersonalData();
 
   const loadTropeData = useCallback(async () => {
     setIsLoading(true);
@@ -59,16 +62,22 @@ export const useTropeGenerator = () => {
       return;
     }
 
-    const newTropes = generateRandomTropes(allTropes, tropeCount);
-    setGeneratedTropes(newTropes);
+    const generated = generateMixedTropes(allTropes, personalTropes, tropeCount);
+    setGeneratedTropes(generated);
+    
+    const personalCount = generated.filter(trope => 
+      personalTropes.some(p => p.id === trope.id)
+    ).length;
     
     toast({
-      title: "Tropes Generated",
-      description: `Generated ${newTropes.length} random tropes`,
+      title: "Tropes generated!",
+      description: hasPersonalData 
+        ? `Generated ${generated.length} tropes (${personalCount} personal, ${generated.length - personalCount} default)`
+        : `Generated ${generated.length} random tropes`,
     });
 
-    console.log('Generated tropes:', newTropes.map(t => t.name));
-  }, [allTropes, tropeCount, toast]);
+    console.log('Generated tropes:', generated.map(t => t.name));
+  }, [allTropes, personalTropes, tropeCount, hasPersonalData, toast]);
 
   // Handle URL actions (for PWA shortcuts)
   useEffect(() => {
@@ -150,11 +159,15 @@ export const useTropeGenerator = () => {
     tropeCount,
     isLoading,
     isInitialLoad,
+    personalTropes,
+    hasPersonalData,
     setTropeCount,
     generateTropes,
     refreshData: loadTropeData,
     removeTrope,
     addRandomTrope,
     addCustomTrope,
+    uploadPersonalData,
+    purgePersonalData
   };
 };
