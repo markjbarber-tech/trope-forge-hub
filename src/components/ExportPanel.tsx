@@ -206,67 +206,56 @@ Would you like this exported as:
 
 *Generated on ${currentDate} using the D&D Story Generator*`;
     } else {
-      return `🎯 PROMPT ENGINEERED TEMPLATE: ONE-SHOT OR SIDE QUEST ADVENTURE (1–10 Tropes)
+      return `# 🚀 ONE-SHOT OR SIDE QUEST ADVENTURE GENERATOR (AUTO-EXECUTE)
+
+You are a creative **D&D one-shot or side quest generator**.  
+
+Your input is a table of **1–10 story tropes**. Each trope includes:  
+- A **trope name**  
+- An **optional description** (unlimited length, narrative or thematic)  
+
+For any trope that does **not** include a description, you must:  
+1. Search the web (e.g., TVTropes.org or Wikipedia)  
+2. Summarize the trope's meaning and dramatic function in a few sentences  
+3. Cite the source used  
+
+Then, using **all trope details**, immediately generate a **compact, engaging adventure** suitable for:  
+- A **one-shot (3–6 hours of play)**  
+- OR a **side quest** that fits within a broader campaign  
+
+The adventure should reflect a **lower scale of epicness**: focus on local consequences, intimate mysteries, personal stakes, or self-contained magical events.  
 
 ---
 
-🧠 SYSTEM INSTRUCTIONS (FOR CHATGPT):
+✅ **INPUT FORMAT (TROPE TABLE)**  
 
-You are a creative D&D one-shot or side quest generator.
-
-Your input is a table of **1–10 story tropes**. Each trope includes:
-- A **trope name**
-- An **optional description** (unlimited length, narrative or thematic)
-
-For any trope that does not include a description, you must:
-- Search the web (e.g., TVTropes.org or Wikipedia)
-- Summarize the trope's meaning and dramatic function in a few sentences
-- Cite the source used
-
-You will then use all trope details to build a **compact, engaging adventure** suitable for:
-- A **one-shot (3–6 hours of play)**
-- OR a **side quest** that fits within a broader campaign
-
-The story should reflect a **lower scale of epicness**: focus on local consequences, intimate mysteries, personal stakes, or self-contained magical events.
-
----
-
-✅ INPUT FORMAT (TROPE TABLE)
-
-| # | Trope Name         | Trope Description (optional, any length)                          |
-|---|--------------------|----------------------------------------------------------------------|
+| # | Trope Name | Trope Description (optional, any length) |
+|---|------------|-------------------------------------------|
 ${tropeTable}
 
 ---
 
-🧾 OUTPUT FORMAT (ONE-SHOT / SIDE QUEST STRUCTURE)
+### 🧾 OUTPUT FORMAT (ONE-SHOT / SIDE QUEST STRUCTURE)
+
+When the trope table is provided, immediately output the following structure:  
 
 ---
 
-🧙‍♂️ ADVENTURE TITLE AND PREMISE
-
+## 🧙‍♂️ ADVENTURE TITLE AND PREMISE  
 **Title:**  
-[A short, evocative title.]
+[Short, evocative title.]  
 
 **Summary:**  
-[1 paragraph summary. Show how the selected tropes combine to shape the plot, tone, and central problem.]
+[1 paragraph showing how the selected tropes combine into the plot, tone, and central problem.]  
 
 ---
 
-🎣 ADVENTURE HOOKS
-
-[2–3 ways the party might become involved in the quest.]
-
-1.  
-2.  
-3.  
+## 🎣 ADVENTURE HOOKS  
+[2–3 ways the party might become involved in the quest.]  
 
 ---
 
-🗺️ MAIN LOCATION(S)
-
-[Describe 1–2 key settings where the adventure takes place.]
-
+## 🗺️ MAIN LOCATION(S)  
 - **Name:**  
   *Description:*  
   *Why it matters:*  
@@ -274,77 +263,39 @@ ${tropeTable}
 
 ---
 
-🎭 MAJOR NPCs
-
-[Describe 2–3 important NPCs involved in the quest.]
-
-- **Name:**  
-  *Role in the Quest:*  
-  *Connection to Tropes:*  
-  *What they want from the PCs:*  
-  *How to Roleplay Them:*  
+## 🎭 MAJOR NPCs  
+[Describe 2–3 important NPCs with roles, wants, how to roleplay them, and connection to tropes.]  
 
 ---
 
-🎬 CORE SCENES AND CHALLENGES
-
-[List **3–4 major scenes or situations** in the one-shot. Each should include the location, NPCs, core problem, and mystery clues if relevant.]
-
-🔹 Scene 1: [Scene Title]  
-- **Location:**  
-- **Involved NPCs:**  
-- **Scene Focus / Conflict:**  
-- **Mystery Clues (if applicable):**  
-  - Clue 1:  
-  - Clue 2:  
-  - Clue 3:  
-
-🔹 Scene 2:  
-- **Location:**  
-- **Involved NPCs:**  
-- **Scene Focus / Conflict:**  
-- **Mystery Clues (if applicable):**  
-  -  
-  -  
-  -  
-
-(Repeat up to Scene 4.)
+## 🎬 CORE SCENES AND CHALLENGES  
+[List 3–4 major scenes. Each should include location, NPCs, conflict, and mystery clues if relevant.]  
 
 ---
 
-🎭 REWARD / OUTCOME OPTIONS
-
-[Describe 2–3 ways the quest may resolve. Allow for different choices or approaches.]
-
-1.  
-2.  
-3.
+## 🎭 REWARD / OUTCOME OPTIONS  
+[2–3 ways the quest may resolve, allowing for different choices or approaches.]  
 
 ---
 
-🌱 RECURRING THEMES
-
-[1–2 themes that emerge from the tropes and story.]
-
-1.  
-2.
+## 🌱 RECURRING THEMES  
+[1–2 themes that emerge from the tropes and story.]  
 
 ---
 
-📌 CUSTOMIZATION INVITE
+## 📌 CUSTOMIZATION INVITE  
+Would you like to tailor this one-shot or side quest to an existing world or campaign?  
 
-Would you like to tailor this one-shot or side quest to an existing world or campaign?
+If so, please provide:  
+- Key facts about your campaign (major factions, current story arc, tone, known NPCs, etc.)  
+- Whether you want this to connect to the main plot, foreshadow something bigger, or stay standalone  
+- Any known character backgrounds or hooks you'd like to incorporate  
 
-If so, please provide:
-- Key facts about your campaign (major factions, current story arc, tone, known NPCs, etc.)
-- Whether you want this to connect to the main plot, foreshadow something bigger, or stay standalone
-- Any known character backgrounds or hooks you'd like to incorporate
-
-I'll adapt the adventure accordingly.
+I'll adapt the adventure accordingly.  
 
 ---
 
-*Generated on ${currentDate} using the D&D Story Generator*`;
+✨ *Generated with the D&D One-Shot / Side Quest Auto-Exec Template*`;
     }
   };
 
