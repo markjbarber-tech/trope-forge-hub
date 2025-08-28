@@ -32,7 +32,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: ./build  # Your build output directory (e.g., 'dist' or 'build')
+          path: ./dist  # Your build output directory (e.g., 'dist' or 'build')
 
       - name: Deploy to GitHub Pages
         id: deployment
