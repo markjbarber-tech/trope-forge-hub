@@ -17,7 +17,7 @@ All colors MUST be HSL.
     --popover: 25 12% 12%;
     --popover-foreground: 0 0% 98%;
 
-    --primary: 280 65% 45%;
+    --primary: 180 100% 35%;
     --primary-foreground: 0 0% 98%;
 
     --secondary: 30 25% 15%;
@@ -34,15 +34,15 @@ All colors MUST be HSL.
 
     --border: 25 12% 22%;
     --input: 25 12% 18%;
-    --ring: 280 65% 45%;
+    --ring: 180 100% 35%;
 
     /* Custom D&D theme tokens */
     --fantasy-gold: 0 0% 100%;
-    --fantasy-purple: 280 65% 45%;
-    --fantasy-deep: 275 80% 25%;
+    --fantasy-purple: 180 100% 35%;
+    --fantasy-deep: 185 100% 25%;
     --parchment: 45 50% 92%;
     --parchment-dark: 35 25% 85%;
-    --mystical-glow: 280 100% 75%;
+    --mystical-glow: 180 100% 75%;
     
     /* Gradients */
     --gradient-mystical: linear-gradient(135deg, hsl(var(--fantasy-purple)), hsl(var(--fantasy-deep)));
@@ -52,7 +52,7 @@ All colors MUST be HSL.
     /* Shadows */
     --shadow-mystical: 0 10px 40px -10px hsl(var(--fantasy-purple) / 0.4);
     --shadow-gold: 0 8px 32px -8px hsl(var(--fantasy-gold) / 0.3);
-    --shadow-deep: 0 20px 60px -15px hsl(275 80% 15% / 0.6);
+    --shadow-deep: 0 20px 60px -15px hsl(185 100% 15% / 0.6);
 
     --radius: 0.5rem;
 
