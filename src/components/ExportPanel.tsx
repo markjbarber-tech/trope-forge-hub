@@ -104,7 +104,7 @@ export const ExportPanel = ({ tropes, disabled = false, onExportTemplate }: Expo
             className="w-full justify-start"
           >
             <Scroll className="h-4 w-4 mr-2" />
-            Generate D&D {templateType === 'campaign' ? 'Campaign' : 'One Shot'} Template
+            Create adventure from these tropes
           </Button>
         </div>
         
