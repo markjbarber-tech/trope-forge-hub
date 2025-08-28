@@ -9,28 +9,28 @@ All colors MUST be HSL.
 @layer base {
   :root {
     --background: 20 14% 8%;
-    --foreground: 45 93% 85%;
+    --foreground: 0 0% 98%;
 
     --card: 25 12% 12%;
-    --card-foreground: 45 93% 85%;
+    --card-foreground: 0 0% 98%;
 
     --popover: 25 12% 12%;
-    --popover-foreground: 45 93% 85%;
+    --popover-foreground: 0 0% 98%;
 
     --primary: 280 65% 45%;
-    --primary-foreground: 45 93% 95%;
+    --primary-foreground: 0 0% 98%;
 
     --secondary: 30 25% 15%;
-    --secondary-foreground: 45 93% 85%;
+    --secondary-foreground: 0 0% 98%;
 
     --muted: 25 12% 18%;
-    --muted-foreground: 45 30% 65%;
+    --muted-foreground: 0 0% 70%;
 
     --accent: 45 90% 65%;
     --accent-foreground: 25 12% 12%;
 
     --destructive: 0 75% 55%;
-    --destructive-foreground: 45 93% 95%;
+    --destructive-foreground: 0 0% 98%;
 
     --border: 25 12% 22%;
     --input: 25 12% 18%;
