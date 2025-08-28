@@ -9,8 +9,8 @@ export default defineConfig(({ mode }) => ({
     host: "::",
     port: 8080,
   },
-  // Use relative base so the app works on subpaths (e.g., GitHub Pages)
-  base: './',
+  // Set base path for GitHub Pages deployment
+  base: '/trope-forge-hub/',
   plugins: [
     react(),
     mode === 'development' &&
