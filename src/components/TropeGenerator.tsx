@@ -92,7 +92,7 @@ export const TropeGenerator = ({
           className="w-full text-lg py-6 shadow-lg hover:shadow-xl transition-all duration-300"
         >
           <Dice6 className="h-6 w-6 mr-2" />
-          {isLoading ? 'Loading Data...' : 'Generate Tropes'}
+          {isLoading ? 'Loading Data...' : 'Generate story elements'}
         </Button>
       </CardContent>
     </Card>
