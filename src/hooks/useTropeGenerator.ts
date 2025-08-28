@@ -126,6 +126,24 @@ export const useTropeGenerator = () => {
     });
   }, [allTropes, generatedTropes, toast]);
 
+  const addCustomTrope = useCallback((name: string, detail: string) => {
+    // Generate a unique ID for the custom trope
+    const customId = `custom-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+    
+    const customTrope: Trope = {
+      id: customId,
+      name,
+      detail,
+    };
+    
+    setGeneratedTropes(prev => [...prev, customTrope]);
+    
+    toast({
+      title: "Custom Trope Added",
+      description: `Added "${name}" to your list`,
+    });
+  }, [toast]);
+
   return {
     allTropes,
     generatedTropes,
@@ -137,5 +155,6 @@ export const useTropeGenerator = () => {
     refreshData: loadTropeData,
     removeTrope,
     addRandomTrope,
+    addCustomTrope,
   };
 };

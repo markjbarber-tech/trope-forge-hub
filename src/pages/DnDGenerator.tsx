@@ -24,6 +24,7 @@ export const DnDGenerator = () => {
     refreshData,
     removeTrope,
     addRandomTrope,
+    addCustomTrope,
   } = useTropeGenerator();
 
   // Monitor online status
@@ -88,6 +89,7 @@ export const DnDGenerator = () => {
                 tropes={generatedTropes} 
                 onRemoveTrope={removeTrope}
                 onAddRandomTrope={addRandomTrope}
+                onAddCustomTrope={addCustomTrope}
               />
             </div>
             
@@ -104,6 +106,7 @@ export const DnDGenerator = () => {
               tropes={generatedTropes} 
               onRemoveTrope={removeTrope}
               onAddRandomTrope={addRandomTrope}
+              onAddCustomTrope={addCustomTrope}
             />
           </div>
         </div>
