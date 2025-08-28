@@ -61,18 +61,10 @@ export const ExportPanel = ({ tropes, loreLinks = [], disabled = false, onExport
     // Generate lore links section
     const loreLinkSection = loreLinks.length > 0 ? `
 
----
+**Optional World Lore Links:**  
+${loreLinks.map((link) => `- ${link.title}: ${link.url}`).join('  \n')}  
 
-📚 **LORE DOCUMENTS TO REFERENCE**
-
-Please reference and incorporate relevant information from these lore documents:
-
-${loreLinks.map((link, index) => `${index + 1}. **${link.title}**  
-   Link: ${link.url}`).join('\n\n')}
-
-*Note: Use these documents to inform world-building, character backgrounds, established lore, and story consistency.*
-
----` : '';
+*Note: Please read and incorporate relevant information from these lore documents to ground the adventure in the established world setting.*` : '';
 
     if (type === 'campaign') {
       return `# 🎯 PROMPT ENGINEERED TEMPLATE: SINGLE-ARC CAMPAIGN BUILDER (1–10 Tropes, Auto-Execute)
@@ -190,7 +182,12 @@ For any trope that does **not** include a description, you must:
 2. Summarize the trope's meaning and dramatic function in a few sentences  
 3. Cite the source used  
 
-Then, using **all trope details**, immediately generate a **compact, engaging one-shot or side quest** suitable for:  
+If the user also provides **links to Google Docs files** containing information about their homebrew world or campaign setting, you must:  
+- Read and incorporate the relevant details from those files.  
+- Use this world information to ground the adventure in its setting (names, factions, locations, history, etc.).  
+- Prioritize those lore documents over general assumptions.  
+
+Then, using **all trope details** and any provided lore links, immediately generate a **compact, engaging one-shot or side quest** suitable for:  
 - A **one-shot (3–6 hours of play)**  
 - OR a **side quest** that fits within a broader campaign  
 
@@ -198,7 +195,7 @@ The story should focus on **local consequences, intimate mysteries, personal sta
 
 ---
 
-✅ **INPUT FORMAT (TROPE TABLE)**  
+✅ **INPUT FORMAT (TROPE TABLE + OPTIONAL WORLD LORE LINKS)**  
 
 | # | Trope Name | Trope Description (optional, any length) |
 |---|------------|-------------------------------------------|
@@ -217,7 +214,7 @@ ${loreLinkSection}
 [Short, evocative title.]  
 
 **Summary:**  
-[1–2 paragraphs summarizing the adventure. Explain each trope by weaving it into the context of the story's danger, mystery, or transformation. Do not mention "tropes" directly.]  
+[1–2 paragraphs summarizing the adventure. Explain each trope by weaving it into the context of the story's danger, mystery, or transformation. Do not mention "tropes" directly. Integrate any relevant world-lore details.]  
 
 ---
 
