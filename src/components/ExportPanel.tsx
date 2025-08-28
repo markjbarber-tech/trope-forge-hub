@@ -301,7 +301,7 @@ ${tropeTable}
           className="w-full justify-start"
         >
           <FileText className="h-4 w-4 mr-2" />
-          View Tropes Table
+          Export Tropes
         </Button>
         
         <div className="space-y-3">
