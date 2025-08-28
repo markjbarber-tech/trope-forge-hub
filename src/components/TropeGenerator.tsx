@@ -32,15 +32,6 @@ export const TropeGenerator = ({
             <Sparkles className="h-5 w-5" />
             Story Generator
           </CardTitle>
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={onRefreshData}
-            disabled={isLoading}
-            className="text-muted-foreground hover:text-white"
-          >
-            <RefreshCw className={`h-4 w-4 ${isLoading ? 'animate-spin' : ''}`} />
-          </Button>
         </div>
         
         {totalTropes && (
