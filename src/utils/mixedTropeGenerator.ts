@@ -11,26 +11,36 @@ export const generateMixedTropes = (
   }
 
   if (totalCount === 1) {
-    // If only 1 trope requested, always use personal
-    return generateRandomTropes(personalTropes, 1);
+    // If only 1 trope requested, always use default
+    return generateRandomTropes(defaultTropes, 1);
   }
 
-  // Ensure at least 1 from personal, rest from combined pool
-  const personalCount = 1;
-  const remainingCount = totalCount - personalCount;
+  if (totalCount === 2) {
+    // If 2 tropes requested, get 1 from each
+    const selectedDefault = generateRandomTropes(defaultTropes, 1);
+    const selectedPersonal = generateRandomTropes(personalTropes, 1);
+    return shuffleArray([...selectedDefault, ...selectedPersonal]);
+  }
 
-  // Get 1 random from personal
+  // For 3+ tropes, ensure at least 1 from each source
+  const defaultCount = 1;
+  const personalCount = 1;
+  const remainingCount = totalCount - defaultCount - personalCount;
+
+  // Get 1 from each source
+  const selectedDefault = generateRandomTropes(defaultTropes, defaultCount);
   const selectedPersonal = generateRandomTropes(personalTropes, personalCount);
   
   // Get remaining from combined pool (excluding already selected)
+  const usedIds = new Set([...selectedDefault, ...selectedPersonal].map(t => t.id));
   const combinedPool = [...defaultTropes, ...personalTropes].filter(
-    trope => !selectedPersonal.some(selected => selected.id === trope.id)
+    trope => !usedIds.has(trope.id)
   );
   
   const remainingTropes = generateRandomTropes(combinedPool, remainingCount);
   
   // Combine and shuffle the final result
-  const result = [...selectedPersonal, ...remainingTropes];
+  const result = [...selectedDefault, ...selectedPersonal, ...remainingTropes];
   return shuffleArray(result);
 };
 
