@@ -23,8 +23,12 @@ export const AppHeader = ({ isOnline = true }: AppHeaderProps) => {
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-4">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-lg bg-fantasy-purple/20 flex items-center justify-center">
-                <Dice6 className="h-6 w-6 text-fantasy-purple" />
+              <div className="w-10 h-10 rounded-lg bg-white/10 flex items-center justify-center p-1">
+                <img 
+                  src="/app-icon.jpg" 
+                  alt="D20 Dice" 
+                  className="w-full h-full object-contain rounded"
+                />
               </div>
               <div>
                 <h1 className="text-xl font-bold text-white">
