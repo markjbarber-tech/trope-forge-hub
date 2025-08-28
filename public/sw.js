@@ -38,14 +38,36 @@ self.addEventListener('activate', (event) => {
   self.clients.claim();
 });
 
-// Fetch event - serve from cache, fallback to network
+// Fetch event - smarter strategy
 self.addEventListener('fetch', (event) => {
-  // Special handling for CSV data - always try network first
-  if (event.request.url === DATA_URL) {
+  const req = event.request;
+
+  // HTML navigations: network-first to avoid serving stale index.html
+  if (req.mode === 'navigate' || (req.headers.get('accept') || '').includes('text/html')) {
     event.respondWith(
-      fetch(event.request).catch(() => {
+      fetch(req)
+        .then((res) => {
+          // Cache the latest index.html for offline use
+          const resClone = res.clone();
+          caches.open(CACHE_NAME).then((cache) => {
+            cache.put(`${BASE_PATH}index.html`, resClone).catch(() => {});
+          });
+          return res;
+        })
+        .catch(() =>
+          // Fallback to cached index.html if offline
+          caches.match(`${BASE_PATH}index.html`)
+        )
+    );
+    return;
+  }
+
+  // Special handling for CSV data - always try network first
+  if (req.url === DATA_URL) {
+    event.respondWith(
+      fetch(req).catch(() => {
         // If network fails, try cache
-        return caches.match(event.request);
+        return caches.match(req);
       })
     );
     return;
@@ -53,8 +75,8 @@ self.addEventListener('fetch', (event) => {
 
   // For everything else, cache first
   event.respondWith(
-    caches.match(event.request).then((response) => {
-      return response || fetch(event.request);
+    caches.match(req).then((response) => {
+      return response || fetch(req);
     })
   );
 });
