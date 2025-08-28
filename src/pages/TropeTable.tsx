@@ -64,7 +64,7 @@ const TropeTable = () => {
         <div className="container mx-auto px-6 py-8">
           <div className="text-center">
             <h1 className="text-2xl font-bold text-white mb-4">No Tropes Found</h1>
-            <Button onClick={() => navigate('/')} variant="mystical">
+            <Button onClick={() => navigate('/')} variant="mystical" className="text-center justify-center">
               Back to Generator
             </Button>
           </div>
@@ -83,6 +83,7 @@ const TropeTable = () => {
             onClick={() => navigate('/')} 
             variant="mystical"
             size="sm"
+            className="text-center justify-center"
           >
             Back to Generator
           </Button>
@@ -92,7 +93,7 @@ const TropeTable = () => {
               onClick={handlePrint}
               variant="outline"
               size="sm"
-              className="text-white border-white/30 hover:bg-white/10"
+              className="text-white border-white/30 hover:bg-white/10 text-center justify-center"
             >
               Print Table
             </Button>
@@ -100,6 +101,7 @@ const TropeTable = () => {
               onClick={handleDownloadText}
               variant="gold"
               size="sm"
+              className="text-center justify-center"
             >
               Download as Text
             </Button>

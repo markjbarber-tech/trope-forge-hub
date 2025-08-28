@@ -88,7 +88,7 @@ export const TropeDisplay = ({ tropes, onRemoveTrope, onAddRandomTrope, onAddCus
             variant="ghost"
             size="sm"
             onClick={toggleAllDetails}
-            className="text-muted-foreground hover:text-white"
+            className="text-muted-foreground hover:text-white text-center justify-center"
           >
             {showAllDetails ? 'Hide All Details' : 'Show All Details'}
           </Button>
@@ -120,7 +120,7 @@ export const TropeDisplay = ({ tropes, onRemoveTrope, onAddRandomTrope, onAddCus
                         variant="ghost"
                         size="sm"
                         onClick={() => onRemoveTrope(trope.id)}
-                        className="text-white hover:text-white hover:bg-white/10 transition-colors"
+                        className="text-white hover:text-white hover:bg-white/10 transition-colors text-center justify-center"
                       >
                         ×
                       </Button>
@@ -129,7 +129,7 @@ export const TropeDisplay = ({ tropes, onRemoveTrope, onAddRandomTrope, onAddCus
                       variant="ghost"
                       size="sm"
                       onClick={() => toggleTrope(trope.id)}
-                      className="text-white hover:text-mystical-glow hover:bg-fantasy-purple/10 transition-colors"
+                      className="text-white hover:text-mystical-glow hover:bg-fantasy-purple/10 transition-colors text-center justify-center"
                     >
                       {isExpanded ? 'Hide' : 'Show Detail'}
                     </Button>
@@ -187,6 +187,7 @@ export const TropeDisplay = ({ tropes, onRemoveTrope, onAddRandomTrope, onAddCus
                 disabled={!customName.trim() || !customDetail.trim()}
                 variant="mystical"
                 size="sm"
+                className="text-center justify-center"
               >
                 Confirm Custom Trope
               </Button>
@@ -210,7 +211,7 @@ export const TropeDisplay = ({ tropes, onRemoveTrope, onAddRandomTrope, onAddCus
             variant="ghost"
             size="sm"
             onClick={() => setShowCustomForm(true)}
-            className="text-muted-foreground hover:text-white"
+            className="text-muted-foreground hover:text-white text-center justify-center"
           >
             Add Custom Trope
           </Button>
@@ -220,7 +221,7 @@ export const TropeDisplay = ({ tropes, onRemoveTrope, onAddRandomTrope, onAddCus
             variant="ghost"
             size="sm"
             onClick={onAddRandomTrope}
-            className="text-muted-foreground hover:text-white"
+            className="text-muted-foreground hover:text-white text-center justify-center"
           >
             Add Another
           </Button>

@@ -32,7 +32,7 @@ const CampaignTemplate = () => {
       <div className="min-h-screen bg-background flex items-center justify-center">
         <div className="text-center">
           <h1 className="text-2xl font-bold mb-4">No Tropes Found</h1>
-          <Button onClick={() => navigate('/')}>
+          <Button onClick={() => navigate('/')} className="text-center justify-center">
             Back to Generator
           </Button>
         </div>
@@ -368,14 +368,14 @@ I'll adapt the adventure accordingly.
           <Button
             variant="outline"
             onClick={() => navigate('/')}
-            className="flex items-center gap-2"
+            className="flex items-center gap-2 text-center justify-center"
           >
             Back to Generator
           </Button>
           
           <Button
             onClick={handleDownload}
-            className="flex items-center gap-2"
+            className="flex items-center gap-2 text-center justify-center"
           >
             Download as Text File
           </Button>

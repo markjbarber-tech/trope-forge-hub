@@ -297,7 +297,7 @@ ${tropeTable}
           variant="gold"
           onClick={handleExportTable}
           disabled={disabled || hasNoTropes}
-          className="w-full justify-start"
+          className="w-full justify-center text-center"
         >
           Export Tropes
         </Button>
@@ -325,7 +325,7 @@ ${tropeTable}
             variant="parchment"
             onClick={handleExportTemplate}
             disabled={disabled || hasNoTropes}
-            className="w-full justify-start"
+            className="w-full justify-center text-center"
           >
             Create adventure prompt
           </Button>
