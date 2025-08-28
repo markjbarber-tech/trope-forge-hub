@@ -28,8 +28,7 @@ export const TropeGenerator = ({
     <Card className="bg-card/90 backdrop-blur-sm border-border/60 shadow-xl">
       <CardHeader className="pb-4">
         <div className="flex items-center justify-between">
-          <CardTitle className="text-white flex items-center gap-2">
-            <Sparkles className="h-5 w-5" />
+          <CardTitle className="text-white">
             Story Generator
           </CardTitle>
         </div>
