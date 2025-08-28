@@ -17,6 +17,7 @@ interface ExportPanelProps {
 export const ExportPanel = ({ tropes, disabled = false, onExportTemplate }: ExportPanelProps) => {
   const { toast } = useToast();
   const [templateType, setTemplateType] = useState<'campaign' | 'oneshot'>('campaign');
+  const [showClipboardMessage, setShowClipboardMessage] = useState(false);
   const hasNoTropes = tropes.length === 0;
 
   const handleExportText = () => {
@@ -356,13 +357,18 @@ I'll adapt the adventure accordingly.
       // Copy to clipboard
       await navigator.clipboard.writeText(promptContent);
       
-      // Open ChatGPT in a new tab
-      window.open('https://chatgpt.com/', '_blank');
+      // Show clipboard message
+      setShowClipboardMessage(true);
+      
+      // Hide message after 5 seconds
+      setTimeout(() => {
+        setShowClipboardMessage(false);
+      }, 5000);
       
       toast({
-        title: "Prompt Ready!",
-        description: "Prompt copied to clipboard and ChatGPT opened. Paste (Ctrl+V) and press Enter!",
-        duration: 6000,
+        title: "Prompt Copied!",
+        description: "Adventure prompt copied to clipboard",
+        duration: 3000,
       });
     } catch (error) {
       toast({
@@ -418,8 +424,14 @@ I'll adapt the adventure accordingly.
             className="w-full justify-start"
           >
             <Scroll className="h-4 w-4 mr-2" />
-            Create adventure
+            Create adventure prompt
           </Button>
+          
+          {showClipboardMessage && (
+            <div className="text-sm text-green-400 text-center mt-2 p-2 bg-green-500/10 rounded-lg border border-green-500/20">
+              Prompt copied to clipboard. Open an LLM to paste the prompt.
+            </div>
+          )}
         </div>
         
         {hasNoTropes && (
