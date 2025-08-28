@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
-import { ChevronDown, ChevronUp, Eye, EyeOff, Dice6, X, Plus, PlusCircle, Check } from 'lucide-react';
+import { Dice6 } from 'lucide-react';
 import { Trope } from '@/types/trope';
 import { Badge } from '@/components/ui/badge';
 
@@ -90,17 +90,7 @@ export const TropeDisplay = ({ tropes, onRemoveTrope, onAddRandomTrope, onAddCus
             onClick={toggleAllDetails}
             className="text-muted-foreground hover:text-white"
           >
-            {showAllDetails ? (
-              <>
-                <EyeOff className="h-4 w-4 mr-2" />
-                Hide All Details
-              </>
-            ) : (
-              <>
-                <Eye className="h-4 w-4 mr-2" />
-                Show All Details
-              </>
-            )}
+            {showAllDetails ? 'Hide All Details' : 'Show All Details'}
           </Button>
         </div>
       </div>
@@ -132,7 +122,7 @@ export const TropeDisplay = ({ tropes, onRemoveTrope, onAddRandomTrope, onAddCus
                         onClick={() => onRemoveTrope(trope.id)}
                         className="text-white hover:text-white hover:bg-white/10 transition-colors"
                       >
-                        <X className="h-4 w-4" />
+                        ×
                       </Button>
                     )}
                     <Button
@@ -141,17 +131,7 @@ export const TropeDisplay = ({ tropes, onRemoveTrope, onAddRandomTrope, onAddCus
                       onClick={() => toggleTrope(trope.id)}
                       className="text-white hover:text-mystical-glow hover:bg-fantasy-purple/10 transition-colors"
                     >
-                      {isExpanded ? (
-                        <>
-                          <ChevronUp className="h-4 w-4 mr-1" />
-                          Hide
-                        </>
-                      ) : (
-                        <>
-                          <ChevronDown className="h-4 w-4 mr-1" />
-                          Show Detail
-                        </>
-                      )}
+                      {isExpanded ? 'Hide' : 'Show Detail'}
                     </Button>
                   </div>
                 </div>
@@ -208,7 +188,6 @@ export const TropeDisplay = ({ tropes, onRemoveTrope, onAddRandomTrope, onAddCus
                 variant="mystical"
                 size="sm"
               >
-                <Check className="h-4 w-4 mr-2" />
                 Confirm Custom Trope
               </Button>
               <Button
@@ -233,7 +212,6 @@ export const TropeDisplay = ({ tropes, onRemoveTrope, onAddRandomTrope, onAddCus
             onClick={() => setShowCustomForm(true)}
             className="text-muted-foreground hover:text-white"
           >
-            <PlusCircle className="h-4 w-4 mr-2" />
             Add Custom Trope
           </Button>
         )}
@@ -244,7 +222,6 @@ export const TropeDisplay = ({ tropes, onRemoveTrope, onAddRandomTrope, onAddCus
             onClick={onAddRandomTrope}
             className="text-muted-foreground hover:text-white"
           >
-            <Plus className="h-4 w-4 mr-2" />
             Add Another
           </Button>
         )}

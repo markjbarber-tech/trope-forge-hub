@@ -2,7 +2,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Label } from '@/components/ui/label';
-import { Download, FileText, Scroll, Printer } from 'lucide-react';
+import { Printer } from 'lucide-react';
 import { Trope } from '@/types/trope';
 import { exportTropesToText, exportDnDCampaignTemplate } from '@/utils/exportUtils';
 import { useToast } from '@/hooks/use-toast';
@@ -288,8 +288,7 @@ ${tropeTable}
   return (
     <Card className="bg-card/90 backdrop-blur-sm border-border/60 shadow-xl">
       <CardHeader>
-        <CardTitle className="text-white flex items-center gap-2">
-          <Download className="h-5 w-5" />
+        <CardTitle className="text-white">
           Export Options
         </CardTitle>
       </CardHeader>
@@ -300,7 +299,6 @@ ${tropeTable}
           disabled={disabled || hasNoTropes}
           className="w-full justify-start"
         >
-          <FileText className="h-4 w-4 mr-2" />
           Export Tropes
         </Button>
         
@@ -329,7 +327,6 @@ ${tropeTable}
             disabled={disabled || hasNoTropes}
             className="w-full justify-start"
           >
-            <Scroll className="h-4 w-4 mr-2" />
             Create adventure prompt
           </Button>
           

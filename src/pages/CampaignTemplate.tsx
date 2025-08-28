@@ -2,7 +2,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { ArrowLeft, Download } from 'lucide-react';
+import { ArrowLeft } from 'lucide-react';
 import { Trope } from '@/types/trope';
 import { exportDnDCampaignTemplate } from '@/utils/exportUtils';
 
@@ -33,7 +33,6 @@ const CampaignTemplate = () => {
         <div className="text-center">
           <h1 className="text-2xl font-bold mb-4">No Tropes Found</h1>
           <Button onClick={() => navigate('/')}>
-            <ArrowLeft className="h-4 w-4 mr-2" />
             Back to Generator
           </Button>
         </div>
@@ -371,7 +370,6 @@ I'll adapt the adventure accordingly.
             onClick={() => navigate('/')}
             className="flex items-center gap-2"
           >
-            <ArrowLeft className="h-4 w-4" />
             Back to Generator
           </Button>
           
@@ -379,7 +377,6 @@ I'll adapt the adventure accordingly.
             onClick={handleDownload}
             className="flex items-center gap-2"
           >
-            <Download className="h-4 w-4" />
             Download as Text File
           </Button>
         </div>

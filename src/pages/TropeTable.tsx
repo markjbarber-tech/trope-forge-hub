@@ -2,7 +2,7 @@ import { useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { ArrowLeft, Download, Printer } from 'lucide-react';
+import { ArrowLeft } from 'lucide-react';
 import { Trope } from '@/types/trope';
 import { AppHeader } from '@/components/AppHeader';
 import {
@@ -65,7 +65,6 @@ const TropeTable = () => {
           <div className="text-center">
             <h1 className="text-2xl font-bold text-white mb-4">No Tropes Found</h1>
             <Button onClick={() => navigate('/')} variant="mystical">
-              <ArrowLeft className="h-4 w-4 mr-2" />
               Back to Generator
             </Button>
           </div>
@@ -85,7 +84,6 @@ const TropeTable = () => {
             variant="mystical"
             size="sm"
           >
-            <ArrowLeft className="h-4 w-4 mr-2" />
             Back to Generator
           </Button>
           
@@ -96,7 +94,6 @@ const TropeTable = () => {
               size="sm"
               className="text-white border-white/30 hover:bg-white/10"
             >
-              <Printer className="h-4 w-4 mr-2" />
               Print Table
             </Button>
             <Button 
@@ -104,7 +101,6 @@ const TropeTable = () => {
               variant="gold"
               size="sm"
             >
-              <Download className="h-4 w-4 mr-2" />
               Download as Text
             </Button>
           </div>
