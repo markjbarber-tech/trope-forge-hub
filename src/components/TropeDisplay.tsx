@@ -109,7 +109,7 @@ export const TropeDisplay = ({ tropes, onRemoveTrope, onAddRandomTrope }: TropeD
                         variant="ghost"
                         size="sm"
                         onClick={() => onRemoveTrope(trope.id)}
-                        className="text-red-400 hover:text-red-300 hover:bg-red-500/10 transition-colors"
+                        className="text-white hover:text-white hover:bg-white/10 transition-colors"
                       >
                         <X className="h-4 w-4" />
                       </Button>
