@@ -1,7 +1,7 @@
 import { useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Upload, Trash2, FileText, Users } from 'lucide-react';
+import { Upload, Trash2, FileText, Users, Download } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
 
@@ -58,6 +58,24 @@ export const PersonalDataManager = ({
     }
   };
 
+  const downloadTemplate = () => {
+    const templateContent = `#,Trope name,Trope detail`;
+    const blob = new Blob([templateContent], { type: 'text/csv' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = 'personal-tropes-template.csv';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+    
+    toast({
+      title: "Template Downloaded",
+      description: "Template file saved as personal-tropes-template.csv",
+    });
+  };
+
   return (
     <Card className="bg-card/80 backdrop-blur-sm border-border/50 shadow-lg">
       <CardHeader>
@@ -107,15 +125,26 @@ export const PersonalDataManager = ({
             <p className="text-sm text-muted-foreground">
               Add your own custom tropes! Upload a CSV file with the same structure as the default data.
             </p>
-            <Button
-              variant="parchment"
-              onClick={() => fileInputRef.current?.click()}
-              disabled={isLoading}
-              className="w-full"
-            >
-              <Upload className="h-4 w-4 mr-2" />
-              Upload Personal Tropes
-            </Button>
+            <div className="flex gap-2">
+              <Button
+                variant="parchment"
+                onClick={() => fileInputRef.current?.click()}
+                disabled={isLoading}
+                className="flex-1"
+              >
+                <Upload className="h-4 w-4 mr-2" />
+                Upload Personal Tropes
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={downloadTemplate}
+                disabled={isLoading}
+              >
+                <Download className="h-4 w-4 mr-2" />
+                Template
+              </Button>
+            </div>
           </>
         )}
         
