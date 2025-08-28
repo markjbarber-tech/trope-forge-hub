@@ -63,17 +63,6 @@ export const TropeDisplay = ({ tropes, onRemoveTrope, onAddRandomTrope }: TropeD
           <Badge variant="outline" className="text-white border-white/30">
             {tropes.length} trope{tropes.length !== 1 ? 's' : ''}
           </Badge>
-          {onAddRandomTrope && (
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={onAddRandomTrope}
-              className="text-muted-foreground hover:text-white"
-            >
-              <Plus className="h-4 w-4 mr-2" />
-              Add Random
-            </Button>
-          )}
           <Button
             variant="ghost"
             size="sm"
@@ -160,6 +149,20 @@ export const TropeDisplay = ({ tropes, onRemoveTrope, onAddRandomTrope }: TropeD
           );
         })}
       </div>
+
+      {onAddRandomTrope && (
+        <div className="flex justify-center pt-4">
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={onAddRandomTrope}
+            className="text-muted-foreground hover:text-white"
+          >
+            <Plus className="h-4 w-4 mr-2" />
+            Add Another
+          </Button>
+        </div>
+      )}
     </div>
   );
 };
