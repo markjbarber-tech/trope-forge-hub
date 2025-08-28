@@ -1,15 +1,17 @@
 import { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { ChevronDown, ChevronUp, Eye, EyeOff, Dice6 } from 'lucide-react';
+import { ChevronDown, ChevronUp, Eye, EyeOff, Dice6, X, Plus } from 'lucide-react';
 import { Trope } from '@/types/trope';
 import { Badge } from '@/components/ui/badge';
 
 interface TropeDisplayProps {
   tropes: Trope[];
+  onRemoveTrope?: (tropeId: string) => void;
+  onAddRandomTrope?: () => void;
 }
 
-export const TropeDisplay = ({ tropes }: TropeDisplayProps) => {
+export const TropeDisplay = ({ tropes, onRemoveTrope, onAddRandomTrope }: TropeDisplayProps) => {
   const [expandedTropes, setExpandedTropes] = useState<Set<string>>(new Set());
   const [showAllDetails, setShowAllDetails] = useState(false);
 
@@ -61,6 +63,17 @@ export const TropeDisplay = ({ tropes }: TropeDisplayProps) => {
           <Badge variant="outline" className="text-fantasy-gold border-fantasy-gold/30">
             {tropes.length} trope{tropes.length !== 1 ? 's' : ''}
           </Badge>
+          {onAddRandomTrope && (
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={onAddRandomTrope}
+              className="text-muted-foreground hover:text-fantasy-gold"
+            >
+              <Plus className="h-4 w-4 mr-2" />
+              Add Random
+            </Button>
+          )}
           <Button
             variant="ghost"
             size="sm"
@@ -101,24 +114,36 @@ export const TropeDisplay = ({ tropes }: TropeDisplayProps) => {
                       {trope.name}
                     </CardTitle>
                   </div>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => toggleTrope(trope.id)}
-                    className="text-fantasy-gold hover:text-mystical-glow hover:bg-fantasy-purple/10 transition-colors"
-                  >
-                    {isExpanded ? (
-                      <>
-                        <ChevronUp className="h-4 w-4 mr-1" />
-                        Hide
-                      </>
-                    ) : (
-                      <>
-                        <ChevronDown className="h-4 w-4 mr-1" />
-                        Show Detail
-                      </>
+                  <div className="flex items-center gap-2">
+                    {onRemoveTrope && (
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => onRemoveTrope(trope.id)}
+                        className="text-red-400 hover:text-red-300 hover:bg-red-500/10 transition-colors"
+                      >
+                        <X className="h-4 w-4" />
+                      </Button>
                     )}
-                  </Button>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => toggleTrope(trope.id)}
+                      className="text-fantasy-gold hover:text-mystical-glow hover:bg-fantasy-purple/10 transition-colors"
+                    >
+                      {isExpanded ? (
+                        <>
+                          <ChevronUp className="h-4 w-4 mr-1" />
+                          Hide
+                        </>
+                      ) : (
+                        <>
+                          <ChevronDown className="h-4 w-4 mr-1" />
+                          Show Detail
+                        </>
+                      )}
+                    </Button>
+                  </div>
                 </div>
               </CardHeader>
               

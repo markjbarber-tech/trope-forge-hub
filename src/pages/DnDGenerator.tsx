@@ -22,6 +22,8 @@ export const DnDGenerator = () => {
     setTropeCount,
     generateTropes,
     refreshData,
+    removeTrope,
+    addRandomTrope,
   } = useTropeGenerator();
 
   // Monitor online status
@@ -82,7 +84,11 @@ export const DnDGenerator = () => {
             
             {/* Show tropes first, then export options */}
             <div className="lg:hidden">
-              <TropeDisplay tropes={generatedTropes} />
+              <TropeDisplay 
+                tropes={generatedTropes} 
+                onRemoveTrope={removeTrope}
+                onAddRandomTrope={addRandomTrope}
+              />
             </div>
             
             <ExportPanel
@@ -94,7 +100,11 @@ export const DnDGenerator = () => {
 
           {/* Main Content - Trope Display (desktop only) */}
           <div className="hidden lg:block lg:col-span-3">
-            <TropeDisplay tropes={generatedTropes} />
+            <TropeDisplay 
+              tropes={generatedTropes} 
+              onRemoveTrope={removeTrope}
+              onAddRandomTrope={addRandomTrope}
+            />
           </div>
         </div>
       </div>

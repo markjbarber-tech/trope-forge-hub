@@ -82,6 +82,50 @@ export const useTropeGenerator = () => {
     }
   }, [allTropes, generateTropes]);
 
+  const removeTrope = useCallback((tropeId: string) => {
+    setGeneratedTropes(prev => prev.filter(trope => trope.id !== tropeId));
+    
+    toast({
+      title: "Trope Removed",
+      description: "Successfully removed trope from the list",
+    });
+  }, [toast]);
+
+  const addRandomTrope = useCallback(() => {
+    if (allTropes.length === 0) {
+      toast({
+        title: "No Data Available",
+        description: "Please wait for trope data to load first",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    // Filter out tropes already in the generated list
+    const usedTropeIds = new Set(generatedTropes.map(t => t.id));
+    const availableTropes = allTropes.filter(t => !usedTropeIds.has(t.id));
+    
+    if (availableTropes.length === 0) {
+      toast({
+        title: "No More Tropes",
+        description: "All available tropes are already in your list",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    // Get a random trope from available ones
+    const randomIndex = Math.floor(Math.random() * availableTropes.length);
+    const newTrope = availableTropes[randomIndex];
+    
+    setGeneratedTropes(prev => [...prev, newTrope]);
+    
+    toast({
+      title: "Trope Added",
+      description: `Added "${newTrope.name}" to your list`,
+    });
+  }, [allTropes, generatedTropes, toast]);
+
   return {
     allTropes,
     generatedTropes,
@@ -91,5 +135,7 @@ export const useTropeGenerator = () => {
     setTropeCount,
     generateTropes,
     refreshData: loadTropeData,
+    removeTrope,
+    addRandomTrope,
   };
 };
