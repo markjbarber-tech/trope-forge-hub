@@ -37,7 +37,7 @@ export const TropeGenerator = ({
             size="sm"
             onClick={onRefreshData}
             disabled={isLoading}
-            className="text-muted-foreground hover:text-fantasy-gold"
+            className="text-muted-foreground hover:text-white"
           >
             <RefreshCw className={`h-4 w-4 ${isLoading ? 'animate-spin' : ''}`} />
           </Button>
@@ -61,7 +61,7 @@ export const TropeGenerator = ({
             <label className="text-sm font-medium text-foreground/90">
               Number of Tropes:
             </label>
-            <span className="text-fantasy-gold font-bold text-xl">
+            <span className="text-white font-bold text-xl">
               {tropeCount}
             </span>
           </div>
@@ -77,7 +77,7 @@ export const TropeGenerator = ({
           
           <div className="flex justify-between text-xs text-muted-foreground">
             {Array.from({ length: 6 }, (_, i) => (
-              <span key={i + 1} className={tropeCount === i + 1 ? 'text-fantasy-gold font-medium' : ''}>
+              <span key={i + 1} className={tropeCount === i + 1 ? 'text-white font-medium' : ''}>
                 {i + 1}
               </span>
             ))}

@@ -12,7 +12,7 @@ export const TropeCard = ({ trope }: TropeCardProps) => {
   const [isDetailVisible, setIsDetailVisible] = useState(false);
 
   return (
-    <Card className="bg-card/80 backdrop-blur-sm border-border/50 hover:border-fantasy-gold/30 transition-all duration-300 shadow-lg">
+    <Card className="bg-card/80 backdrop-blur-sm border-border/50 hover:border-white/30 transition-all duration-300 shadow-lg">
       <CardHeader className="pb-3">
         <div className="flex items-center justify-between">
           <CardTitle className="text-white text-lg font-bold">
@@ -22,7 +22,7 @@ export const TropeCard = ({ trope }: TropeCardProps) => {
             variant="ghost"
             size="sm"
             onClick={() => setIsDetailVisible(!isDetailVisible)}
-            className="text-fantasy-gold hover:text-mystical-glow hover:bg-fantasy-purple/10"
+            className="text-white hover:text-mystical-glow hover:bg-fantasy-purple/10"
           >
             {isDetailVisible ? (
               <>

@@ -37,7 +37,7 @@ All colors MUST be HSL.
     --ring: 280 65% 45%;
 
     /* Custom D&D theme tokens */
-    --fantasy-gold: 45 90% 65%;
+    --fantasy-gold: 0 0% 100%;
     --fantasy-purple: 280 65% 45%;
     --fantasy-deep: 275 80% 25%;
     --parchment: 45 50% 92%;
@@ -46,7 +46,7 @@ All colors MUST be HSL.
     
     /* Gradients */
     --gradient-mystical: linear-gradient(135deg, hsl(var(--fantasy-purple)), hsl(var(--fantasy-deep)));
-    --gradient-gold: linear-gradient(135deg, hsl(var(--fantasy-gold)), hsl(45 80% 55%));
+    --gradient-gold: linear-gradient(135deg, hsl(var(--fantasy-gold)), hsl(0 0% 90%));
     --gradient-parchment: linear-gradient(180deg, hsl(var(--parchment)), hsl(var(--parchment-dark)));
     
     /* Shadows */

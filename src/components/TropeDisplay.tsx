@@ -60,7 +60,7 @@ export const TropeDisplay = ({ tropes, onRemoveTrope, onAddRandomTrope }: TropeD
           Generated Tropes
         </h2>
         <div className="flex items-center gap-3">
-          <Badge variant="outline" className="text-fantasy-gold border-fantasy-gold/30">
+          <Badge variant="outline" className="text-white border-white/30">
             {tropes.length} trope{tropes.length !== 1 ? 's' : ''}
           </Badge>
           {onAddRandomTrope && (
@@ -68,7 +68,7 @@ export const TropeDisplay = ({ tropes, onRemoveTrope, onAddRandomTrope }: TropeD
               variant="ghost"
               size="sm"
               onClick={onAddRandomTrope}
-              className="text-muted-foreground hover:text-fantasy-gold"
+              className="text-muted-foreground hover:text-white"
             >
               <Plus className="h-4 w-4 mr-2" />
               Add Random
@@ -78,7 +78,7 @@ export const TropeDisplay = ({ tropes, onRemoveTrope, onAddRandomTrope }: TropeD
             variant="ghost"
             size="sm"
             onClick={toggleAllDetails}
-            className="text-muted-foreground hover:text-fantasy-gold"
+            className="text-muted-foreground hover:text-white"
           >
             {showAllDetails ? (
               <>
@@ -102,7 +102,7 @@ export const TropeDisplay = ({ tropes, onRemoveTrope, onAddRandomTrope }: TropeD
           return (
             <Card 
               key={trope.id} 
-              className="bg-card/90 backdrop-blur-sm border-border/60 hover:border-fantasy-gold/40 transition-all duration-300 shadow-lg hover:shadow-xl"
+              className="bg-card/90 backdrop-blur-sm border-border/60 hover:border-white/40 transition-all duration-300 shadow-lg hover:shadow-xl"
             >
               <CardHeader className="pb-3">
                 <div className="flex items-center justify-between">
@@ -129,7 +129,7 @@ export const TropeDisplay = ({ tropes, onRemoveTrope, onAddRandomTrope }: TropeD
                       variant="ghost"
                       size="sm"
                       onClick={() => toggleTrope(trope.id)}
-                      className="text-fantasy-gold hover:text-mystical-glow hover:bg-fantasy-purple/10 transition-colors"
+                      className="text-white hover:text-mystical-glow hover:bg-fantasy-purple/10 transition-colors"
                     >
                       {isExpanded ? (
                         <>
