@@ -3,7 +3,9 @@ name: Deploy SPA to GitHub Pages
 on:
   push:
     branches:
-      - main  # or your default branch
+      - main
+      - master
+  workflow_dispatch:
 
 jobs:
   build-and-deploy:
@@ -19,6 +21,12 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
       - name: Setup Pages
         uses: actions/configure-pages@v5
 
@@ -28,6 +36,9 @@ jobs:
 
       - name: Build SPA
         run: npm run build  # Adjust if your build command is different
+
+      - name: Create SPA 404 fallback
+        run: cp dist/index.html dist/404.html
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
