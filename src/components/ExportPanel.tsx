@@ -104,7 +104,7 @@ export const ExportPanel = ({ tropes, disabled = false, onExportTemplate }: Expo
             className="w-full justify-start"
           >
             <Scroll className="h-4 w-4 mr-2" />
-            Create adventure from these tropes
+            Create adventure
           </Button>
         </div>
         
