@@ -84,13 +84,18 @@ For any trope that does **not** include a description, you must:
 2. Summarize the trope's meaning in a few sentences, incorporating its key narrative elements  
 3. Cite the source used  
 
-Then, use **all trope details** to build a **single-arc campaign-level adventure**.  
+If the user also provides **links to Google Docs files** containing information about their homebrew world or campaign setting, you must:  
+- Read and incorporate the relevant details from those files.  
+- Use this world information to ground the campaign in its setting (names, factions, locations, history, etc.).  
+- Prioritize those lore documents over general assumptions.  
+
+Then, use **all trope details** and any provided lore links to build a **single-arc campaign-level adventure**.  
 
 This arc should span **multiple sessions** and support **3rd–10th level progression**, with **branching player decisions** but a **cohesive story climax**.  
 
 ---
 
-✅ **INPUT FORMAT (TROPE TABLE)**  
+✅ **INPUT FORMAT (TROPE TABLE + OPTIONAL WORLD LORE LINKS)**  
 
 | # | Trope Name | Trope Description (optional, any length) |
 |---|------------|-------------------------------------------|
@@ -109,7 +114,7 @@ ${loreLinkSection}
 [A compelling campaign title.]  
 
 **Summary:**  
-[1–2 paragraphs summarizing the arc. Explain each trope by weaving it into the story's central conflict and transformation. Do not mention "tropes" directly.]  
+[1–2 paragraphs summarizing the arc. Explain each trope by weaving it into the story's central conflict and transformation. Do not mention "tropes" directly. Integrate any relevant world-lore details.]  
 
 ---
 
