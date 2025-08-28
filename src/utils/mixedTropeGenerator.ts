@@ -5,20 +5,22 @@ export const generateMixedTropes = (
   personalTropes: Trope[], 
   totalCount: number
 ): Trope[] => {
+  const withSource = (t: Trope, source: 'default' | 'personal'): Trope => ({ ...t, source });
+
   if (personalTropes.length === 0) {
     // No personal data, just use default
-    return generateRandomTropes(defaultTropes, totalCount);
+    return generateRandomTropes(defaultTropes, totalCount).map(t => withSource(t, 'default'));
   }
 
   if (totalCount === 1) {
     // If only 1 trope requested, always use default
-    return generateRandomTropes(defaultTropes, 1);
+    return generateRandomTropes(defaultTropes, 1).map(t => withSource(t, 'default'));
   }
 
   if (totalCount === 2) {
     // If 2 tropes requested, get 1 from each
-    const selectedDefault = generateRandomTropes(defaultTropes, 1);
-    const selectedPersonal = generateRandomTropes(personalTropes, 1);
+    const selectedDefault = generateRandomTropes(defaultTropes, 1).map(t => withSource(t, 'default'));
+    const selectedPersonal = generateRandomTropes(personalTropes, 1).map(t => withSource(t, 'personal'));
     return shuffleArray([...selectedDefault, ...selectedPersonal]);
   }
 
@@ -28,14 +30,15 @@ export const generateMixedTropes = (
   const remainingCount = totalCount - defaultCount - personalCount;
 
   // Get 1 from each source
-  const selectedDefault = generateRandomTropes(defaultTropes, defaultCount);
-  const selectedPersonal = generateRandomTropes(personalTropes, personalCount);
+  const selectedDefault = generateRandomTropes(defaultTropes, defaultCount).map(t => withSource(t, 'default'));
+  const selectedPersonal = generateRandomTropes(personalTropes, personalCount).map(t => withSource(t, 'personal'));
   
   // Get remaining from combined pool (excluding already selected)
   const usedIds = new Set([...selectedDefault, ...selectedPersonal].map(t => t.id));
-  const combinedPool = [...defaultTropes, ...personalTropes].filter(
-    trope => !usedIds.has(trope.id)
-  );
+  const combinedPool = [
+    ...defaultTropes.filter(t => !usedIds.has(t.id)).map(t => withSource(t, 'default')),
+    ...personalTropes.filter(t => !usedIds.has(t.id)).map(t => withSource(t, 'personal')),
+  ];
   
   const remainingTropes = generateRandomTropes(combinedPool, remainingCount);
   

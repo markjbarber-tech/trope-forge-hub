@@ -65,11 +65,8 @@ export const useTropeGenerator = () => {
     const generated = generateMixedTropes(allTropes, personalTropes, tropeCount);
     setGeneratedTropes(generated);
     
-    const personalCount = generated.filter(trope => 
-      personalTropes.some(p => p.id === trope.id)
-    ).length;
-    
-    const defaultCount = generated.length - personalCount;
+    const personalCount = generated.filter(trope => trope.source === 'personal').length;
+    const defaultCount = generated.filter(trope => trope.source === 'default').length;
     
     toast({
       title: "Tropes generated!",
@@ -128,7 +125,11 @@ export const useTropeGenerator = () => {
 
     // Get a random trope from available ones
     const randomIndex = Math.floor(Math.random() * availableTropes.length);
-    const newTrope = availableTropes[randomIndex];
+    const newTropeBase = availableTropes[randomIndex];
+    const newTrope: Trope = {
+      ...newTropeBase,
+      source: personalTropes.some(p => p.id === newTropeBase.id) ? 'personal' : 'default',
+    };
     
     setGeneratedTropes(prev => [...prev, newTrope]);
     
@@ -146,6 +147,7 @@ export const useTropeGenerator = () => {
       id: customId,
       name,
       detail,
+      source: 'custom',
     };
     
     setGeneratedTropes(prev => [...prev, customTrope]);
