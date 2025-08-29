@@ -33,6 +33,16 @@ export const TropeGenerator = ({
           </CardTitle>
         </div>
         
+        <Button 
+          variant="mystical" 
+          size="lg" 
+          onClick={onGenerate}
+          disabled={isLoading}
+          className="w-full text-sm py-6 shadow-lg hover:shadow-xl transition-all duration-300 text-center justify-center"
+        >
+          {isLoading ? 'Loading Data...' : 'Generate Story Elements'}
+        </Button>
+        
         {totalTropes && (
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2 text-sm text-muted-foreground">
@@ -84,16 +94,6 @@ export const TropeGenerator = ({
             ))}
           </div>
         </div>
-        
-        <Button 
-          variant="mystical" 
-          size="lg" 
-          onClick={onGenerate}
-          disabled={isLoading}
-          className="w-full text-sm py-6 shadow-lg hover:shadow-xl transition-all duration-300 text-center justify-center"
-        >
-          {isLoading ? 'Loading Data...' : 'Generate Story Elements'}
-        </Button>
       </CardContent>
     </Card>
   );
