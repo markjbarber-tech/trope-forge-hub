@@ -211,7 +211,7 @@ export const AdvancedOptions = ({
               </div>
               {hasPersonalData && (
                 <span className="text-xs text-muted-foreground">
-                  {personalElementCount} elements
+                  {personalElementCount} personal story elements loaded
                 </span>
               )}
               
