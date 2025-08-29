@@ -178,19 +178,10 @@ export const AdvancedOptions = ({
                 Advanced Options
               </CardTitle>
               <div className="flex items-center gap-2">
-                {(hasPersonalData || loreLinks.length > 0) && (
-                  <div className="flex items-center gap-1">
-                    {hasPersonalData && (
-                      <Badge variant="secondary" className="text-xs">
-                        {personalElementCount} personal
-                      </Badge>
-                    )}
-                    {loreLinks.length > 0 && (
-                      <Badge variant="secondary" className="text-xs">
-                        {loreLinks.length} docs
-                      </Badge>
-                    )}
-                  </div>
+                {loreLinks.length > 0 && (
+                  <Badge variant="secondary" className="text-xs">
+                    {loreLinks.length} docs
+                  </Badge>
                 )}
                 <ChevronDown 
                   className={`h-4 w-4 text-white transition-transform duration-200 ${
