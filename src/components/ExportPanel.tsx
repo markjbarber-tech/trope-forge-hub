@@ -340,6 +340,15 @@ ${loreLinkSection}
         </Button>
         
         <div className="space-y-3">
+          <Button
+            variant="parchment"
+            onClick={handleExportTemplate}
+            disabled={disabled || hasNoElements}
+            className="w-full justify-center text-center"
+          >
+            Create adventure prompt
+          </Button>
+          
           <div className="space-y-2">
             <Label className="text-sm font-medium">What sort of adventure do you want to create?</Label>
             <RadioGroup 
@@ -357,15 +366,6 @@ ${loreLinkSection}
               </div>
             </RadioGroup>
           </div>
-          
-          <Button
-            variant="parchment"
-            onClick={handleExportTemplate}
-            disabled={disabled || hasNoElements}
-            className="w-full justify-center text-center"
-          >
-            Create adventure prompt
-          </Button>
           
           {showClipboardMessage && (
             <div className="text-sm text-green-400 text-center mt-2 p-2 bg-green-500/10 rounded-lg border border-green-500/20">
