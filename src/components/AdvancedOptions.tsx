@@ -14,7 +14,8 @@ import {
   ChevronDown,
   Settings,
   Users,
-  BookOpen
+  BookOpen,
+  HelpCircle
 } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
@@ -47,6 +48,7 @@ export const AdvancedOptions = ({
   const [isOpen, setIsOpen] = useState(false);
   const [newTitle, setNewTitle] = useState('');
   const [newUrl, setNewUrl] = useState('');
+  const [showLoreHelp, setShowLoreHelp] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { toast } = useToast();
 
@@ -282,11 +284,21 @@ export const AdvancedOptions = ({
               <div className="flex items-center gap-2">
                 <BookOpen className="h-4 w-4 text-white" />
                 <h3 className="text-white font-medium">Lore Documents ({loreLinks.length}/10)</h3>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setShowLoreHelp(!showLoreHelp)}
+                  className="h-6 w-6 p-0 hover:bg-muted/20"
+                >
+                  <HelpCircle className="h-4 w-4 text-muted-foreground" />
+                </Button>
               </div>
               
-              <p className="text-sm text-muted-foreground">
-                Add links to key lore documents to tie your generated adventure into an existing campaign.
-              </p>
+              {showLoreHelp && (
+                <p className="text-sm text-muted-foreground bg-muted/10 p-3 rounded-lg border border-border/20">
+                  Add links to key lore documents to tie your generated adventure into an existing campaign.
+                </p>
+              )}
               
               <div className="grid grid-cols-1 gap-3">
                 <div>
