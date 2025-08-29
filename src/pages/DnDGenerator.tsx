@@ -109,7 +109,14 @@ export const DnDGenerator = () => {
               onLinksChange={setLoreLinks}
             />
             
-            {/* Show tropes first, then export options */}
+            {/* Show export options first, then tropes on mobile */}
+            <ExportPanel
+              tropes={generatedTropes}
+              loreLinks={loreLinks}
+              disabled={isLoading}
+              onExportTemplate={handleExportTemplate}
+            />
+            
             <div className="lg:hidden">
               <TropeDisplay 
                 tropes={generatedTropes} 
@@ -118,13 +125,6 @@ export const DnDGenerator = () => {
                 onAddCustomTrope={addCustomTrope}
               />
             </div>
-            
-            <ExportPanel
-              tropes={generatedTropes}
-              loreLinks={loreLinks}
-              disabled={isLoading}
-              onExportTemplate={handleExportTemplate}
-            />
           </div>
 
           {/* Main Content - Trope Display (desktop only) */}

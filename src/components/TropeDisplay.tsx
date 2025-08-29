@@ -78,7 +78,7 @@ export const TropeDisplay = ({ tropes, onRemoveTrope, onAddRandomTrope, onAddCus
     <div className="space-y-4">
       <div className="flex items-center justify-between">
         <h2 className="text-2xl font-bold text-white">
-          Generated Tropes
+          Story Inputs
         </h2>
         <div className="flex items-center gap-3">
           <Badge variant="outline" className="text-white border-white/30">

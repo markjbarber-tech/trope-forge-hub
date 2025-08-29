@@ -316,7 +316,7 @@ ${loreLinkSection}
     <Card className="bg-card/90 backdrop-blur-sm border-border/60 shadow-xl">
       <CardHeader>
         <CardTitle className="text-white">
-          Export Options
+          Let's make an adventure
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-3">
