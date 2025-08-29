@@ -225,13 +225,9 @@ export const AdvancedOptions = ({
               </div>
               
               {showPersonalHelp && (
-                <div className="text-sm text-muted-foreground bg-muted/10 p-3 rounded-lg border border-border/20">
-                  {hasPersonalData ? (
-                    <p>When generating story elements, at least 1 will come from your personal collection.</p>
-                  ) : (
-                    <p>Add your own custom story elements! Upload a CSV file with the same structure as the default data.</p>
-                  )}
-                </div>
+                <p className="text-sm text-muted-foreground bg-muted/10 p-3 rounded-lg border border-border/20">
+                  You can load your own campaign specific story elements to use.
+                </p>
               )}
               
               {hasPersonalData ? (
@@ -257,6 +253,9 @@ export const AdvancedOptions = ({
                       Clear
                     </Button>
                   </div>
+                  <p className="text-sm text-muted-foreground">
+                    When generating story elements, at least 1 will come from your personal collection.
+                  </p>
                 </>
               ) : (
                 <>
@@ -280,6 +279,9 @@ export const AdvancedOptions = ({
                       Template
                     </Button>
                   </div>
+                  <p className="text-sm text-muted-foreground">
+                    Add your own custom story elements! Upload a CSV file with the same structure as the default data.
+                  </p>
                 </>
               )}
               
