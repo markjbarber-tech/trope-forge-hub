@@ -16,6 +16,7 @@ interface LoreLink {
 }
 
 export const DnDGenerator = () => {
+  console.log('DnDGenerator component rendering...');
   const [isOnline, setIsOnline] = useState(navigator.onLine);
   const [loadTime, setLoadTime] = useState<string>('');
   const [loreLinks, setLoreLinks] = useState<LoreLink[]>([]);
@@ -75,6 +76,13 @@ export const DnDGenerator = () => {
     onGenerate: generateTropes,
     onExportTropes: () => exportTropesToText(generatedTropes),
     onExportTemplate: () => handleExportTemplate('campaign'),
+  });
+
+  console.log('DnDGenerator rendering with:', { 
+    allTropesCount: allTropes.length, 
+    generatedTropesCount: generatedTropes.length, 
+    isLoading, 
+    isInitialLoad 
   });
 
   return (
@@ -137,7 +145,7 @@ export const DnDGenerator = () => {
 
       {/* PWA Status Bar */}
       {!isOnline && (
-        <div className="fixed bottom-0 left-0 right-0 bg-yellow-600/90 text-white px-4 py-2 text-center text-sm backdrop-blur-sm">
+        <div className="fixed bottom-0 left-0 right-0 bg-destructive/90 text-destructive-foreground px-4 py-2 text-center text-sm backdrop-blur-sm">
           You're offline. Some features may be limited.
         </div>
       )}

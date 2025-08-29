@@ -28,7 +28,7 @@ export const TropeGenerator = ({
     <Card className="bg-card/90 backdrop-blur-sm border-border/60 shadow-xl">
       <CardHeader className="pb-4">
         <div className="flex items-center justify-between">
-          <CardTitle className="text-white">
+          <CardTitle className="text-foreground">
             Story Generator
           </CardTitle>
         </div>
@@ -48,7 +48,7 @@ export const TropeGenerator = ({
               size="sm"
               onClick={onRefreshData}
               disabled={isLoading}
-              className="text-muted-foreground hover:text-white text-center justify-center"
+              className="text-muted-foreground hover:text-foreground text-center justify-center"
             >
               <RefreshCw className={`h-3 w-3 ${isLoading ? 'animate-spin' : ''}`} />
             </Button>
@@ -62,7 +62,7 @@ export const TropeGenerator = ({
             <label className="text-sm font-medium text-foreground/90">
               Number of Story Elements:
             </label>
-            <span className="text-white font-bold text-xl">
+            <span className="text-foreground font-bold text-xl">
               {tropeCount}
             </span>
           </div>
@@ -78,7 +78,7 @@ export const TropeGenerator = ({
           
           <div className="flex justify-between text-xs text-muted-foreground">
             {Array.from({ length: 6 }, (_, i) => (
-              <span key={i + 1} className={tropeCount === i + 1 ? 'text-white font-medium' : ''}>
+              <span key={i + 1} className={tropeCount === i + 1 ? 'text-foreground font-medium' : ''}>
                 {i + 1}
               </span>
             ))}
