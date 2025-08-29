@@ -4,8 +4,7 @@ import { AppHeader } from '@/components/AppHeader';
 import { TropeGenerator } from '@/components/TropeGenerator';
 import { TropeDisplay } from '@/components/TropeDisplay';
 import { ExportPanel } from '@/components/ExportPanel';
-import { PersonalDataManager } from '@/components/PersonalDataManager';
-import { LoreLinksManager } from '@/components/LoreLinksManager';
+import { AdvancedOptions } from '@/components/AdvancedOptions';
 import { useTropeGenerator } from '@/hooks/useTropeGenerator';
 import { useKeyboardShortcuts } from '@/hooks/useKeyboardShortcuts';
 import { exportTropesToText } from '@/utils/exportUtils';
@@ -103,17 +102,14 @@ export const DnDGenerator = () => {
               onExportTemplate={handleExportTemplate}
             />
             
-            <PersonalDataManager
+            <AdvancedOptions
               personalTropeCount={personalTropes.length}
               hasPersonalData={hasPersonalData}
               onPersonalUpload={uploadPersonalData}
               onPurgePersonalData={purgePersonalData}
-              isLoading={isLoading}
-            />
-            
-            <LoreLinksManager
               loreLinks={loreLinks}
               onLinksChange={setLoreLinks}
+              isLoading={isLoading}
             />
             
             {/* Show export options first, then tropes on mobile */}
