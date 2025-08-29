@@ -330,6 +330,10 @@ ${loreLinkSection}
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-3">
+        <p className="text-sm text-muted-foreground">
+          You can use your story elements combination to create an adventure with an LLM. Click "create adventure prompt" to copy a prompt to the clipboard.
+        </p>
+        
         <div className="space-y-3">
           <Button
             variant="parchment"
