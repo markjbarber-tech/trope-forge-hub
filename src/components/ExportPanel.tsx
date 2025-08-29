@@ -31,15 +31,25 @@ export const ExportPanel = ({ tropes, loreLinks = [], disabled = false, onExport
     if (hasNoElements) return;
     
     try {
-      // Navigate to story elements table page with data
-      window.open(`/trope-table?timestamp=${Date.now()}`, '_blank');
-      
-      // Store story elements in sessionStorage for the new window
+      // Build a hash-route URL that works in PWAs and respects base path
+      const routeUrl = `${import.meta.env.BASE_URL}#/trope-table?timestamp=${Date.now()}`;
+
+      // Store story elements before navigating
       sessionStorage.setItem('tropes-for-table', JSON.stringify(tropes));
-      
+
+      const isStandalone = window.matchMedia('(display-mode: standalone)').matches || (window.navigator as any).standalone;
+
+      if (isStandalone) {
+        // In iOS A2HS/standalone, open in-app to avoid 404/new-window issues
+        window.location.assign(routeUrl);
+      } else {
+        // In browsers, open a new tab
+        window.open(routeUrl, '_blank');
+      }
+
       toast({
         title: "Table Opened",
-        description: "Story elements table opened in new tab",
+        description: "Story elements table opened",
       });
     } catch (error) {
       toast({
