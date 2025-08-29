@@ -284,6 +284,10 @@ export const AdvancedOptions = ({
                 <h3 className="text-white font-medium">Lore Documents ({loreLinks.length}/10)</h3>
               </div>
               
+              <p className="text-sm text-muted-foreground">
+                Add links to key lore documents to tie your generated adventure into an existing campaign.
+              </p>
+              
               <div className="grid grid-cols-1 gap-3">
                 <div>
                   <Label htmlFor="link-title" className="text-sm font-medium text-white">
