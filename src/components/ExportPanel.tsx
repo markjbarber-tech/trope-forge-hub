@@ -336,7 +336,7 @@ ${loreLinkSection}
         
         <div className="space-y-3">
           <Button
-            variant="parchment"
+            variant="mystical"
             onClick={handleExportTemplate}
             disabled={disabled || hasNoElements}
             className="w-full justify-center text-center"
