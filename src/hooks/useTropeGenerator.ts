@@ -80,6 +80,7 @@ export const useTropeGenerator = () => {
       toast({
         title: "Scroll down for story element combination",
         description: "View your generated elements below to start crafting your story",
+        duration: 5000, // Fade after 5 seconds
       });
     }, 1500);
 
