@@ -96,6 +96,13 @@ export const DnDGenerator = () => {
               totalTropes={allTropes.length}
             />
             
+            <ExportPanel
+              tropes={generatedTropes}
+              loreLinks={loreLinks}
+              disabled={isLoading}
+              onExportTemplate={handleExportTemplate}
+            />
+            
             <PersonalDataManager
               personalTropeCount={personalTropes.length}
               hasPersonalData={hasPersonalData}
@@ -110,13 +117,6 @@ export const DnDGenerator = () => {
             />
             
             {/* Show export options first, then tropes on mobile */}
-            <ExportPanel
-              tropes={generatedTropes}
-              loreLinks={loreLinks}
-              disabled={isLoading}
-              onExportTemplate={handleExportTemplate}
-            />
-            
             <div className="lg:hidden">
               <TropeDisplay 
                 tropes={generatedTropes} 
