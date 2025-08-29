@@ -55,7 +55,6 @@ export default {
 				'charcoal': 'hsl(var(--charcoal))',
 				'cadet-gray': 'hsl(var(--cadet-gray))', 
 				'pure-white': 'hsl(var(--pure-white))',
-				'orchid-pink': 'hsl(var(--orchid-pink))',
 				'rose-taupe': 'hsl(var(--rose-taupe))',
 				'fantasy-gold': 'hsl(var(--fantasy-gold))',
 				'fantasy-purple': 'hsl(var(--fantasy-purple))',

@@ -20,7 +20,7 @@ const buttonVariants = cva(
         link: "text-primary underline-offset-4 hover:underline",
         mystical: "bg-fantasy-purple text-primary-foreground hover:bg-fantasy-purple/90 transition-all duration-300",
         gold: "bg-pure-white text-charcoal font-semibold hover:bg-pure-white/90 transition-all duration-300",
-        parchment: "bg-parchment text-charcoal border border-orchid-pink/20 hover:bg-parchment/90 transition-all duration-300",
+        parchment: "bg-parchment text-charcoal border border-rose-taupe/20 hover:bg-parchment/90 transition-all duration-300",
       },
       size: {
         default: "h-10 px-4 py-2",

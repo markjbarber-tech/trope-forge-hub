@@ -12,7 +12,6 @@ All colors MUST be HSL.
     --charcoal: 213 12% 30%;
     --cadet-gray: 192 12% 62%;
     --pure-white: 0 0% 100%;
-    --orchid-pink: 347 35% 80%;
     --rose-taupe: 357 19% 51%;
 
     /* Core theme colors using the palette */
@@ -25,7 +24,7 @@ All colors MUST be HSL.
     --popover: 213 12% 26%;
     --popover-foreground: 0 0% 98%;
 
-    --primary: 347 35% 70%;
+    --primary: 357 19% 60%;
     --primary-foreground: 0 0% 98%;
 
     --secondary: 192 12% 45%;
@@ -34,7 +33,7 @@ All colors MUST be HSL.
     --muted: 213 12% 35%;
     --muted-foreground: 192 12% 70%;
 
-    --accent: 347 35% 80%;
+    --accent: 192 12% 70%;
     --accent-foreground: 213 12% 30%;
 
     --destructive: 0 75% 55%;
@@ -42,15 +41,15 @@ All colors MUST be HSL.
 
     --border: 213 12% 35%;
     --input: 213 12% 30%;
-    --ring: 347 35% 70%;
+    --ring: 357 19% 60%;
 
     /* Custom D&D theme tokens using the new palette */
     --fantasy-gold: 0 0% 100%;
-    --fantasy-purple: 347 35% 70%;
+    --fantasy-purple: 357 19% 60%;
     --fantasy-deep: 213 12% 25%;
-    --parchment: 347 35% 92%;
-    --parchment-dark: 347 25% 85%;
-    --mystical-glow: 347 35% 85%;
+    --parchment: 192 12% 85%;
+    --parchment-dark: 192 12% 75%;
+    --mystical-glow: 192 12% 80%;
     
     /* Gradients */
     --gradient-mystical: linear-gradient(135deg, hsl(var(--fantasy-purple)), hsl(var(--fantasy-deep)));
@@ -86,7 +85,6 @@ All colors MUST be HSL.
     --charcoal: 213 12% 30%;
     --cadet-gray: 192 12% 62%;
     --pure-white: 0 0% 100%;
-    --orchid-pink: 347 35% 80%;
     --rose-taupe: 357 19% 51%;
 
     /* Dark mode theme colors using the palette */
@@ -99,7 +97,7 @@ All colors MUST be HSL.
     --popover: 213 12% 22%;
     --popover-foreground: 0 0% 98%;
 
-    --primary: 347 35% 75%;
+    --primary: 357 19% 65%;
     --primary-foreground: 213 12% 15%;
 
     --secondary: 192 12% 40%;
@@ -108,7 +106,7 @@ All colors MUST be HSL.
     --muted: 213 12% 30%;
     --muted-foreground: 192 12% 65%;
 
-    --accent: 347 35% 70%;
+    --accent: 192 12% 70%;
     --accent-foreground: 0 0% 98%;
 
     --destructive: 0 62% 45%;
@@ -116,16 +114,16 @@ All colors MUST be HSL.
 
     --border: 213 12% 30%;
     --input: 213 12% 25%;
-    --ring: 347 35% 75%;
+    --ring: 357 19% 65%;
     
     --sidebar-background: 213 12% 20%;
     --sidebar-foreground: 192 12% 85%;
-    --sidebar-primary: 347 35% 65%;
+    --sidebar-primary: 357 19% 60%;
     --sidebar-primary-foreground: 0 0% 100%;
     --sidebar-accent: 213 12% 25%;
     --sidebar-accent-foreground: 192 12% 85%;
     --sidebar-border: 213 12% 25%;
-    --sidebar-ring: 347 35% 75%;
+    --sidebar-ring: 357 19% 65%;
   }
 }
 
