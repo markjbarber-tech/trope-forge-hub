@@ -90,7 +90,7 @@ export const TropeGenerator = ({
           size="lg" 
           onClick={onGenerate}
           disabled={isLoading}
-          className="w-full text-xs sm:text-sm lg:text-base py-6 shadow-lg hover:shadow-xl transition-all duration-300 text-center justify-center"
+          className="w-full text-sm py-6 shadow-lg hover:shadow-xl transition-all duration-300 text-center justify-center"
         >
           {isLoading ? 'Loading Data...' : 'Generate Story Elements'}
         </Button>
