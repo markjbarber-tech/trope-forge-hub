@@ -69,10 +69,10 @@ export const useTropeGenerator = () => {
     const defaultCount = generated.filter(trope => trope.source === 'default').length;
     
     toast({
-      title: "Tropes generated!",
+      title: "Story elements generated!",
       description: hasPersonalData 
-        ? `Scroll down for story element combination. Generated ${generated.length} tropes (${personalCount} personal, ${defaultCount} default).`
-        : `Scroll down for story element combination. Generated ${generated.length} random tropes.`,
+        ? `Scroll down to see your story elements\nGenerated ${generated.length} story elements (${defaultCount} default, ${personalCount} personal)`
+        : `Scroll down to see your story elements\nGenerated ${generated.length} story elements`,
       duration: 5000, // Fade after 5 seconds
     });
 
