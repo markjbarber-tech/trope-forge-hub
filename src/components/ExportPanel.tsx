@@ -1,12 +1,12 @@
+import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Label } from '@/components/ui/label';
-import { Printer } from 'lucide-react';
+import { Printer, HelpCircle } from 'lucide-react';
 import { Trope } from '@/types/trope';
 import { exportTropesToText, exportDnDCampaignTemplate } from '@/utils/exportUtils';
 import { useToast } from '@/hooks/use-toast';
-import { useState } from 'react';
 
 interface LoreLink {
   id: string;
@@ -25,6 +25,7 @@ export const ExportPanel = ({ tropes, loreLinks = [], disabled = false, onExport
   const { toast } = useToast();
   const [templateType, setTemplateType] = useState<'campaign' | 'oneshot'>('campaign');
   const [showClipboardMessage, setShowClipboardMessage] = useState(false);
+  const [showExportHelp, setShowExportHelp] = useState(false);
   const hasNoElements = tropes.length === 0;
 
   const handleExportTable = () => {
@@ -325,14 +326,26 @@ ${loreLinkSection}
   return (
     <Card className="bg-card/90 backdrop-blur-sm border-border/60 shadow-xl">
       <CardHeader>
-        <CardTitle className="text-foreground">
-          Let's make an adventure
-        </CardTitle>
+        <div className="flex items-center gap-2">
+          <CardTitle className="text-foreground">
+            Let's make an adventure
+          </CardTitle>
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => setShowExportHelp(!showExportHelp)}
+            className="h-6 w-6 p-0 hover:bg-muted/20"
+          >
+            <HelpCircle className="h-4 w-4 text-muted-foreground" />
+          </Button>
+        </div>
       </CardHeader>
       <CardContent className="space-y-3">
-        <p className="text-sm text-muted-foreground">
-          You can use your story elements combination to create an adventure with an LLM. Click "create adventure prompt" to copy a prompt to the clipboard.
-        </p>
+        {showExportHelp && (
+          <p className="text-sm text-muted-foreground bg-muted/10 p-3 rounded-lg border border-border/20">
+            You can use your story elements combination to create an adventure with an LLM. Click "create adventure prompt" to copy a prompt to the clipboard.
+          </p>
+        )}
         
         <div className="space-y-3">
           <Button

@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Slider } from '@/components/ui/slider';
-import { Sparkles, RefreshCw } from 'lucide-react';
+import { Sparkles, RefreshCw, HelpCircle } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 
 interface TropeGeneratorProps {
@@ -24,6 +24,8 @@ export const TropeGenerator = ({
   dataLoadTime,
   totalTropes
 }: TropeGeneratorProps) => {
+  const [showGeneratorHelp, setShowGeneratorHelp] = useState(false);
+
   return (
     <Card className="bg-card/90 backdrop-blur-sm border-border/60 shadow-xl">
       <CardHeader className="pb-4">
@@ -31,11 +33,21 @@ export const TropeGenerator = ({
           <CardTitle className="text-foreground">
             Story Generator
           </CardTitle>
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => setShowGeneratorHelp(!showGeneratorHelp)}
+            className="h-6 w-6 p-0 hover:bg-muted/20"
+          >
+            <HelpCircle className="h-4 w-4 text-muted-foreground" />
+          </Button>
         </div>
         
-        <p className="text-sm text-muted-foreground">
-          Story elements are the key concepts of your story.
-        </p>
+        {showGeneratorHelp && (
+          <p className="text-sm text-muted-foreground bg-muted/10 p-3 rounded-lg border border-border/20">
+            Story elements are the key concepts of your story.
+          </p>
+        )}
         
         <Button 
           variant="mystical" 

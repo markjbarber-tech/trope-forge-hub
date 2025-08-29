@@ -49,6 +49,7 @@ export const AdvancedOptions = ({
   const [newTitle, setNewTitle] = useState('');
   const [newUrl, setNewUrl] = useState('');
   const [showLoreHelp, setShowLoreHelp] = useState(false);
+  const [showPersonalHelp, setShowPersonalHelp] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { toast } = useToast();
 
@@ -213,13 +214,28 @@ export const AdvancedOptions = ({
                     {personalElementCount} elements
                   </Badge>
                 )}
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setShowPersonalHelp(!showPersonalHelp)}
+                  className="h-6 w-6 p-0 hover:bg-muted/20"
+                >
+                  <HelpCircle className="h-4 w-4 text-muted-foreground" />
+                </Button>
               </div>
+              
+              {showPersonalHelp && (
+                <div className="text-sm text-muted-foreground bg-muted/10 p-3 rounded-lg border border-border/20">
+                  {hasPersonalData ? (
+                    <p>When generating story elements, at least 1 will come from your personal collection.</p>
+                  ) : (
+                    <p>Add your own custom story elements! Upload a CSV file with the same structure as the default data.</p>
+                  )}
+                </div>
+              )}
               
               {hasPersonalData ? (
                 <>
-                  <p className="text-sm text-muted-foreground">
-                    When generating story elements, at least 1 will come from your personal collection.
-                  </p>
                   <div className="flex gap-2">
                     <Button
                       variant="outline"
@@ -244,9 +260,6 @@ export const AdvancedOptions = ({
                 </>
               ) : (
                 <>
-                  <p className="text-sm text-muted-foreground">
-                    Add your own custom story elements! Upload a CSV file with the same structure as the default data.
-                  </p>
                   <div className="flex gap-2">
                     <Button
                       variant="parchment"
