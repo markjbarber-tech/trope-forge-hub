@@ -198,8 +198,15 @@ export const AdvancedOptions = ({
             {/* Personal Story Elements Section */}
             <div className="space-y-4">
               <div className="flex items-center gap-2">
-                <Users className="h-4 w-4 text-white" />
                 <h3 className="text-white font-medium">Use your personal story elements</h3>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setShowPersonalHelp(!showPersonalHelp)}
+                  className="h-6 w-6 p-0 hover:bg-muted/20"
+                >
+                  <HelpCircle className="h-4 w-4 text-muted-foreground" />
+                </Button>
               </div>
               <p className="text-sm text-muted-foreground">
                 You can load your own campaign specific story elements to use.
@@ -212,7 +219,7 @@ export const AdvancedOptions = ({
               
               {showPersonalHelp && (
                 <p className="text-sm text-muted-foreground bg-muted/10 p-3 rounded-lg border border-border/20">
-                  You can load your own campaign specific story elements to use.
+                  Upload a CSV file with your own story elements. These will be mixed with the default elements when generating.
                 </p>
               )}
               
