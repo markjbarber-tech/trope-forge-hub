@@ -325,7 +325,7 @@ ${loreLinkSection}
   return (
     <Card className="bg-card/90 backdrop-blur-sm border-border/60 shadow-xl">
       <CardHeader>
-        <CardTitle className="text-white">
+        <CardTitle className="text-foreground">
           Let's make an adventure
         </CardTitle>
       </CardHeader>

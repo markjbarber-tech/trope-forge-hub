@@ -22,6 +22,8 @@ export const DnDGenerator = () => {
   const [loreLinks, setLoreLinks] = useState<LoreLink[]>([]);
   const navigate = useNavigate();
 
+  console.log('DnDGenerator: About to call useTropeGenerator hook');
+
   const {
     allTropes,
     generatedTropes,
