@@ -330,15 +330,6 @@ ${loreLinkSection}
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-3">
-        <Button
-          variant="gold"
-          onClick={handleExportTable}
-          disabled={disabled || hasNoElements}
-          className="w-full justify-center text-center"
-        >
-          Export Story Elements
-        </Button>
-        
         <div className="space-y-3">
           <Button
             variant="parchment"
@@ -366,6 +357,15 @@ ${loreLinkSection}
               </div>
             </RadioGroup>
           </div>
+
+          <Button
+            variant="gold"
+            onClick={handleExportTable}
+            disabled={disabled || hasNoElements}
+            className="w-full justify-center text-center"
+          >
+            Export Story Elements
+          </Button>
           
           {showClipboardMessage && (
             <div className="text-sm text-green-400 text-center mt-2 p-2 bg-green-500/10 rounded-lg border border-green-500/20">
