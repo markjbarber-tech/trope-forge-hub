@@ -208,9 +208,6 @@ export const AdvancedOptions = ({
                   <HelpCircle className="h-4 w-4 text-muted-foreground" />
                 </Button>
               </div>
-              <p className="text-sm text-muted-foreground">
-                You can load your own campaign specific story elements to use.
-              </p>
               {hasPersonalData && (
                 <span className="text-xs text-muted-foreground">
                   {personalElementCount} personal story elements loaded
@@ -219,7 +216,7 @@ export const AdvancedOptions = ({
               
               {showPersonalHelp && (
                 <p className="text-sm text-muted-foreground bg-muted/10 p-3 rounded-lg border border-border/20">
-                  Upload a CSV file with your own story elements. These will be mixed with the default elements when generating.
+                  You can load your own campaign specific story elements to use. Download a template csv file below, enter your story elements and upload to use.
                 </p>
               )}
               
