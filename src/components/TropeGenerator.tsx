@@ -92,9 +92,9 @@ export const TropeGenerator = ({
         {totalTropes && (
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2 text-sm text-muted-foreground">
-              <Badge variant="secondary" className="text-xs">
+              <span className="text-xs">
                 {totalTropes} elements loaded
-              </Badge>
+              </span>
               {dataLoadTime && (
                 <span className="text-xs">• {dataLoadTime}</span>
               )}
