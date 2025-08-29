@@ -201,9 +201,9 @@ export const AdvancedOptions = ({
                 <Users className="h-4 w-4 text-white" />
                 <h3 className="text-white font-medium">Personal Story Elements</h3>
                 {hasPersonalData && (
-                  <Badge variant="secondary" className="text-xs">
+                  <span className="text-xs text-muted-foreground">
                     {personalElementCount} elements
-                  </Badge>
+                  </span>
                 )}
                 <Button
                   variant="ghost"
