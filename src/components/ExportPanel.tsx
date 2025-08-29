@@ -341,7 +341,7 @@ ${loreLinkSection}
         
         <div className="space-y-3">
           <div className="space-y-2">
-            <Label className="text-sm font-medium">Template Type</Label>
+            <Label className="text-sm font-medium">What sort of adventure do you want to create?</Label>
             <RadioGroup 
               value={templateType} 
               onValueChange={(value) => setTemplateType(value as 'campaign' | 'oneshot')}
