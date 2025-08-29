@@ -42,35 +42,13 @@ export const TropeGenerator = ({
         >
           {isLoading ? 'Loading Data...' : 'Generate Story Elements'}
         </Button>
-        
-        {totalTropes && (
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2 text-sm text-muted-foreground">
-              <Badge variant="secondary" className="text-xs">
-                {totalTropes} elements loaded
-              </Badge>
-              {dataLoadTime && (
-                <span className="text-xs">• {dataLoadTime}</span>
-              )}
-            </div>
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={onRefreshData}
-              disabled={isLoading}
-              className="text-muted-foreground hover:text-foreground text-center justify-center"
-            >
-              <RefreshCw className={`h-3 w-3 ${isLoading ? 'animate-spin' : ''}`} />
-            </Button>
-          </div>
-        )}
       </CardHeader>
       
       <CardContent className="space-y-6">
         <div className="space-y-4">
           <div className="flex items-center justify-between">
             <label className="text-sm font-medium text-foreground/90">
-              Number of Story Elements:
+              Select how many story elements to generate:
             </label>
             <span className="text-foreground font-bold text-xl">
               {tropeCount}
@@ -94,6 +72,28 @@ export const TropeGenerator = ({
             ))}
           </div>
         </div>
+        
+        {totalTropes && (
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2 text-sm text-muted-foreground">
+              <Badge variant="secondary" className="text-xs">
+                {totalTropes} elements loaded
+              </Badge>
+              {dataLoadTime && (
+                <span className="text-xs">• {dataLoadTime}</span>
+              )}
+            </div>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={onRefreshData}
+              disabled={isLoading}
+              className="text-muted-foreground hover:text-foreground text-center justify-center"
+            >
+              <RefreshCw className={`h-3 w-3 ${isLoading ? 'animate-spin' : ''}`} />
+            </Button>
+          </div>
+        )}
       </CardContent>
     </Card>
   );
