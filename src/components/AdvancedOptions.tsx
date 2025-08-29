@@ -199,12 +199,7 @@ export const AdvancedOptions = ({
             <div className="space-y-4">
               <div className="flex items-center gap-2">
                 <Users className="h-4 w-4 text-white" />
-                <h3 className="text-white font-medium">Personal Story Elements</h3>
-                {hasPersonalData && (
-                  <span className="text-xs text-muted-foreground">
-                    {personalElementCount} elements
-                  </span>
-                )}
+                <h3 className="text-white font-medium">Use your personal story elements</h3>
                 <Button
                   variant="ghost"
                   size="sm"
@@ -214,6 +209,11 @@ export const AdvancedOptions = ({
                   <HelpCircle className="h-4 w-4 text-muted-foreground" />
                 </Button>
               </div>
+              {hasPersonalData && (
+                <span className="text-xs text-muted-foreground">
+                  {personalElementCount} elements
+                </span>
+              )}
               
               {showPersonalHelp && (
                 <p className="text-sm text-muted-foreground bg-muted/10 p-3 rounded-lg border border-border/20">
