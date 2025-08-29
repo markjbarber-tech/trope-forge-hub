@@ -32,7 +32,7 @@ export const AppHeader = ({ isOnline = true }: AppHeaderProps) => {
               </div>
               <div>
                 <h1 className="text-xl font-bold text-foreground">
-                  D&D Story Generator
+                  D&D Story Copilot
                 </h1>
                 <p className="text-xs text-muted-foreground">
                   Desktop PWA • Fantasy Campaign Tool

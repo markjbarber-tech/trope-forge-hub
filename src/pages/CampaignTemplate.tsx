@@ -205,7 +205,7 @@ Would you like this exported as:
 
 ---
 
-*Generated on ${currentDate} using the D&D Story Generator*`;
+*Generated on ${currentDate} using the D&D Story Copilot*`;
   };
 
   const generateOneShotTemplate = () => {
@@ -354,7 +354,7 @@ I'll adapt the adventure accordingly.
 
 ---
 
-*Generated on ${currentDate} using the D&D Story Generator*`;
+*Generated on ${currentDate} using the D&D Story Copilot*`;
   };
 
   const generateTemplateContent = () => {
