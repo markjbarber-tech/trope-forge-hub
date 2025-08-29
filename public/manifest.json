@@ -2,7 +2,7 @@
   "name": "D&D Story Generator",
   "short_name": "D&D Tropes",
   "description": "Generate random story tropes for your D&D campaigns. Create compelling fantasy adventures with our intuitive story generator tool for dungeon masters.",
-  "start_url": "/",
+  "start_url": "/trope-forge-hub/",
   "display": "standalone",
   "background_color": "#1a1a1a",
   "theme_color": "#9333ea",
