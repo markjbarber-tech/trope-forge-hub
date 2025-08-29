@@ -71,18 +71,10 @@ export const useTropeGenerator = () => {
     toast({
       title: "Tropes generated!",
       description: hasPersonalData 
-        ? `Generated ${generated.length} tropes (${personalCount} personal, ${defaultCount} default)`
-        : `Generated ${generated.length} random tropes`,
+        ? `Generated ${generated.length} tropes (${personalCount} personal, ${defaultCount} default). Scroll down for story element combination.`
+        : `Generated ${generated.length} random tropes. Scroll down for story element combination.`,
+      duration: 5000, // Fade after 5 seconds
     });
-
-    // Add a second toast with scroll instruction after a brief delay
-    setTimeout(() => {
-      toast({
-        title: "Scroll down for story element combination",
-        description: "View your generated elements below to start crafting your story",
-        duration: 5000, // Fade after 5 seconds
-      });
-    }, 1500);
 
     console.log('Generated tropes:', generated.map(t => t.name));
     console.log(`Counts: ${personalCount} personal, ${defaultCount} default`);
