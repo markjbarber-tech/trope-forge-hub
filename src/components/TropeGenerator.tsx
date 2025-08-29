@@ -48,7 +48,7 @@ export const TropeGenerator = ({
         <div className="space-y-4">
           <div className="flex items-center justify-between">
             <label className="text-sm font-medium text-foreground/90">
-              Select how many story elements to generate:
+              How many story elements do you want?
             </label>
             <span className="text-foreground font-bold text-xl">
               {tropeCount}
