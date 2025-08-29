@@ -37,7 +37,7 @@ export const TropeGenerator = ({
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2 text-sm text-muted-foreground">
               <Badge variant="secondary" className="text-xs">
-                {totalTropes} tropes loaded
+                {totalTropes} elements loaded
               </Badge>
               {dataLoadTime && (
                 <span className="text-xs">• {dataLoadTime}</span>
@@ -60,7 +60,7 @@ export const TropeGenerator = ({
         <div className="space-y-4">
           <div className="flex items-center justify-between">
             <label className="text-sm font-medium text-foreground/90">
-              Number of Tropes:
+              Number of Story Elements:
             </label>
             <span className="text-white font-bold text-xl">
               {tropeCount}
@@ -92,7 +92,7 @@ export const TropeGenerator = ({
           disabled={isLoading}
           className="w-full text-sm sm:text-base lg:text-lg py-6 shadow-lg hover:shadow-xl transition-all duration-300 text-center justify-center"
         >
-          {isLoading ? 'Loading Data...' : 'Generate story elements'}
+          {isLoading ? 'Loading Data...' : 'Generate Story Elements'}
         </Button>
       </CardContent>
     </Card>

@@ -26,7 +26,7 @@ interface LoreLink {
 }
 
 interface AdvancedOptionsProps {
-  personalTropeCount: number;
+  personalElementCount: number;
   hasPersonalData: boolean;
   onPersonalUpload: (content: string) => void;
   onPurgePersonalData: () => void;
@@ -36,7 +36,7 @@ interface AdvancedOptionsProps {
 }
 
 export const AdvancedOptions = ({ 
-  personalTropeCount,
+  personalElementCount,
   hasPersonalData,
   onPersonalUpload, 
   onPurgePersonalData,
@@ -86,12 +86,12 @@ export const AdvancedOptions = ({
   };
 
   const downloadTemplate = () => {
-    const templateContent = `#,Trope name,Trope detail`;
+    const templateContent = `#,Element name,Element detail`;
     const blob = new Blob([templateContent], { type: 'text/csv' });
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
     link.href = url;
-    link.download = 'personal-tropes-template.csv';
+    link.download = 'personal-elements-template.csv';
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -99,7 +99,7 @@ export const AdvancedOptions = ({
     
     toast({
       title: "Template Downloaded",
-      description: "Template file saved as personal-tropes-template.csv",
+      description: "Template file saved as personal-elements-template.csv",
     });
   };
 
@@ -179,7 +179,7 @@ export const AdvancedOptions = ({
                   <div className="flex items-center gap-1">
                     {hasPersonalData && (
                       <Badge variant="secondary" className="text-xs">
-                        {personalTropeCount} personal
+                        {personalElementCount} personal
                       </Badge>
                     )}
                     {loreLinks.length > 0 && (
@@ -201,14 +201,14 @@ export const AdvancedOptions = ({
         
         <CollapsibleContent>
           <CardContent className="space-y-6 pt-0">
-            {/* Personal Tropes Section */}
+            {/* Personal Story Elements Section */}
             <div className="space-y-4">
               <div className="flex items-center gap-2">
                 <Users className="h-4 w-4 text-white" />
-                <h3 className="text-white font-medium">Personal Tropes</h3>
+                <h3 className="text-white font-medium">Personal Story Elements</h3>
                 {hasPersonalData && (
                   <Badge variant="secondary" className="text-xs">
-                    {personalTropeCount} tropes
+                    {personalElementCount} elements
                   </Badge>
                 )}
               </div>
@@ -216,7 +216,7 @@ export const AdvancedOptions = ({
               {hasPersonalData ? (
                 <>
                   <p className="text-sm text-muted-foreground">
-                    When generating tropes, at least 1 will come from your personal collection.
+                    When generating story elements, at least 1 will come from your personal collection.
                   </p>
                   <div className="flex gap-2">
                     <Button
@@ -243,7 +243,7 @@ export const AdvancedOptions = ({
               ) : (
                 <>
                   <p className="text-sm text-muted-foreground">
-                    Add your own custom tropes! Upload a CSV file with the same structure as the default data.
+                    Add your own custom story elements! Upload a CSV file with the same structure as the default data.
                   </p>
                   <div className="flex gap-2">
                     <Button
@@ -253,7 +253,7 @@ export const AdvancedOptions = ({
                       className="flex-1"
                     >
                       <Upload className="h-4 w-4 mr-2" />
-                      Upload Personal Tropes
+                      Upload Personal Story Elements
                     </Button>
                     <Button
                       variant="outline"

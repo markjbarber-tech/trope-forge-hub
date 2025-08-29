@@ -25,37 +25,37 @@ export const ExportPanel = ({ tropes, loreLinks = [], disabled = false, onExport
   const { toast } = useToast();
   const [templateType, setTemplateType] = useState<'campaign' | 'oneshot'>('campaign');
   const [showClipboardMessage, setShowClipboardMessage] = useState(false);
-  const hasNoTropes = tropes.length === 0;
+  const hasNoElements = tropes.length === 0;
 
   const handleExportTable = () => {
-    if (hasNoTropes) return;
+    if (hasNoElements) return;
     
     try {
-      // Navigate to trope table page with tropes data
+      // Navigate to story elements table page with data
       window.open(`/trope-table?timestamp=${Date.now()}`, '_blank');
       
-      // Store tropes in sessionStorage for the new window
+      // Store story elements in sessionStorage for the new window
       sessionStorage.setItem('tropes-for-table', JSON.stringify(tropes));
       
       toast({
         title: "Table Opened",
-        description: "Tropes table opened in new tab",
+        description: "Story elements table opened in new tab",
       });
     } catch (error) {
       toast({
         title: "Failed to Open Table",
-        description: "Failed to open tropes table",
+        description: "Failed to open story elements table",
         variant: "destructive",
       });
     }
   };
 
-  const generateTemplateContent = (type: 'campaign' | 'oneshot', tropeList: Trope[]) => {
+  const generateTemplateContent = (type: 'campaign' | 'oneshot', elementList: Trope[]) => {
     const currentDate = new Date().toLocaleDateString();
     
-    // Generate trope table for the prompt
-    const tropeTable = tropeList.map((trope, index) => 
-      `| ${index + 1} | ${trope.name} | ${trope.detail || '(No description provided)'} |`
+    // Generate story elements table for the prompt
+    const elementTable = elementList.map((element, index) => 
+      `| ${index + 1} | ${element.name} | ${element.detail || '(No description provided)'} |`
     ).join('\n');
 
     // Generate lore links section
@@ -99,7 +99,7 @@ This arc should span **multiple sessions** and support **3rd–10th level progre
 
 | # | Trope Name | Trope Description (optional, any length) |
 |---|------------|-------------------------------------------|
-${tropeTable}
+${elementTable}
 ${loreLinkSection}
 
 ---
@@ -204,7 +204,7 @@ The story should focus on **local consequences, intimate mysteries, personal sta
 
 | # | Trope Name | Trope Description (optional, any length) |
 |---|------------|-------------------------------------------|
-${tropeTable}
+${elementTable}
 ${loreLinkSection}
 
 ---
@@ -282,7 +282,7 @@ ${loreLinkSection}
   };
 
   const handleExportTemplate = async () => {
-    if (hasNoTropes) return;
+    if (hasNoElements) return;
     
     try {
       const promptContent = generateTemplateContent(templateType, tropes);
@@ -323,10 +323,10 @@ ${loreLinkSection}
         <Button
           variant="gold"
           onClick={handleExportTable}
-          disabled={disabled || hasNoTropes}
+          disabled={disabled || hasNoElements}
           className="w-full justify-center text-center"
         >
-          Export Tropes
+          Export Story Elements
         </Button>
         
         <div className="space-y-3">
@@ -351,7 +351,7 @@ ${loreLinkSection}
           <Button
             variant="parchment"
             onClick={handleExportTemplate}
-            disabled={disabled || hasNoTropes}
+            disabled={disabled || hasNoElements}
             className="w-full justify-center text-center"
           >
             Create adventure prompt
@@ -364,10 +364,10 @@ ${loreLinkSection}
           )}
         </div>
         
-        {hasNoTropes && (
+        {hasNoElements && (
           <div className="text-xs text-muted-foreground text-center mt-3 p-3 bg-muted/30 rounded-lg">
             <Printer className="h-4 w-4 mx-auto mb-1 opacity-50" />
-            Generate some tropes first to enable export options
+            Generate some story elements first to enable export options
           </div>
         )}
       </CardContent>

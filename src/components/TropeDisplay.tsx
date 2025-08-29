@@ -63,10 +63,10 @@ export const TropeDisplay = ({ tropes, onRemoveTrope, onAddRandomTrope, onAddCus
             <Dice6 className="h-8 w-8 text-fantasy-purple" />
           </div>
           <h3 className="text-xl font-semibold text-foreground mb-2">
-            Ready to Generate Tropes
+            Ready to Generate Story Elements
           </h3>
           <p className="text-muted-foreground max-w-md">
-            Click the "Generate Tropes" button to create random story elements for your D&D campaign. 
+            Click the "Generate Story Elements" button to create random story elements for your D&D campaign. 
             Each generation will give you fresh inspiration for your adventures.
           </p>
         </CardContent>
@@ -82,7 +82,7 @@ export const TropeDisplay = ({ tropes, onRemoveTrope, onAddRandomTrope, onAddCus
         </h2>
         <div className="flex items-center gap-3">
           <Badge variant="outline" className="text-white border-white/30">
-            {tropes.length} trope{tropes.length !== 1 ? 's' : ''}
+            {tropes.length} element{tropes.length !== 1 ? 's' : ''}
           </Badge>
           <Button
             variant="ghost"
@@ -155,28 +155,28 @@ export const TropeDisplay = ({ tropes, onRemoveTrope, onAddRandomTrope, onAddCus
       {showCustomForm && onAddCustomTrope && (
         <Card className="bg-card/90 backdrop-blur-sm border-border/60 shadow-lg">
           <CardHeader className="pb-3">
-            <CardTitle className="text-white text-lg">Add Custom Trope</CardTitle>
+            <CardTitle className="text-white text-lg">Add Custom Story Element</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="space-y-2">
               <label className="text-sm font-medium text-foreground/90">
-                Trope Name
+                Story Element Name
               </label>
               <Input
                 value={customName}
                 onChange={(e) => setCustomName(e.target.value)}
-                placeholder="Enter trope name..."
+                placeholder="Enter story element name..."
                 className="bg-background/50 border-border/60 text-white placeholder:text-muted-foreground"
               />
             </div>
             <div className="space-y-2">
               <label className="text-sm font-medium text-foreground/90">
-                Trope Details
+                Story Element Details
               </label>
               <Textarea
                 value={customDetail}
                 onChange={(e) => setCustomDetail(e.target.value)}
-                placeholder="Enter detailed description of the trope..."
+                placeholder="Enter detailed description of the story element..."
                 rows={4}
                 className="bg-background/50 border-border/60 text-white placeholder:text-muted-foreground resize-none"
               />
@@ -189,7 +189,7 @@ export const TropeDisplay = ({ tropes, onRemoveTrope, onAddRandomTrope, onAddCus
                 size="sm"
                 className="text-center justify-center"
               >
-                Confirm Custom Trope
+                Confirm Custom Story Element
               </Button>
               <Button
                 onClick={cancelCustomTrope}
@@ -213,7 +213,7 @@ export const TropeDisplay = ({ tropes, onRemoveTrope, onAddRandomTrope, onAddCus
             onClick={() => setShowCustomForm(true)}
             className="text-muted-foreground hover:text-white text-center justify-center"
           >
-            Add Custom Trope
+            Add Custom Story Element
           </Button>
         )}
         {onAddRandomTrope && (

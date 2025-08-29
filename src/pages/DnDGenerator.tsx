@@ -103,7 +103,7 @@ export const DnDGenerator = () => {
             />
             
             <AdvancedOptions
-              personalTropeCount={personalTropes.length}
+              personalElementCount={personalTropes.length}
               hasPersonalData={hasPersonalData}
               onPersonalUpload={uploadPersonalData}
               onPurgePersonalData={purgePersonalData}
