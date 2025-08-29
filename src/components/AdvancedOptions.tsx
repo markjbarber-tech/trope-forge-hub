@@ -249,7 +249,7 @@ export const AdvancedOptions = ({
                 </>
               ) : (
                 <>
-                  <div className="flex gap-2">
+                  <div className="flex flex-col sm:flex-row gap-2">
                     <Button
                       variant="parchment"
                       onClick={() => fileInputRef.current?.click()}
@@ -264,6 +264,7 @@ export const AdvancedOptions = ({
                       size="sm"
                       onClick={downloadTemplate}
                       disabled={isLoading}
+                      className="sm:w-auto w-full"
                     >
                       <Download className="h-4 w-4 mr-2" />
                       Template
