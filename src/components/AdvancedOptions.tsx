@@ -200,15 +200,10 @@ export const AdvancedOptions = ({
               <div className="flex items-center gap-2">
                 <Users className="h-4 w-4 text-white" />
                 <h3 className="text-white font-medium">Use your personal story elements</h3>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => setShowPersonalHelp(!showPersonalHelp)}
-                  className="h-6 w-6 p-0 hover:bg-muted/20"
-                >
-                  <HelpCircle className="h-4 w-4 text-muted-foreground" />
-                </Button>
               </div>
+              <p className="text-sm text-muted-foreground">
+                You can load your own campaign specific story elements to use.
+              </p>
               {hasPersonalData && (
                 <span className="text-xs text-muted-foreground">
                   {personalElementCount} personal story elements loaded
