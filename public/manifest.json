@@ -3,26 +3,26 @@
   "short_name": "D&D Tropes",
   "description": "Generate random story tropes for your D&D campaigns. Create compelling fantasy adventures with our intuitive story generator tool for dungeon masters.",
   "start_url": "/trope-forge-hub/",
-  "display": "standalone",
+  "scope": "/trope-forge-hub/",
   "background_color": "#1a1a1a",
   "theme_color": "#9333ea",
   "orientation": "any",
   "categories": ["games", "entertainment", "utilities"],
   "icons": [
     {
-      "src": "/icon-192.png",
+      "src": "icon-192.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "any maskable"
     },
     {
-      "src": "/icon-256.png", 
+      "src": "icon-256.png", 
       "sizes": "256x256",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "/icon-512.png",
+      "src": "icon-512.png",
       "sizes": "512x512", 
       "type": "image/png",
       "purpose": "any"
@@ -33,20 +33,20 @@
       "name": "Generate Tropes",
       "short_name": "Generate",
       "description": "Generate new random tropes",
-      "url": "/?action=generate",
-      "icons": [{ "src": "/icon-192.png", "sizes": "192x192" }]
+      "url": "./?action=generate",
+      "icons": [{ "src": "icon-192.png", "sizes": "192x192" }]
     },
     {
       "name": "Export Prompt",
       "short_name": "Export", 
       "description": "Export D&D campaign template",
-      "url": "/?action=export",
-      "icons": [{ "src": "/icon-192.png", "sizes": "192x192" }]
+      "url": "./?action=export",
+      "icons": [{ "src": "icon-192.png", "sizes": "192x192" }]
     }
   ],
   "file_handlers": [
     {
-      "action": "/",
+      "action": "./",
       "accept": {
         "text/csv": [".csv"]
       }
