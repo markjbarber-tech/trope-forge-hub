@@ -363,7 +363,7 @@ ${loreLinkSection}
           </div>
 
           <Button
-            variant="gold"
+            variant="outline"
             onClick={handleExportTable}
             disabled={disabled || hasNoElements}
             className="w-full justify-center text-center"
