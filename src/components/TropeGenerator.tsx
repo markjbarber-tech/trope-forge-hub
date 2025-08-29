@@ -33,6 +33,10 @@ export const TropeGenerator = ({
           </CardTitle>
         </div>
         
+        <p className="text-sm text-muted-foreground">
+          Story elements are the key concepts of your story.
+        </p>
+        
         <Button 
           variant="mystical" 
           size="lg" 
