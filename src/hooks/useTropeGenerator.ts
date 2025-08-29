@@ -71,8 +71,8 @@ export const useTropeGenerator = () => {
     toast({
       title: "Tropes generated!",
       description: hasPersonalData 
-        ? `Generated ${generated.length} tropes (${personalCount} personal, ${defaultCount} default). Scroll down for story element combination.`
-        : `Generated ${generated.length} random tropes. Scroll down for story element combination.`,
+        ? `Scroll down for story element combination. Generated ${generated.length} tropes (${personalCount} personal, ${defaultCount} default).`
+        : `Scroll down for story element combination. Generated ${generated.length} random tropes.`,
       duration: 5000, // Fade after 5 seconds
     });
 
