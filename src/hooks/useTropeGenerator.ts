@@ -21,10 +21,6 @@ export const useTropeGenerator = () => {
       const tropes = await fetchTropeData();
       setAllTropes(tropes);
       
-      toast({
-        title: "Trope Data Loaded",
-        description: `Successfully loaded ${tropes.length} tropes from CSV`,
-      });
       
       console.log(`Loaded ${tropes.length} tropes from CSV`);
     } catch (error) {
