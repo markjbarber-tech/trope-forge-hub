@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Label } from '@/components/ui/label';
-import { Printer, HelpCircle } from 'lucide-react';
+import { Printer, HelpCircle, X } from 'lucide-react';
 import { Trope } from '@/types/trope';
 import { exportTropesToText, exportDnDCampaignTemplate } from '@/utils/exportUtils';
 import { useToast } from '@/hooks/use-toast';
@@ -301,13 +301,8 @@ ${loreLinkSection}
       // Copy to clipboard
       await navigator.clipboard.writeText(promptContent);
       
-      // Show clipboard message
+      // Show clipboard message (persistent until dismissed)
       setShowClipboardMessage(true);
-      
-      // Hide message after 5 seconds
-      setTimeout(() => {
-        setShowClipboardMessage(false);
-      }, 5000);
     } catch (error) {
       toast({
         title: "Copy Failed", 
@@ -352,8 +347,16 @@ ${loreLinkSection}
           </Button>
           
           {showClipboardMessage && (
-            <div className="text-sm text-green-400 text-center p-2 bg-green-500/10 rounded-lg border border-green-500/20">
+            <div className="text-sm text-green-400 text-center p-3 pr-8 bg-green-500/20 rounded-lg border border-green-500/40 relative">
               Prompt copied to clipboard. Open an LLM to paste the prompt.
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setShowClipboardMessage(false)}
+                className="absolute top-2 right-2 h-5 w-5 p-0 bg-green-500/30 hover:bg-green-500/50 text-green-200 hover:text-white border border-green-500/60"
+              >
+                <X className="h-3 w-3" />
+              </Button>
             </div>
           )}
           
