@@ -11,6 +11,7 @@ export const useTropeGenerator = () => {
   const [tropeCount, setTropeCount] = useState(5);
   const [isLoading, setIsLoading] = useState(false);
   const [isInitialLoad, setIsInitialLoad] = useState(true);
+  const [showGenerationMessage, setShowGenerationMessage] = useState(false);
   const { toast } = useToast();
   const { personalTropes, hasPersonalData, uploadPersonalData, purgePersonalData } = usePersonalData();
 
@@ -64,13 +65,13 @@ export const useTropeGenerator = () => {
     const personalCount = generated.filter(trope => trope.source === 'personal').length;
     const defaultCount = generated.filter(trope => trope.source === 'default').length;
     
-    toast({
-      title: "Story elements generated!",
-      description: hasPersonalData 
-        ? `Scroll down to see your story elements\nGenerated ${generated.length} story elements (${defaultCount} default, ${personalCount} personal)`
-        : `Scroll down to see your story elements\nGenerated ${generated.length} story elements`,
-      duration: 5000, // Fade after 5 seconds
-    });
+    // Show generation message
+    setShowGenerationMessage(true);
+    
+    // Hide message after 5 seconds
+    setTimeout(() => {
+      setShowGenerationMessage(false);
+    }, 5000);
 
     console.log('Generated tropes:', generated.map(t => t.name));
     console.log(`Counts: ${personalCount} personal, ${defaultCount} default`);
@@ -189,6 +190,7 @@ export const useTropeGenerator = () => {
     isInitialLoad,
     personalTropes,
     hasPersonalData,
+    showGenerationMessage,
     setTropeCount,
     generateTropes,
     refreshData: loadTropeData,

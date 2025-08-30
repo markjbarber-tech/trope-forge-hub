@@ -13,6 +13,7 @@ interface TropeGeneratorProps {
   isLoading?: boolean;
   dataLoadTime?: string;
   totalTropes?: number;
+  showGenerationMessage?: boolean;
 }
 
 export const TropeGenerator = ({ 
@@ -22,7 +23,8 @@ export const TropeGenerator = ({
   onRefreshData,
   isLoading = false,
   dataLoadTime,
-  totalTropes
+  totalTropes,
+  showGenerationMessage = false
 }: TropeGeneratorProps) => {
   const [showGeneratorHelp, setShowGeneratorHelp] = useState(false);
 
@@ -58,6 +60,12 @@ export const TropeGenerator = ({
         >
           {isLoading ? 'Loading Data...' : 'Generate Story Elements'}
         </Button>
+        
+        {showGenerationMessage && (
+          <div className="text-sm text-green-400 text-center p-2 bg-green-500/10 rounded-lg border border-green-500/20">
+            Story elements generated! Scroll down to see your elements.
+          </div>
+        )}
       </CardHeader>
       
       <CardContent className="space-y-6">

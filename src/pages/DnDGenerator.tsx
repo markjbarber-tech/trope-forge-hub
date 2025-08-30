@@ -33,6 +33,7 @@ export const DnDGenerator = () => {
     isInitialLoad,
     personalTropes,
     hasPersonalData,
+    showGenerationMessage,
     setTropeCount,
     generateTropes,
     refreshData,
@@ -106,6 +107,7 @@ export const DnDGenerator = () => {
               isLoading={isLoading || isInitialLoad}
               dataLoadTime={loadTime}
               totalTropes={allTropes.length}
+              showGenerationMessage={showGenerationMessage}
             />
             
             <TropeSearch
