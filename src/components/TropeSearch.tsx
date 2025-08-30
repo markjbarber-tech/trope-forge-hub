@@ -75,7 +75,7 @@ export const TropeSearch = ({ allTropes, generatedTropes, onAddTrope }: TropeSea
           value={searchQuery}
           onChange={(e) => handleInputChange(e.target.value)}
           placeholder="Search story elements to add..."
-          className="pl-10 pr-10 bg-background/50 border-border/60 text-white placeholder:text-muted-foreground"
+          className="pl-10 pr-10"
           onFocus={() => searchQuery.trim() && setIsOpen(true)}
         />
         {searchQuery && (
@@ -99,7 +99,7 @@ export const TropeSearch = ({ allTropes, generatedTropes, onAddTrope }: TropeSea
                 <Button
                   key={trope.id}
                   variant="ghost"
-                  className="w-full justify-start text-left h-auto p-3 text-white hover:bg-white/10"
+                  className="w-full justify-start text-left h-auto p-3"
                   onClick={() => handleSelectTrope(trope)}
                 >
                   <div className="flex flex-col items-start gap-1">
