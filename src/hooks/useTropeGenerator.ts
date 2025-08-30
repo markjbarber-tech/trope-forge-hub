@@ -156,9 +156,13 @@ export const useTropeGenerator = () => {
   }, [toast]);
 
   const addSpecificTrope = useCallback((trope: Trope) => {
+    console.log('addSpecificTrope called with:', trope);
+    console.log('Current generatedTropes:', generatedTropes);
+    
     // Check if trope is already in the list
     const usedTropeIds = new Set(generatedTropes.map(t => t.id));
     if (usedTropeIds.has(trope.id)) {
+      console.log('Trope already exists:', trope.id);
       toast({
         title: "Already Added",
         description: "This story element is already in your list",
@@ -173,7 +177,12 @@ export const useTropeGenerator = () => {
       source: personalTropes.some(p => p.id === trope.id) ? 'personal' : 'default',
     };
     
-    setGeneratedTropes(prev => [...prev, tropeToAdd]);
+    console.log('Adding trope:', tropeToAdd);
+    setGeneratedTropes(prev => {
+      const newList = [...prev, tropeToAdd];
+      console.log('New generatedTropes list:', newList);
+      return newList;
+    });
     
     toast({
       title: "Story Element Added",
