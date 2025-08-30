@@ -65,13 +65,8 @@ export const useTropeGenerator = () => {
     const personalCount = generated.filter(trope => trope.source === 'personal').length;
     const defaultCount = generated.filter(trope => trope.source === 'default').length;
     
-    // Show generation message
+    // Show generation message (persistent until dismissed)
     setShowGenerationMessage(true);
-    
-    // Hide message after 5 seconds
-    setTimeout(() => {
-      setShowGenerationMessage(false);
-    }, 5000);
 
     console.log('Generated tropes:', generated.map(t => t.name));
     console.log(`Counts: ${personalCount} personal, ${defaultCount} default`);

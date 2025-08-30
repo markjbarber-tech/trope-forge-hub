@@ -64,16 +64,16 @@ export const TropeGenerator = ({
         </Button>
         
         {showGenerationMessage && (
-          <div className="text-sm text-green-400 text-center p-2 bg-green-500/10 rounded-lg border border-green-500/20 relative">
+          <div className="text-sm text-green-400 text-center p-3 pr-8 bg-green-500/20 rounded-lg border border-green-500/40 relative">
             Story elements generated! Scroll down to see your elements.
             {onDismissGenerationMessage && (
               <Button
                 variant="ghost"
                 size="sm"
                 onClick={onDismissGenerationMessage}
-                className="absolute top-1 right-1 h-6 w-6 p-0 hover:bg-green-500/20 text-green-400 hover:text-green-300"
+                className="absolute top-2 right-2 h-5 w-5 p-0 bg-green-500/30 hover:bg-green-500/50 text-green-200 hover:text-white border border-green-500/60"
               >
-                <X className="h-4 w-4" />
+                <X className="h-3 w-3" />
               </Button>
             )}
           </div>
