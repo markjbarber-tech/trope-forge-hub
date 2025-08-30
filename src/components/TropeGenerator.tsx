@@ -71,9 +71,9 @@ export const TropeGenerator = ({
                 variant="ghost"
                 size="sm"
                 onClick={onDismissGenerationMessage}
-                className="absolute top-1 right-1 h-6 w-6 p-0 hover:bg-green-500/20"
+                className="absolute top-1 right-1 h-6 w-6 p-0 hover:bg-green-500/20 text-green-400 hover:text-green-300"
               >
-                <X className="h-3 w-3" />
+                <X className="h-4 w-4" />
               </Button>
             )}
           </div>
