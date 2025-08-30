@@ -308,12 +308,6 @@ ${loreLinkSection}
       setTimeout(() => {
         setShowClipboardMessage(false);
       }, 5000);
-      
-      toast({
-        title: "Prompt Copied!",
-        description: "Adventure prompt copied to clipboard",
-        duration: 3000,
-      });
     } catch (error) {
       toast({
         title: "Copy Failed", 
