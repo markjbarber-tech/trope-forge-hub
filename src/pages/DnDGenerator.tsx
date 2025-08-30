@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { AppHeader } from '@/components/AppHeader';
 import { TropeGenerator } from '@/components/TropeGenerator';
 import { TropeDisplay } from '@/components/TropeDisplay';
+import { TropeSearch } from '@/components/TropeSearch';
 import { ExportPanel } from '@/components/ExportPanel';
 import { AdvancedOptions } from '@/components/AdvancedOptions';
 import { useTropeGenerator } from '@/hooks/useTropeGenerator';
@@ -38,6 +39,7 @@ export const DnDGenerator = () => {
     removeTrope,
     addRandomTrope,
     addCustomTrope,
+    addSpecificTrope,
     uploadPersonalData,
     purgePersonalData
   } = useTropeGenerator();
@@ -103,6 +105,12 @@ export const DnDGenerator = () => {
               isLoading={isLoading || isInitialLoad}
               dataLoadTime={loadTime}
               totalTropes={allTropes.length}
+            />
+            
+            <TropeSearch
+              allTropes={allTropes}
+              generatedTropes={generatedTropes}
+              onAddTrope={addSpecificTrope}
             />
             
             <ExportPanel

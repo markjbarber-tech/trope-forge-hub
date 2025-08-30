@@ -159,6 +159,32 @@ export const useTropeGenerator = () => {
     });
   }, [toast]);
 
+  const addSpecificTrope = useCallback((trope: Trope) => {
+    // Check if trope is already in the list
+    const usedTropeIds = new Set(generatedTropes.map(t => t.id));
+    if (usedTropeIds.has(trope.id)) {
+      toast({
+        title: "Already Added",
+        description: "This story element is already in your list",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    // Add the trope with proper source marking
+    const tropeToAdd: Trope = {
+      ...trope,
+      source: personalTropes.some(p => p.id === trope.id) ? 'personal' : 'default',
+    };
+    
+    setGeneratedTropes(prev => [...prev, tropeToAdd]);
+    
+    toast({
+      title: "Story Element Added",
+      description: `Added "${trope.name}" to your list`,
+    });
+  }, [generatedTropes, personalTropes, toast]);
+
   return {
     allTropes,
     generatedTropes,
@@ -173,6 +199,7 @@ export const useTropeGenerator = () => {
     removeTrope,
     addRandomTrope,
     addCustomTrope,
+    addSpecificTrope,
     uploadPersonalData,
     purgePersonalData
   };
