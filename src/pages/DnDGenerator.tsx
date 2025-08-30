@@ -141,6 +141,7 @@ export const DnDGenerator = () => {
               personalTropes={personalTropes}
               onPersonalUpload={uploadPersonalData}
               onPurgePersonalData={purgePersonalData}
+              onAddTrope={addSpecificTrope}
               loreLinks={loreLinks}
               onLinksChange={setLoreLinks}
               isLoading={isLoading}

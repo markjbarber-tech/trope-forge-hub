@@ -13,6 +13,7 @@ interface PersonalDataManagerProps {
   personalTropes: Trope[];
   onPersonalUpload: (content: string) => void;
   onPurgePersonalData: () => void;
+  onAddTrope?: (trope: Trope) => void;
   isLoading?: boolean;
 }
 
@@ -22,6 +23,7 @@ export const PersonalDataManager = ({
   personalTropes,
   onPersonalUpload, 
   onPurgePersonalData,
+  onAddTrope,
   isLoading = false 
 }: PersonalDataManagerProps) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -164,7 +166,10 @@ export const PersonalDataManager = ({
       </Card>
 
       {hasPersonalData && (
-        <PersonalTropesSearch personalTropes={personalTropes} />
+        <PersonalTropesSearch 
+          personalTropes={personalTropes} 
+          onAddTrope={onAddTrope}
+        />
       )}
     </div>
   );

@@ -34,6 +34,7 @@ interface AdvancedOptionsProps {
   personalTropes: Trope[];
   onPersonalUpload: (content: string) => void;
   onPurgePersonalData: () => void;
+  onAddTrope?: (trope: Trope) => void;
   loreLinks: LoreLink[];
   onLinksChange: (links: LoreLink[]) => void;
   isLoading?: boolean;
@@ -45,6 +46,7 @@ export const AdvancedOptions = ({
   personalTropes,
   onPersonalUpload, 
   onPurgePersonalData,
+  onAddTrope,
   loreLinks,
   onLinksChange,
   isLoading = false 
@@ -200,12 +202,13 @@ export const AdvancedOptions = ({
         <CollapsibleContent>
           <CardContent className="space-y-6 pt-0">
             {/* Personal Story Elements Section */}
-            <PersonalDataManager 
+            <PersonalDataManager
               personalTropeCount={personalElementCount}
               hasPersonalData={hasPersonalData}
               personalTropes={personalTropes}
               onPersonalUpload={onPersonalUpload}
               onPurgePersonalData={onPurgePersonalData}
+              onAddTrope={onAddTrope}
               isLoading={isLoading}
             />
 

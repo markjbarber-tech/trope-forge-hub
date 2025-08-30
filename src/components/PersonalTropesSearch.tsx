@@ -8,9 +8,10 @@ import { TropeCard } from './TropeCard';
 
 interface PersonalTropesSearchProps {
   personalTropes: Trope[];
+  onAddTrope?: (trope: Trope) => void;
 }
 
-export const PersonalTropesSearch = ({ personalTropes }: PersonalTropesSearchProps) => {
+export const PersonalTropesSearch = ({ personalTropes, onAddTrope }: PersonalTropesSearchProps) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [showResults, setShowResults] = useState(false);
 
@@ -91,7 +92,12 @@ export const PersonalTropesSearch = ({ personalTropes }: PersonalTropesSearchPro
         {showResults && filteredTropes.length > 0 && (
           <div className="space-y-3 max-h-96 overflow-y-auto">
             {filteredTropes.map((trope) => (
-              <TropeCard key={trope.id} trope={trope} />
+              <TropeCard 
+                key={trope.id} 
+                trope={trope} 
+                onAddTrope={onAddTrope}
+                showAddButton={true}
+              />
             ))}
           </div>
         )}

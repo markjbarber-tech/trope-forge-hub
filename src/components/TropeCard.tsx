@@ -1,14 +1,16 @@
 import { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { ChevronDown, ChevronUp } from 'lucide-react';
+import { ChevronDown, ChevronUp, Plus } from 'lucide-react';
 import { Trope } from '@/types/trope';
 
 interface TropeCardProps {
   trope: Trope;
+  onAddTrope?: (trope: Trope) => void;
+  showAddButton?: boolean;
 }
 
-export const TropeCard = ({ trope }: TropeCardProps) => {
+export const TropeCard = ({ trope, onAddTrope, showAddButton = false }: TropeCardProps) => {
   const [isDetailVisible, setIsDetailVisible] = useState(false);
 
   return (
@@ -18,24 +20,37 @@ export const TropeCard = ({ trope }: TropeCardProps) => {
           <CardTitle className="text-white text-lg font-bold">
             {trope.name}
           </CardTitle>
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => setIsDetailVisible(!isDetailVisible)}
-            className="text-white hover:text-mystical-glow hover:bg-fantasy-purple/10"
-          >
-            {isDetailVisible ? (
-              <>
-                <ChevronUp className="h-4 w-4" />
-                Hide
-              </>
-            ) : (
-              <>
-                <ChevronDown className="h-4 w-4" />
-                Show Detail
-              </>
+          <div className="flex items-center gap-2">
+            {showAddButton && onAddTrope && (
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => onAddTrope(trope)}
+                className="text-white hover:text-mystical-glow hover:bg-fantasy-purple/10"
+              >
+                <Plus className="h-4 w-4 mr-1" />
+                Add
+              </Button>
             )}
-          </Button>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => setIsDetailVisible(!isDetailVisible)}
+              className="text-white hover:text-mystical-glow hover:bg-fantasy-purple/10"
+            >
+              {isDetailVisible ? (
+                <>
+                  <ChevronUp className="h-4 w-4" />
+                  Hide
+                </>
+              ) : (
+                <>
+                  <ChevronDown className="h-4 w-4" />
+                  Show Detail
+                </>
+              )}
+            </Button>
+          </div>
         </div>
       </CardHeader>
       {isDetailVisible && (
