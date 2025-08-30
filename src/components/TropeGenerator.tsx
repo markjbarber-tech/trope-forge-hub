@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Slider } from '@/components/ui/slider';
-import { Sparkles, RefreshCw, HelpCircle } from 'lucide-react';
+import { Sparkles, RefreshCw, HelpCircle, X } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 
 interface TropeGeneratorProps {
@@ -14,6 +14,7 @@ interface TropeGeneratorProps {
   dataLoadTime?: string;
   totalTropes?: number;
   showGenerationMessage?: boolean;
+  onDismissGenerationMessage?: () => void;
 }
 
 export const TropeGenerator = ({ 
@@ -24,7 +25,8 @@ export const TropeGenerator = ({
   isLoading = false,
   dataLoadTime,
   totalTropes,
-  showGenerationMessage = false
+  showGenerationMessage = false,
+  onDismissGenerationMessage
 }: TropeGeneratorProps) => {
   const [showGeneratorHelp, setShowGeneratorHelp] = useState(false);
 
@@ -62,8 +64,18 @@ export const TropeGenerator = ({
         </Button>
         
         {showGenerationMessage && (
-          <div className="text-sm text-green-400 text-center p-2 bg-green-500/10 rounded-lg border border-green-500/20">
+          <div className="text-sm text-green-400 text-center p-2 bg-green-500/10 rounded-lg border border-green-500/20 relative">
             Story elements generated! Scroll down to see your elements.
+            {onDismissGenerationMessage && (
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={onDismissGenerationMessage}
+                className="absolute top-1 right-1 h-6 w-6 p-0 hover:bg-green-500/20"
+              >
+                <X className="h-3 w-3" />
+              </Button>
+            )}
           </div>
         )}
       </CardHeader>

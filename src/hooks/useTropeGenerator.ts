@@ -77,6 +77,10 @@ export const useTropeGenerator = () => {
     console.log(`Counts: ${personalCount} personal, ${defaultCount} default`);
   }, [allTropes, personalTropes, tropeCount, hasPersonalData, toast]);
 
+  const dismissGenerationMessage = useCallback(() => {
+    setShowGenerationMessage(false);
+  }, []);
+
   // Handle URL actions (for PWA shortcuts)
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
@@ -191,6 +195,7 @@ export const useTropeGenerator = () => {
     personalTropes,
     hasPersonalData,
     showGenerationMessage,
+    dismissGenerationMessage,
     setTropeCount,
     generateTropes,
     refreshData: loadTropeData,
