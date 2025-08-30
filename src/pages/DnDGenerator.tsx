@@ -138,6 +138,7 @@ export const DnDGenerator = () => {
             <AdvancedOptions
               personalElementCount={personalTropes.length}
               hasPersonalData={hasPersonalData}
+              personalTropes={personalTropes}
               onPersonalUpload={uploadPersonalData}
               onPurgePersonalData={purgePersonalData}
               loreLinks={loreLinks}

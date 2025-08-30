@@ -19,6 +19,8 @@ import {
 } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
+import { PersonalDataManager } from './PersonalDataManager';
+import { Trope } from '@/types/trope';
 
 interface LoreLink {
   id: string;
@@ -29,6 +31,7 @@ interface LoreLink {
 interface AdvancedOptionsProps {
   personalElementCount: number;
   hasPersonalData: boolean;
+  personalTropes: Trope[];
   onPersonalUpload: (content: string) => void;
   onPurgePersonalData: () => void;
   loreLinks: LoreLink[];
@@ -39,6 +42,7 @@ interface AdvancedOptionsProps {
 export const AdvancedOptions = ({ 
   personalElementCount,
   hasPersonalData,
+  personalTropes,
   onPersonalUpload, 
   onPurgePersonalData,
   loreLinks,
@@ -196,94 +200,14 @@ export const AdvancedOptions = ({
         <CollapsibleContent>
           <CardContent className="space-y-6 pt-0">
             {/* Personal Story Elements Section */}
-            <div className="space-y-4">
-              <div className="flex items-center gap-2">
-                <h3 className="text-white font-medium">Use your personal story elements</h3>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => setShowPersonalHelp(!showPersonalHelp)}
-                  className="h-6 w-6 p-0 hover:bg-muted/20"
-                >
-                  <HelpCircle className="h-4 w-4 text-muted-foreground" />
-                </Button>
-              </div>
-              {hasPersonalData && (
-                <span className="text-xs text-muted-foreground">
-                  {personalElementCount} personal story elements loaded
-                </span>
-              )}
-              
-              {showPersonalHelp && (
-                <p className="text-sm text-muted-foreground bg-muted/10 p-3 rounded-lg border border-border/20">
-                  You can load your own campaign specific story elements to use. Download a template csv file below, enter your story elements and upload to use.
-                </p>
-              )}
-              
-              {hasPersonalData ? (
-                <>
-                  <div className="flex gap-2">
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => fileInputRef.current?.click()}
-                      disabled={isLoading}
-                      className="flex-1"
-                    >
-                      <Upload className="h-4 w-4 mr-2" />
-                      Replace
-                    </Button>
-                    <Button
-                      variant="destructive"
-                      size="sm"
-                      onClick={onPurgePersonalData}
-                      disabled={isLoading}
-                    >
-                      <Trash2 className="h-4 w-4 mr-2" />
-                      Clear
-                    </Button>
-                  </div>
-                  <p className="text-sm text-muted-foreground">
-                    When generating story elements, at least 1 will come from your personal collection.
-                  </p>
-                </>
-              ) : (
-                <>
-                  <div className="flex flex-col sm:flex-row gap-2">
-                    <Button
-                      variant="parchment"
-                      onClick={() => fileInputRef.current?.click()}
-                      disabled={isLoading}
-                      className="flex-1"
-                    >
-                      <Upload className="h-4 w-4 mr-2" />
-                      Upload Personal Story Elements
-                    </Button>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={downloadTemplate}
-                      disabled={isLoading}
-                      className="sm:w-auto w-full"
-                    >
-                      <Download className="h-4 w-4 mr-2" />
-                      Template
-                    </Button>
-                  </div>
-                  <p className="text-sm text-muted-foreground">
-                    Add your own custom story elements! Upload a CSV file with the same structure as the default data.
-                  </p>
-                </>
-              )}
-              
-              <input
-                ref={fileInputRef}
-                type="file"
-                accept=".csv"
-                onChange={handleFileChange}
-                className="hidden"
-              />
-            </div>
+            <PersonalDataManager 
+              personalTropeCount={personalElementCount}
+              hasPersonalData={hasPersonalData}
+              personalTropes={personalTropes}
+              onPersonalUpload={onPersonalUpload}
+              onPurgePersonalData={onPurgePersonalData}
+              isLoading={isLoading}
+            />
 
             {/* Lore Documents Section */}
             <div className="space-y-4 border-t border-border/30 pt-4">
