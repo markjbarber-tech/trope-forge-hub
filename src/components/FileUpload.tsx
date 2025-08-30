@@ -30,10 +30,6 @@ export const FileUpload = ({ onFileUpload, isLoading = false }: FileUploadProps)
     reader.onload = (e) => {
       const content = e.target?.result as string;
       onFileUpload(content);
-      toast({
-        title: "File uploaded successfully",
-        description: `Loaded ${file.name}`,
-      });
     };
     
     reader.onerror = () => {
