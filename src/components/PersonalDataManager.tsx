@@ -87,8 +87,7 @@ export const PersonalDataManager = ({
       <Card className="bg-card/80 backdrop-blur-sm border-border/50 shadow-lg">
         <CardHeader>
           <div className="flex items-center justify-between">
-            <CardTitle className="text-white flex items-center gap-2">
-              <Users className="h-5 w-5" />
+            <CardTitle className="text-white">
               Personal Story Elements
             </CardTitle>
           </div>
