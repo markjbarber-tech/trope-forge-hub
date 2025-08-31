@@ -65,12 +65,12 @@ export const PersonalDataManager = ({
   };
 
   const downloadTemplate = () => {
-    const templateContent = `#,Trope name,Trope detail`;
+    const templateContent = `#,Element name,Element detail`;
     const blob = new Blob([templateContent], { type: 'text/csv' });
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
     link.href = url;
-    link.download = 'personal-tropes-template.csv';
+    link.download = 'personal-story-elements-template.csv';
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -78,7 +78,7 @@ export const PersonalDataManager = ({
     
     toast({
       title: "Template Downloaded",
-      description: "Template file saved as personal-tropes-template.csv",
+      description: "Template file saved as personal-story-elements-template.csv",
     });
   };
 
@@ -89,11 +89,11 @@ export const PersonalDataManager = ({
           <div className="flex items-center justify-between">
             <CardTitle className="text-white flex items-center gap-2">
               <Users className="h-5 w-5" />
-              Personal Tropes
+              Personal Story Elements
             </CardTitle>
             {hasPersonalData && (
               <Badge variant="secondary" className="text-xs">
-                {personalTropeCount} personal tropes
+                {personalTropeCount} personal elements
               </Badge>
             )}
           </div>
@@ -103,8 +103,12 @@ export const PersonalDataManager = ({
           {hasPersonalData ? (
             <>
               <p className="text-sm text-muted-foreground">
-                When generating tropes, at least 1 will come from your personal collection.
+                When generating story elements, some will come from your personal collection based on the balance setting.
               </p>
+              <PersonalTropesSearch 
+                personalTropes={personalTropes} 
+                onAddTrope={onAddTrope}
+              />
               <div className="flex gap-2">
                 <Button
                   variant="outline"
@@ -130,7 +134,7 @@ export const PersonalDataManager = ({
           ) : (
             <>
               <p className="text-sm text-muted-foreground">
-                Add your own custom tropes! Upload a CSV file with the same structure as the default data.
+                Add your own custom story elements! Upload a CSV file with the same structure as the default data.
               </p>
               <div className="flex gap-2">
                 <Button
@@ -140,7 +144,7 @@ export const PersonalDataManager = ({
                   className="flex-1"
                 >
                   <Upload className="h-4 w-4 mr-2" />
-                  Upload Personal Tropes
+                  Upload Personal Story Elements
                 </Button>
                 <Button
                   variant="outline"
@@ -164,13 +168,6 @@ export const PersonalDataManager = ({
           />
         </CardContent>
       </Card>
-
-      {hasPersonalData && (
-        <PersonalTropesSearch 
-          personalTropes={personalTropes} 
-          onAddTrope={onAddTrope}
-        />
-      )}
     </div>
   );
 };
