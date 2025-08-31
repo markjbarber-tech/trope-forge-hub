@@ -49,7 +49,7 @@ export const TropeGenerator = ({
         
         {showGeneratorHelp && (
           <p className="text-sm text-muted-foreground bg-muted/10 p-3 rounded-lg border border-border/20">
-            Story elements are the key concepts of your story.
+            Story elements are the key concepts of your story. Create a random combination of common fantasy story concepts to get the brainstorming rolling!
           </p>
         )}
         
