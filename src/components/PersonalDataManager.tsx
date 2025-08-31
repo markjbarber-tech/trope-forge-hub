@@ -1,7 +1,7 @@
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Upload, Trash2, FileText, Users, Download } from 'lucide-react';
+import { Upload, Trash2, FileText, Users, Download, HelpCircle } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
 import { PersonalTropesSearch } from './PersonalTropesSearch';
@@ -26,6 +26,7 @@ export const PersonalDataManager = ({
   onAddTrope,
   isLoading = false 
 }: PersonalDataManagerProps) => {
+  const [showPersonalHelp, setShowPersonalHelp] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { toast } = useToast();
 
@@ -87,13 +88,29 @@ export const PersonalDataManager = ({
       <Card className="bg-card/80 backdrop-blur-sm border-border/50 shadow-lg">
         <CardHeader>
           <div className="flex items-center justify-between">
-            <CardTitle className="text-white">
-              Personal Story Elements
-            </CardTitle>
+            <div className="flex items-center gap-2">
+              <CardTitle className="text-white">
+                Personal Story Elements
+              </CardTitle>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setShowPersonalHelp(!showPersonalHelp)}
+                className="h-6 w-6 p-0 hover:bg-muted/20"
+              >
+                <HelpCircle className="h-4 w-4 text-muted-foreground" />
+              </Button>
+            </div>
           </div>
         </CardHeader>
         
         <CardContent className="space-y-4">
+          {showPersonalHelp && (
+            <p className="text-sm text-muted-foreground bg-muted/10 p-3 rounded-lg border border-border/20">
+              Upload your own story elements to personalize your campaigns. Use the balance slider in Advanced Options to control how often they appear.
+            </p>
+          )}
+          
           {hasPersonalData ? (
             <>
               <p className="text-sm text-muted-foreground">
