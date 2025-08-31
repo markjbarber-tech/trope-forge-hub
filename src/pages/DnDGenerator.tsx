@@ -40,6 +40,7 @@ export const DnDGenerator = () => {
     refreshData,
     removeTrope,
     addRandomTrope,
+    addRandomPersonalTrope,
     addCustomTrope,
     addSpecificTrope,
     uploadPersonalData,
@@ -131,7 +132,9 @@ export const DnDGenerator = () => {
                 tropes={generatedTropes} 
                 onRemoveTrope={removeTrope}
                 onAddRandomTrope={addRandomTrope}
+                onAddRandomPersonalTrope={addRandomPersonalTrope}
                 onAddCustomTrope={addCustomTrope}
+                hasPersonalData={hasPersonalData}
               />
             </div>
             
@@ -154,7 +157,9 @@ export const DnDGenerator = () => {
               tropes={generatedTropes} 
               onRemoveTrope={removeTrope}
               onAddRandomTrope={addRandomTrope}
+              onAddRandomPersonalTrope={addRandomPersonalTrope}
               onAddCustomTrope={addCustomTrope}
+              hasPersonalData={hasPersonalData}
             />
           </div>
         </div>

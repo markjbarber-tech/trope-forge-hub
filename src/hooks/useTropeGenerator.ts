@@ -136,6 +136,44 @@ export const useTropeGenerator = () => {
     });
   }, [allTropes, generatedTropes, toast]);
 
+  const addRandomPersonalTrope = useCallback(() => {
+    if (personalTropes.length === 0) {
+      toast({
+        title: "No Personal Data",
+        description: "Please upload personal tropes first",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    // Filter out personal tropes already in the generated list
+    const usedTropeIds = new Set(generatedTropes.map(t => t.id));
+    const availablePersonalTropes = personalTropes.filter(t => !usedTropeIds.has(t.id));
+    
+    if (availablePersonalTropes.length === 0) {
+      toast({
+        title: "No More Personal Tropes",
+        description: "All your personal tropes are already in your list",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    // Get a random personal trope from available ones
+    const randomIndex = Math.floor(Math.random() * availablePersonalTropes.length);
+    const newTrope: Trope = {
+      ...availablePersonalTropes[randomIndex],
+      source: 'personal',
+    };
+    
+    setGeneratedTropes(prev => [...prev, newTrope]);
+    
+    toast({
+      title: "Personal Trope Added",
+      description: `Added "${newTrope.name}" from your personal collection`,
+    });
+  }, [personalTropes, generatedTropes, toast]);
+
   const addCustomTrope = useCallback((name: string, detail: string) => {
     // Generate a unique ID for the custom trope
     const customId = `custom-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
@@ -205,6 +243,7 @@ export const useTropeGenerator = () => {
     refreshData: loadTropeData,
     removeTrope,
     addRandomTrope,
+    addRandomPersonalTrope,
     addCustomTrope,
     addSpecificTrope,
     uploadPersonalData,

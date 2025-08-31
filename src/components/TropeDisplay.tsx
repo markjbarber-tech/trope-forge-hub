@@ -11,10 +11,12 @@ interface TropeDisplayProps {
   tropes: Trope[];
   onRemoveTrope?: (tropeId: string) => void;
   onAddRandomTrope?: () => void;
+  onAddRandomPersonalTrope?: () => void;
   onAddCustomTrope?: (name: string, detail: string) => void;
+  hasPersonalData?: boolean;
 }
 
-export const TropeDisplay = ({ tropes, onRemoveTrope, onAddRandomTrope, onAddCustomTrope }: TropeDisplayProps) => {
+export const TropeDisplay = ({ tropes, onRemoveTrope, onAddRandomTrope, onAddRandomPersonalTrope, onAddCustomTrope, hasPersonalData }: TropeDisplayProps) => {
   const [expandedTropes, setExpandedTropes] = useState<Set<string>>(new Set());
   const [showAllDetails, setShowAllDetails] = useState(false);
   const [showCustomForm, setShowCustomForm] = useState(false);
@@ -223,7 +225,17 @@ export const TropeDisplay = ({ tropes, onRemoveTrope, onAddRandomTrope, onAddCus
             onClick={onAddRandomTrope}
             className="text-muted-foreground hover:text-white text-center justify-center"
           >
-            Add Another
+            Add Default Story Element
+          </Button>
+        )}
+        {hasPersonalData && onAddRandomPersonalTrope && (
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={onAddRandomPersonalTrope}
+            className="text-muted-foreground hover:text-white text-center justify-center"
+          >
+            Add Personal Story Element
           </Button>
         )}
       </div>
