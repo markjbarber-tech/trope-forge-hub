@@ -211,7 +211,6 @@ export const AdvancedOptions = ({
             {hasPersonalData && onBalanceChange && (
               <div className="space-y-4">
                 <div className="flex items-center gap-2">
-                  <Users className="h-4 w-4 text-white" />
                   <h3 className="text-white font-medium">Story Element Balance</h3>
                   <Button
                     variant="ghost"
