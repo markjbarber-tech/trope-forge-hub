@@ -34,6 +34,9 @@ export const AppHeader = ({ isOnline = true }: AppHeaderProps) => {
                 <h1 className="text-xl font-bold text-foreground">
                   D&D Story Copilot
                 </h1>
+                <p className="text-sm text-muted-foreground italic">
+                  Supercharge story brainstorming
+                </p>
               </div>
             </div>
           </div>
