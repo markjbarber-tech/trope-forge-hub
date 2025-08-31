@@ -251,7 +251,7 @@ export const AdvancedOptions = ({
                     <span className={balancePercentage === 50 ? 'text-foreground font-medium' : ''}>
                       50/50
                     </span>
-                    <span className={balancePercentage === 100 ? 'text-foreground font-medium' : ''}>
+                    <span className={`text-right ${balancePercentage === 100 ? 'text-foreground font-medium' : ''}`}>
                       All personal elements
                     </span>
                   </div>
