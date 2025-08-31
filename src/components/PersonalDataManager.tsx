@@ -113,9 +113,6 @@ export const PersonalDataManager = ({
           
           {hasPersonalData ? (
             <>
-              <p className="text-sm text-muted-foreground">
-                When generating story elements, some will come from your personal collection based on the balance setting.
-              </p>
               <div className="flex gap-2">
                 <Button
                   variant="outline"
