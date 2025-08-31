@@ -91,11 +91,6 @@ export const PersonalDataManager = ({
               <Users className="h-5 w-5" />
               Personal Story Elements
             </CardTitle>
-            {hasPersonalData && (
-              <Badge variant="secondary" className="text-xs">
-                {personalTropeCount} personal elements
-              </Badge>
-            )}
           </div>
         </CardHeader>
         
@@ -105,10 +100,6 @@ export const PersonalDataManager = ({
               <p className="text-sm text-muted-foreground">
                 When generating story elements, some will come from your personal collection based on the balance setting.
               </p>
-              <PersonalTropesSearch 
-                personalTropes={personalTropes} 
-                onAddTrope={onAddTrope}
-              />
               <div className="flex gap-2">
                 <Button
                   variant="outline"
@@ -166,6 +157,23 @@ export const PersonalDataManager = ({
             onChange={handleFileChange}
             className="hidden"
           />
+          
+          {hasPersonalData && (
+            <>
+              <div className="flex items-center justify-between pt-4 border-t border-border/30">
+                <div className="text-sm text-muted-foreground">
+                  <span className="text-xs">
+                    {personalTropeCount} elements loaded
+                  </span>
+                </div>
+              </div>
+              
+              <PersonalTropesSearch 
+                personalTropes={personalTropes} 
+                onAddTrope={onAddTrope}
+              />
+            </>
+          )}
         </CardContent>
       </Card>
     </div>
