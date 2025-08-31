@@ -207,9 +207,20 @@ export const AdvancedOptions = ({
         
         <CollapsibleContent>
           <CardContent className="space-y-6 pt-0">
+            {/* Personal Story Elements Section */}
+            <PersonalDataManager
+              personalTropeCount={personalElementCount}
+              hasPersonalData={hasPersonalData}
+              personalTropes={personalTropes}
+              onPersonalUpload={onPersonalUpload}
+              onPurgePersonalData={onPurgePersonalData}
+              onAddTrope={onAddTrope}
+              isLoading={isLoading}
+            />
+
             {/* Story Element Balance Section */}
             {hasPersonalData && onBalanceChange && (
-              <div className="space-y-4">
+              <div className="space-y-4 border-t border-border/30 pt-4">
                 <div className="flex items-center gap-2">
                   <h3 className="text-white font-medium">Story Element Balance</h3>
                   <Button
@@ -258,17 +269,6 @@ export const AdvancedOptions = ({
                 </div>
               </div>
             )}
-
-            {/* Personal Story Elements Section */}
-            <PersonalDataManager
-              personalTropeCount={personalElementCount}
-              hasPersonalData={hasPersonalData}
-              personalTropes={personalTropes}
-              onPersonalUpload={onPersonalUpload}
-              onPurgePersonalData={onPurgePersonalData}
-              onAddTrope={onAddTrope}
-              isLoading={isLoading}
-            />
 
             {/* Lore Documents Section */}
             <div className="space-y-4 border-t border-border/30 pt-4">
