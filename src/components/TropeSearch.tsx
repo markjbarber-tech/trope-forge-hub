@@ -74,7 +74,7 @@ export const TropeSearch = ({ allTropes, generatedTropes, onAddTrope }: TropeSea
           ref={inputRef}
           value={searchQuery}
           onChange={(e) => handleInputChange(e.target.value)}
-          placeholder="Search story elements to add..."
+          placeholder="Search common story elements to add..."
           className="pl-10 pr-10"
           onFocus={() => searchQuery.trim() && setIsOpen(true)}
         />
