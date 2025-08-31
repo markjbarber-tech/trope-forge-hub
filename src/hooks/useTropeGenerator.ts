@@ -9,6 +9,7 @@ export const useTropeGenerator = () => {
   const [allTropes, setAllTropes] = useState<Trope[]>([]);
   const [generatedTropes, setGeneratedTropes] = useState<Trope[]>([]);
   const [tropeCount, setTropeCount] = useState(5);
+  const [balancePercentage, setBalancePercentage] = useState(50);
   const [isLoading, setIsLoading] = useState(false);
   const [isInitialLoad, setIsInitialLoad] = useState(true);
   const [showGenerationMessage, setShowGenerationMessage] = useState(false);
@@ -232,6 +233,7 @@ export const useTropeGenerator = () => {
     allTropes,
     generatedTropes,
     tropeCount,
+    balancePercentage,
     isLoading,
     isInitialLoad,
     personalTropes,
@@ -239,6 +241,7 @@ export const useTropeGenerator = () => {
     showGenerationMessage,
     dismissGenerationMessage,
     setTropeCount,
+    setBalancePercentage,
     generateTropes,
     refreshData: loadTropeData,
     removeTrope,

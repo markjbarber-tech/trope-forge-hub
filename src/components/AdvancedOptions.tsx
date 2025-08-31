@@ -3,6 +3,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { Slider } from '@/components/ui/slider';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { 
   Upload, 
@@ -38,6 +39,8 @@ interface AdvancedOptionsProps {
   loreLinks: LoreLink[];
   onLinksChange: (links: LoreLink[]) => void;
   isLoading?: boolean;
+  balancePercentage?: number;
+  onBalanceChange?: (percentage: number) => void;
 }
 
 export const AdvancedOptions = ({ 
@@ -49,13 +52,16 @@ export const AdvancedOptions = ({
   onAddTrope,
   loreLinks,
   onLinksChange,
-  isLoading = false 
+  isLoading = false,
+  balancePercentage = 50,
+  onBalanceChange
 }: AdvancedOptionsProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const [newTitle, setNewTitle] = useState('');
   const [newUrl, setNewUrl] = useState('');
   const [showLoreHelp, setShowLoreHelp] = useState(false);
   const [showPersonalHelp, setShowPersonalHelp] = useState(false);
+  const [showBalanceHelp, setShowBalanceHelp] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { toast } = useToast();
 
@@ -201,6 +207,55 @@ export const AdvancedOptions = ({
         
         <CollapsibleContent>
           <CardContent className="space-y-6 pt-0">
+            {/* Story Element Balance Section */}
+            {hasPersonalData && onBalanceChange && (
+              <div className="space-y-4">
+                <div className="flex items-center gap-2">
+                  <Users className="h-4 w-4 text-white" />
+                  <h3 className="text-white font-medium">Story Element Balance</h3>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => setShowBalanceHelp(!showBalanceHelp)}
+                    className="h-6 w-6 p-0 hover:bg-muted/20"
+                  >
+                    <HelpCircle className="h-4 w-4 text-muted-foreground" />
+                  </Button>
+                </div>
+                
+                {showBalanceHelp && (
+                  <p className="text-sm text-muted-foreground bg-muted/10 p-3 rounded-lg border border-border/20">
+                    Control the mix of common fantasy story elements vs your personal story elements when generating new lists.
+                  </p>
+                )}
+                
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between text-sm text-muted-foreground">
+                    <span>Common story elements</span>
+                    <span className="font-mono text-white">{100 - balancePercentage}% / {balancePercentage}%</span>
+                    <span>Personal story elements</span>
+                  </div>
+                  
+                  <Slider
+                    value={[balancePercentage]}
+                    onValueChange={(value) => onBalanceChange(value[0])}
+                    min={0}
+                    max={100}
+                    step={10}
+                    className="w-full"
+                  />
+                  
+                  <div className="flex justify-between text-xs text-muted-foreground">
+                    {Array.from({ length: 11 }, (_, i) => (
+                      <span key={i * 10} className={balancePercentage === i * 10 ? 'text-foreground font-medium' : ''}>
+                        {i * 10}%
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            )}
+
             {/* Personal Story Elements Section */}
             <PersonalDataManager
               personalTropeCount={personalElementCount}

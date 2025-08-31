@@ -29,6 +29,7 @@ export const DnDGenerator = () => {
     allTropes,
     generatedTropes,
     tropeCount,
+    balancePercentage,
     isLoading,
     isInitialLoad,
     personalTropes,
@@ -36,6 +37,7 @@ export const DnDGenerator = () => {
     showGenerationMessage,
     dismissGenerationMessage,
     setTropeCount,
+    setBalancePercentage,
     generateTropes,
     refreshData,
     removeTrope,
@@ -148,6 +150,8 @@ export const DnDGenerator = () => {
               loreLinks={loreLinks}
               onLinksChange={setLoreLinks}
               isLoading={isLoading}
+              balancePercentage={balancePercentage}
+              onBalanceChange={setBalancePercentage}
             />
           </div>
 
