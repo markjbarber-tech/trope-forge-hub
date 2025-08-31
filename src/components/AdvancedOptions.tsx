@@ -231,23 +231,23 @@ export const AdvancedOptions = ({
                 <div className="space-y-4">
                   <div className="flex items-center justify-between text-sm text-muted-foreground">
                     <span>Common story elements</span>
-                    <span className="font-mono text-white">{11 - balancePercentage} / {balancePercentage}</span>
+                    <span className="font-mono text-white">{10 - balancePercentage} / {balancePercentage}</span>
                     <span>Personal story elements</span>
                   </div>
                   
                   <Slider
                     value={[balancePercentage]}
                     onValueChange={(value) => onBalanceChange(value[0])}
-                    min={1}
+                    min={0}
                     max={10}
                     step={1}
                     className="w-full"
                   />
                   
                   <div className="flex justify-between text-xs text-muted-foreground">
-                    {Array.from({ length: 10 }, (_, i) => (
-                      <span key={i + 1} className={balancePercentage === i + 1 ? 'text-foreground font-medium' : ''}>
-                        {i + 1}
+                    {Array.from({ length: 11 }, (_, i) => (
+                      <span key={i} className={balancePercentage === i ? 'text-foreground font-medium' : ''}>
+                        {i}
                       </span>
                     ))}
                   </div>
