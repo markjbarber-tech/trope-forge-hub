@@ -100,7 +100,7 @@ export const DnDGenerator = () => {
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
           {/* Sidebar - Controls */}
           <div className="lg:col-span-1 space-y-6">
-            <p className="text-muted-foreground italic text-center">Story elements are the key concepts of your story. Create a random combination of common fantasy story concepts to get the brainstorming rolling!</p>
+            
             <TropeGenerator
               tropeCount={tropeCount}
               onTropeCountChange={setTropeCount}
