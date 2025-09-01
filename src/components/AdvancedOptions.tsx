@@ -65,6 +65,9 @@ export const AdvancedOptions = ({
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { toast } = useToast();
 
+  // Use conditional default: 0% when no personal data, provided value when personal data exists
+  const effectiveBalance = hasPersonalData ? balancePercentage : 0;
+
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (!file) return;
@@ -242,13 +245,13 @@ export const AdvancedOptions = ({
                 <div className="space-y-4">
                   <div className="flex items-center justify-between text-sm text-muted-foreground">
                     <span>Common story elements</span>
-                    <span className="font-mono text-white">{100 - balancePercentage}% / {balancePercentage}%</span>
+                    <span className="font-mono text-white">{100 - effectiveBalance}% / {effectiveBalance}%</span>
                     <span>Personal story elements</span>
                   </div>
                   
                   <Slider
-                    value={[balancePercentage]}
-                    onValueChange={(value) => onBalanceChange(value[0])}
+                    value={[effectiveBalance]}
+                    onValueChange={(value) => onBalanceChange?.(value[0])}
                     min={0}
                     max={100}
                     step={10}
@@ -256,13 +259,13 @@ export const AdvancedOptions = ({
                   />
                   
                   <div className="flex justify-between text-xs text-muted-foreground">
-                    <span className={balancePercentage === 0 ? 'text-foreground font-medium' : ''}>
+                    <span className={effectiveBalance === 0 ? 'text-foreground font-medium' : ''}>
                       All common elements
                     </span>
-                    <span className={balancePercentage === 50 ? 'text-foreground font-medium' : ''}>
+                    <span className={effectiveBalance === 50 ? 'text-foreground font-medium' : ''}>
                       50/50
                     </span>
-                    <span className={`text-right ${balancePercentage === 100 ? 'text-foreground font-medium' : ''}`}>
+                    <span className={`text-right ${effectiveBalance === 100 ? 'text-foreground font-medium' : ''}`}>
                       All personal elements
                     </span>
                   </div>
