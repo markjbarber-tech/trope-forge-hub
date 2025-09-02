@@ -99,7 +99,7 @@ export const TropeDisplay = ({
                         </CardTitle>
                       </div>
                       {trope.source && (
-                        <span className="text-xs capitalize opacity-60 text-muted-foreground">
+                        <span className="text-xs capitalize opacity-60 text-muted-foreground ml-8">
                           {trope.source === 'default' ? 'Default' : trope.source === 'personal' ? 'Personal' : 'Custom'}
                         </span>
                       )}
