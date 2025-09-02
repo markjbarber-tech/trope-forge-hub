@@ -105,7 +105,7 @@ export const TropeDisplay = ({
                       )}
                     </div>
                   <div className="flex items-center gap-2">
-                    {onRemoveTrope && <Button variant="ghost" size="sm" onClick={() => onRemoveTrope(trope.id)} className="text-white hover:text-white hover:bg-white/10 transition-colors text-center justify-center">
+                    {onRemoveTrope && <Button variant="ghost" size="sm" onClick={() => onRemoveTrope(trope.id)} className="text-white hover:text-white hover:bg-white/10 transition-colors text-center justify-center items-center">
                         ×
                       </Button>}
                     <Button variant="ghost" size="sm" onClick={() => toggleTrope(trope.id)} className="text-white hover:text-mystical-glow hover:bg-fantasy-purple/10 transition-colors text-center justify-center">
