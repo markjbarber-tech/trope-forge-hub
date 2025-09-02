@@ -99,9 +99,14 @@ export const TropeDisplay = ({
                         </CardTitle>
                       </div>
                       {trope.source && (
-                        <span className="text-xs capitalize opacity-60 self-start ml-8 text-muted-foreground">
-                          {trope.source === 'default' ? 'Default' : trope.source === 'personal' ? 'Personal' : 'Custom'}
-                        </span>
+                        <div className="flex items-center gap-3">
+                          <div className="text-xs font-mono invisible">
+                            {index + 1}
+                          </div>
+                          <span className="text-xs capitalize opacity-60 text-muted-foreground">
+                            {trope.source === 'default' ? 'Default' : trope.source === 'personal' ? 'Personal' : 'Custom'}
+                          </span>
+                        </div>
                       )}
                     </div>
                   <div className="flex items-center gap-2">
