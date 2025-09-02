@@ -108,7 +108,7 @@ export const TropeDisplay = ({
                     {onRemoveTrope && <Button variant="ghost" size="sm" onClick={() => onRemoveTrope(trope.id)} className="text-white hover:text-white hover:bg-white/10 transition-colors text-center justify-center items-center">
                         ×
                       </Button>}
-                    <Button variant="ghost" size="sm" onClick={() => toggleTrope(trope.id)} className="text-white hover:text-mystical-glow hover:bg-fantasy-purple/10 transition-colors text-center justify-center">
+                    <Button variant="ghost" size="sm" onClick={() => toggleTrope(trope.id)} className="text-white hover:text-mystical-glow hover:bg-fantasy-purple/10 transition-colors text-center justify-center items-center">
                       {isExpanded ? 'Hide' : 'Show Detail'}
                     </Button>
                   </div>
