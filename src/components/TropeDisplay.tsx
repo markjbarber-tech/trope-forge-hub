@@ -88,20 +88,22 @@ export const TropeDisplay = ({
         const isExpanded = expandedTropes.has(trope.id);
         return <Card key={trope.id} className="bg-card/90 backdrop-blur-sm border-border/60 hover:border-white/40 transition-all duration-300 shadow-lg hover:shadow-xl">
               <CardHeader className="pb-3">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <Badge variant="secondary" className="text-xs font-mono">
-                      {index + 1}
-                    </Badge>
-                    {trope.source && (
-                      <Badge variant="outline" className="text-xs capitalize">
-                        {trope.source === 'default' ? 'Default' : trope.source === 'personal' ? 'Personal' : 'Custom'}
-                      </Badge>
-                    )}
-                    <CardTitle className="text-white text-lg font-bold">
-                      {trope.name}
-                    </CardTitle>
-                  </div>
+                  <div className="flex items-center justify-between">
+                    <div className="flex flex-col gap-1">
+                      <div className="flex items-center gap-3">
+                        <Badge variant="secondary" className="text-xs font-mono">
+                          {index + 1}
+                        </Badge>
+                        <CardTitle className="text-white text-lg font-bold">
+                          {trope.name}
+                        </CardTitle>
+                      </div>
+                      {trope.source && (
+                        <Badge variant="outline" className="text-xs capitalize opacity-60 self-start ml-8">
+                          {trope.source === 'default' ? 'Default' : trope.source === 'personal' ? 'Personal' : 'Custom'}
+                        </Badge>
+                      )}
+                    </div>
                   <div className="flex items-center gap-2">
                     {onRemoveTrope && <Button variant="ghost" size="sm" onClick={() => onRemoveTrope(trope.id)} className="text-white hover:text-white hover:bg-white/10 transition-colors text-center justify-center">
                         ×
