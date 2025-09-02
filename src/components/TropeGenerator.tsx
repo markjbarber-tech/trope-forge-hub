@@ -35,7 +35,7 @@ export const TropeGenerator = ({
       <CardHeader className="pb-4">
         <div className="flex items-center justify-between">
           <CardTitle className="text-foreground text-sm sm:text-base md:text-lg lg:text-xl leading-tight">
-            Generate story elements
+            Start with some story elements
           </CardTitle>
           <Button
             variant="ghost"
