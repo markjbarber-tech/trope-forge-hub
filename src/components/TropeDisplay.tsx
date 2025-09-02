@@ -150,13 +150,13 @@ export const TropeDisplay = ({
 
       {/* Action Buttons */}
       <div className="flex flex-col sm:flex-row sm:flex-wrap justify-center gap-2 sm:gap-3 pt-4">
-        {onAddRandomTrope && <Button variant="outline" size="sm" onClick={onAddRandomTrope} className="w-full justify-center text-center">
+        {onAddRandomTrope && <Button variant="outline" size="sm" onClick={onAddRandomTrope} className="w-full sm:w-auto justify-center text-center">
             + Default Story Element
           </Button>}
-        {hasPersonalData && onAddRandomPersonalTrope && <Button variant="outline" size="sm" onClick={onAddRandomPersonalTrope} className="w-full justify-center text-center">
+        {hasPersonalData && onAddRandomPersonalTrope && <Button variant="outline" size="sm" onClick={onAddRandomPersonalTrope} className="w-full sm:w-auto justify-center text-center">
             + Personal Story Element
           </Button>}
-        {onAddCustomTrope && <Button variant="outline" size="sm" onClick={() => setShowCustomForm(true)} className="w-full justify-center text-center">
+        {onAddCustomTrope && <Button variant="outline" size="sm" onClick={() => setShowCustomForm(true)} className="w-full sm:w-auto justify-center text-center">
             + Custom Story Element
           </Button>}
       </div>
