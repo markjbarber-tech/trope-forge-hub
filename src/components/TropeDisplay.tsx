@@ -99,9 +99,9 @@ export const TropeDisplay = ({
                         </CardTitle>
                       </div>
                       {trope.source && (
-                        <Badge variant="outline" className="text-xs capitalize opacity-60 self-start ml-8">
+                        <span className="text-xs capitalize opacity-60 self-start ml-8 text-muted-foreground">
                           {trope.source === 'default' ? 'Default' : trope.source === 'personal' ? 'Personal' : 'Custom'}
-                        </Badge>
+                        </span>
                       )}
                     </div>
                   <div className="flex items-center gap-2">
