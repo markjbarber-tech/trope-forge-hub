@@ -149,7 +149,7 @@ export const TropeDisplay = ({
         </Card>}
 
       {/* Action Buttons */}
-      <div className="flex flex-wrap justify-center gap-2 pt-4">
+      <div className="flex flex-col sm:flex-row sm:flex-wrap justify-center gap-2 sm:gap-3 pt-4">
         {onAddRandomTrope && <Button variant="outline" size="sm" onClick={onAddRandomTrope} className="w-full justify-center text-center">
             + Default Story Element
           </Button>}
