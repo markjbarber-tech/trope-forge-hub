@@ -75,7 +75,7 @@ export const TropeDisplay = ({
   }
   return <div className="space-y-4">
       <div className="flex items-center justify-between">
-        <h2 className="text-2xl font-bold text-white">S</h2>
+        <h2 className="text-2xl font-bold text-white">Story el</h2>
         <div className="flex items-center gap-3">
           <Badge variant="outline" className="text-white border-white/30">
             {tropes.length} element{tropes.length !== 1 ? 's' : ''}
