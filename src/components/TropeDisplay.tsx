@@ -151,13 +151,13 @@ export const TropeDisplay = ({
       {/* Action Buttons */}
       <div className="flex flex-wrap justify-center gap-2 pt-4">
         {onAddCustomTrope && <Button variant="ghost" size="sm" onClick={() => setShowCustomForm(true)} className="text-muted-foreground hover:text-white text-center justify-center">
-            Add Custom Story Element
+            + Custom Story Element
           </Button>}
         {onAddRandomTrope && <Button variant="ghost" size="sm" onClick={onAddRandomTrope} className="text-muted-foreground hover:text-white text-center justify-center">
-            Add Default Story Element
+            + Default Story Element
           </Button>}
         {hasPersonalData && onAddRandomPersonalTrope && <Button variant="ghost" size="sm" onClick={onAddRandomPersonalTrope} className="text-muted-foreground hover:text-white text-center justify-center">
-            Add Personal Story Element
+            + Personal Story Element
           </Button>}
       </div>
     </div>;
