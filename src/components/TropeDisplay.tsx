@@ -149,7 +149,7 @@ export const TropeDisplay = ({
         </Card>}
 
       {/* Action Buttons */}
-      <div className="flex justify-center gap-3 pt-4">
+      <div className="flex flex-wrap justify-center gap-2 pt-4">
         {onAddCustomTrope && <Button variant="ghost" size="sm" onClick={() => setShowCustomForm(true)} className="text-muted-foreground hover:text-white text-center justify-center">
             Add Custom Story Element
           </Button>}
