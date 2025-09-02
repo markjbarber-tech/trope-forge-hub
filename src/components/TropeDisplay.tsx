@@ -93,6 +93,11 @@ export const TropeDisplay = ({
                     <Badge variant="secondary" className="text-xs font-mono">
                       {index + 1}
                     </Badge>
+                    {trope.source && (
+                      <Badge variant="outline" className="text-xs capitalize">
+                        {trope.source === 'default' ? 'Default' : trope.source === 'personal' ? 'Personal' : 'Custom'}
+                      </Badge>
+                    )}
                     <CardTitle className="text-white text-lg font-bold">
                       {trope.name}
                     </CardTitle>
