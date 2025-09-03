@@ -108,34 +108,36 @@ export const useTropeGenerator = () => {
       return;
     }
 
-    // Filter out tropes already in the generated list
+    // Filter out tropes already in the generated list and only use default tropes
     const usedTropeIds = new Set(generatedTropes.map(t => t.id));
-    const availableTropes = allTropes.filter(t => !usedTropeIds.has(t.id));
+    const personalTropeIds = new Set(personalTropes.map(t => t.id));
+    const availableDefaultTropes = allTropes.filter(t => 
+      !usedTropeIds.has(t.id) && !personalTropeIds.has(t.id)
+    );
     
-    if (availableTropes.length === 0) {
+    if (availableDefaultTropes.length === 0) {
       toast({
-        title: "No More Tropes",
-        description: "All available tropes are already in your list",
+        title: "No More Default Tropes",
+        description: "All available default tropes are already in your list",
         variant: "destructive",
       });
       return;
     }
 
-    // Get a random trope from available ones
-    const randomIndex = Math.floor(Math.random() * availableTropes.length);
-    const newTropeBase = availableTropes[randomIndex];
+    // Get a random trope from available default ones
+    const randomIndex = Math.floor(Math.random() * availableDefaultTropes.length);
     const newTrope: Trope = {
-      ...newTropeBase,
-      source: personalTropes.some(p => p.id === newTropeBase.id) ? 'personal' : 'default',
+      ...availableDefaultTropes[randomIndex],
+      source: 'default',
     };
     
     setGeneratedTropes(prev => [...prev, newTrope]);
     
     toast({
-      title: "Trope Added",
+      title: "Default Trope Added",
       description: `Added "${newTrope.name}" to your list`,
     });
-  }, [allTropes, generatedTropes, toast]);
+  }, [allTropes, generatedTropes, personalTropes, toast]);
 
   const addRandomPersonalTrope = useCallback(() => {
     if (personalTropes.length === 0) {
