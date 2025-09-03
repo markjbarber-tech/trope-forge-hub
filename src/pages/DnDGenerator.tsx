@@ -153,6 +153,13 @@ export const DnDGenerator = () => {
               balancePercentage={balancePercentage}
               onBalanceChange={setBalancePercentage}
             />
+            
+            {/* Copyright */}
+            <div className="text-center">
+              <span className="text-xs capitalize opacity-60 text-muted-foreground">
+                © Mark Barber 2025
+              </span>
+            </div>
           </div>
 
           {/* Main Content - Trope Display (desktop only) */}
