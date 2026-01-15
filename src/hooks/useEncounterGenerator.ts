@@ -96,6 +96,33 @@ export const useEncounterGenerator = () => {
     setGeneratedEncounter(encounter);
   }, [categoryData, toast]);
 
+  const setEncounterField = useCallback((field: keyof GeneratedEncounter, value: string) => {
+    setGeneratedEncounter(prev => {
+      if (!prev) {
+        // Create a new encounter with just this field set
+        return {
+          location: '',
+          fantasticalNature: '',
+          currentState: '',
+          situation: '',
+          complication: '',
+          npc: '',
+          adversaries: '',
+          [field]: value,
+        };
+      }
+      return { ...prev, [field]: value };
+    });
+  }, []);
+
+  const randomizeField = useCallback((field: keyof GeneratedEncounter) => {
+    if (!categoryData) return;
+    const items = categoryData[field];
+    if (items.length === 0) return;
+    const randomValue = items[Math.floor(Math.random() * items.length)];
+    setEncounterField(field, randomValue);
+  }, [categoryData, setEncounterField]);
+
   const clearEncounter = useCallback(() => {
     setGeneratedEncounter(null);
   }, []);
@@ -106,6 +133,8 @@ export const useEncounterGenerator = () => {
     isLoading,
     dataSource,
     generateEncounter,
+    setEncounterField,
+    randomizeField,
     clearEncounter,
   };
 };
