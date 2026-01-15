@@ -1,5 +1,9 @@
 import { AppHeader } from '@/components/AppHeader';
 import { GeneratorTabs } from '@/components/GeneratorTabs';
+import { EncounterCard } from '@/components/EncounterCard';
+import { useEncounterGenerator } from '@/hooks/useEncounterGenerator';
+import { Button } from '@/components/ui/button';
+import { Dices, Trash2, Loader2 } from 'lucide-react';
 
 interface EncounterGeneratorProps {
   isOnline: boolean;
@@ -7,6 +11,8 @@ interface EncounterGeneratorProps {
 }
 
 export const EncounterGenerator = ({ isOnline, onTabChange }: EncounterGeneratorProps) => {
+  const { generatedEncounter, isLoading, generateEncounter, clearEncounter } = useEncounterGenerator();
+
   return (
     <div className="min-h-screen bg-background">
       <AppHeader isOnline={isOnline} />
@@ -17,15 +23,81 @@ export const EncounterGenerator = ({ isOnline, onTabChange }: EncounterGenerator
           <GeneratorTabs activeTab="encounter" onTabChange={onTabChange} />
         </div>
 
-        {/* Placeholder content */}
-        <div className="text-center py-16">
-          <h2 className="text-2xl font-semibold text-foreground mb-4">
-            Encounter Generator
-          </h2>
-          <p className="text-muted-foreground">
-            Coming soon...
-          </p>
+        {/* Controls */}
+        <div className="flex flex-wrap gap-4 justify-center mb-8">
+          <Button
+            onClick={generateEncounter}
+            disabled={isLoading}
+            size="lg"
+            className="gap-2"
+          >
+            {isLoading ? (
+              <Loader2 className="h-5 w-5 animate-spin" />
+            ) : (
+              <Dices className="h-5 w-5" />
+            )}
+            Generate Encounter
+          </Button>
+          
+          {generatedEncounter && (
+            <Button
+              onClick={clearEncounter}
+              variant="outline"
+              size="lg"
+              className="gap-2"
+            >
+              <Trash2 className="h-5 w-5" />
+              Clear
+            </Button>
+          )}
         </div>
+
+        {/* Generated Encounter Display */}
+        {generatedEncounter ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 max-w-6xl mx-auto">
+            <EncounterCard
+              title="Location"
+              content={generatedEncounter.location}
+              icon="location"
+            />
+            <EncounterCard
+              title="Fantastical Nature"
+              content={generatedEncounter.fantasticalNature}
+              icon="fantastical"
+            />
+            <EncounterCard
+              title="Current State"
+              content={generatedEncounter.currentState}
+              icon="state"
+            />
+            <EncounterCard
+              title="Situation"
+              content={generatedEncounter.situation}
+              icon="situation"
+            />
+            <EncounterCard
+              title="Complication"
+              content={generatedEncounter.complication}
+              icon="complication"
+            />
+            <EncounterCard
+              title="NPC"
+              content={generatedEncounter.npc}
+              icon="npc"
+            />
+            <EncounterCard
+              title="Adversaries"
+              content={generatedEncounter.adversaries}
+              icon="adversaries"
+            />
+          </div>
+        ) : (
+          <div className="text-center py-16">
+            <p className="text-muted-foreground">
+              {isLoading ? 'Loading encounter data...' : 'Click "Generate Encounter" to create a random encounter.'}
+            </p>
+          </div>
+        )}
       </div>
 
       {/* PWA Status Bar */}
