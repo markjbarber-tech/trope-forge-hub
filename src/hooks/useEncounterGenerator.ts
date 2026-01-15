@@ -3,7 +3,7 @@ import { useToast } from '@/hooks/use-toast';
 import { parseEncounterCSV, generateRandomEncounter, CategoryData } from '@/utils/encounterCsvParser';
 import { GeneratedEncounter } from '@/types/encounter';
 
-const ENCOUNTER_CSV_URL = '/Encounter_inputs.csv';
+const ENCOUNTER_CSV_FILENAME = 'Encounter_inputs.csv';
 
 export const useEncounterGenerator = () => {
   const [categoryData, setCategoryData] = useState<CategoryData | null>(null);
@@ -14,8 +14,10 @@ export const useEncounterGenerator = () => {
   const loadEncounterData = useCallback(async () => {
     setIsLoading(true);
     try {
-      // Add cache-busting parameter to ensure fresh fetch
-      const response = await fetch(`${ENCOUNTER_CSV_URL}?v=${Date.now()}`);
+      // Use BASE_URL to handle deployment with base path
+      const baseUrl = import.meta.env.BASE_URL || '/';
+      const csvUrl = `${baseUrl}${ENCOUNTER_CSV_FILENAME}?v=${Date.now()}`;
+      const response = await fetch(csvUrl);
       if (!response.ok) {
         throw new Error(`Failed to fetch encounter data: ${response.status}`);
       }
