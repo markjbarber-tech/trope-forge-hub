@@ -2,38 +2,59 @@ import { useState, useMemo } from 'react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { Search, X, Check } from 'lucide-react';
+import { Search, X, Check, Plus, Star } from 'lucide-react';
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover';
+import { toast } from 'sonner';
 
 interface EncounterCategorySearchProps {
   options: string[];
+  customOptions?: string[];
   value: string;
   onSelect: (value: string) => void;
+  onAddCustom?: (value: string) => boolean;
   placeholder?: string;
   disabled?: boolean;
+  categoryName?: string;
 }
 
 export const EncounterCategorySearch = ({
   options,
+  customOptions = [],
   value,
   onSelect,
+  onAddCustom,
   placeholder = 'Search...',
   disabled = false,
+  categoryName = 'input',
 }: EncounterCategorySearchProps) => {
   const [open, setOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
 
-  const filteredOptions = useMemo(() => {
-    if (!searchQuery.trim()) return options;
-    const query = searchQuery.toLowerCase();
-    return options.filter(option => 
-      option.toLowerCase().includes(query)
+  // Combine options with custom options, marking custom ones
+  const allOptions = useMemo(() => {
+    const customSet = new Set(customOptions.map(o => o.toLowerCase()));
+    const standardOptions = options.map(o => ({ value: o, isCustom: false }));
+    const customOpts = customOptions.map(o => ({ value: o, isCustom: true }));
+    
+    // Filter out duplicates from standard that exist in custom
+    const filteredStandard = standardOptions.filter(
+      o => !customSet.has(o.value.toLowerCase())
     );
-  }, [options, searchQuery]);
+    
+    return [...customOpts, ...filteredStandard];
+  }, [options, customOptions]);
+
+  const filteredOptions = useMemo(() => {
+    if (!searchQuery.trim()) return allOptions;
+    const query = searchQuery.toLowerCase();
+    return allOptions.filter(option => 
+      option.value.toLowerCase().includes(query)
+    );
+  }, [allOptions, searchQuery]);
 
   const handleSelect = (selectedValue: string) => {
     onSelect(selectedValue);
@@ -41,10 +62,26 @@ export const EncounterCategorySearch = ({
     setSearchQuery('');
   };
 
-  const handleClear = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    onSelect('');
+  const handleAddCustom = () => {
+    if (!searchQuery.trim()) return;
+    
+    if (onAddCustom) {
+      const success = onAddCustom(searchQuery.trim());
+      if (success) {
+        toast.success(`Added custom ${categoryName}: "${searchQuery.trim()}"`);
+        onSelect(searchQuery.trim());
+        setSearchQuery('');
+        setOpen(false);
+      } else {
+        toast.error('This input already exists');
+      }
+    }
   };
+
+  const exactMatchExists = useMemo(() => {
+    const query = searchQuery.trim().toLowerCase();
+    return allOptions.some(o => o.value.toLowerCase() === query);
+  }, [allOptions, searchQuery]);
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -59,7 +96,7 @@ export const EncounterCategorySearch = ({
           Search
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-80 p-0" align="start">
+      <PopoverContent className="w-80 p-0 bg-popover" align="start">
         <div className="p-2 border-b border-border">
           <div className="relative">
             <Search className="absolute left-2 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
@@ -67,8 +104,13 @@ export const EncounterCategorySearch = ({
               placeholder={placeholder}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-8 h-9"
+              className="pl-8 pr-8 h-9"
               autoFocus
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' && searchQuery.trim() && !exactMatchExists && onAddCustom) {
+                  handleAddCustom();
+                }
+              }}
             />
             {searchQuery && (
               <Button
@@ -81,6 +123,18 @@ export const EncounterCategorySearch = ({
               </Button>
             )}
           </div>
+          {/* Add custom button */}
+          {searchQuery.trim() && !exactMatchExists && onAddCustom && (
+            <Button
+              variant="secondary"
+              size="sm"
+              className="w-full mt-2 gap-2"
+              onClick={handleAddCustom}
+            >
+              <Plus className="h-3 w-3" />
+              Add custom: "{searchQuery.trim()}"
+            </Button>
+          )}
         </div>
         <ScrollArea className="h-64">
           {filteredOptions.length > 0 ? (
@@ -88,11 +142,14 @@ export const EncounterCategorySearch = ({
               {filteredOptions.map((option, index) => (
                 <button
                   key={index}
-                  onClick={() => handleSelect(option)}
+                  onClick={() => handleSelect(option.value)}
                   className="w-full text-left px-3 py-2 text-sm rounded-md hover:bg-muted/50 transition-colors flex items-start gap-2"
                 >
-                  <div className="flex-1 break-words">{option}</div>
-                  {value === option && (
+                  {option.isCustom && (
+                    <Star className="h-3 w-3 text-amber-500 flex-shrink-0 mt-1" />
+                  )}
+                  <div className="flex-1 break-words">{option.value}</div>
+                  {value === option.value && (
                     <Check className="h-4 w-4 text-primary flex-shrink-0 mt-0.5" />
                   )}
                 </button>
@@ -100,12 +157,18 @@ export const EncounterCategorySearch = ({
             </div>
           ) : (
             <div className="p-4 text-center text-sm text-muted-foreground">
-              No results found
+              {searchQuery.trim() ? 'No results - add as custom?' : 'No options available'}
             </div>
           )}
         </ScrollArea>
-        <div className="p-2 border-t border-border text-xs text-muted-foreground text-center">
-          {filteredOptions.length} of {options.length} options
+        <div className="p-2 border-t border-border text-xs text-muted-foreground text-center flex justify-between">
+          <span>{filteredOptions.length} of {allOptions.length} options</span>
+          {customOptions.length > 0 && (
+            <span className="flex items-center gap-1">
+              <Star className="h-3 w-3 text-amber-500" />
+              {customOptions.length} custom
+            </span>
+          )}
         </div>
       </PopoverContent>
     </Popover>
