@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 
-const GITHUB_RAW_URL = 'https://raw.githubusercontent.com/markjbarber-tech/DnD-Story-Generator/fb5b57a89a19fea37d44c110ee9e9e3505dacb6f/Lovable_DnD_Encounter_AutoExec_System_Prompt_v1.3.txt';
+const GITHUB_RAW_URL = 'https://raw.githubusercontent.com/markjbarber-tech/DnD-Story-Generator/main/Lovable_DnD_Encounter_AutoExec_System_Prompt_v1.3.txt';
 const LOCAL_STORAGE_KEY = 'encounter-prompt-template';
 const LOCAL_FALLBACK_PATH = '/encounter-prompt-template.txt';
 
