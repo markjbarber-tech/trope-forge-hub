@@ -14,7 +14,8 @@ export const useEncounterGenerator = () => {
   const loadEncounterData = useCallback(async () => {
     setIsLoading(true);
     try {
-      const response = await fetch(ENCOUNTER_CSV_URL);
+      // Add cache-busting parameter to ensure fresh fetch
+      const response = await fetch(`${ENCOUNTER_CSV_URL}?v=${Date.now()}`);
       if (!response.ok) {
         throw new Error(`Failed to fetch encounter data: ${response.status}`);
       }
