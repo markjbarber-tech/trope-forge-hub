@@ -1,5 +1,6 @@
 import { AppHeader } from '@/components/AppHeader';
 import { GeneratorTabs } from '@/components/GeneratorTabs';
+import { EncounterExportPanel } from '@/components/EncounterExportPanel';
 import { useEncounterGenerator } from '@/hooks/useEncounterGenerator';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
@@ -87,6 +88,11 @@ export const EncounterGenerator = ({ isOnline, onTabChange }: EncounterGenerator
                 </div>
               </CardContent>
             </Card>
+            
+            {/* Export Panel */}
+            <div className="mt-6">
+              <EncounterExportPanel encounter={generatedEncounter} disabled={isLoading} />
+            </div>
           </div>
         ) : (
           <div className="text-center py-16">
