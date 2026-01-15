@@ -16,7 +16,9 @@ import {
   Settings,
   Users,
   BookOpen,
-  HelpCircle
+  HelpCircle,
+  Link,
+  FileText
 } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
@@ -27,6 +29,9 @@ interface LoreLink {
   id: string;
   title: string;
   url: string;
+  sourceType: 'url' | 'file';
+  fileContent?: string;
+  fileName?: string;
 }
 
 interface AdvancedOptionsProps {
@@ -62,7 +67,9 @@ export const AdvancedOptions = ({
   const [showLoreHelp, setShowLoreHelp] = useState(false);
   const [showPersonalHelp, setShowPersonalHelp] = useState(false);
   const [showBalanceHelp, setShowBalanceHelp] = useState(false);
+  const [addMode, setAddMode] = useState<'url' | 'file'>('url');
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const loreFileInputRef = useRef<HTMLInputElement>(null);
   const { toast } = useToast();
 
   // Use conditional default: 0% when no personal data, provided value when personal data exists
@@ -130,6 +137,51 @@ export const AdvancedOptions = ({
     }
   };
 
+  const handleLoreFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    if (loreLinks.length >= 10) {
+      toast({
+        title: "Maximum Links Reached",
+        description: "You can add up to 10 lore document links",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const content = e.target?.result as string;
+      const newLink: LoreLink = {
+        id: Date.now().toString(),
+        title: newTitle.trim() || file.name.replace(/\.[^/.]+$/, ''),
+        url: '',
+        sourceType: 'file',
+        fileContent: content,
+        fileName: file.name,
+      };
+      onLinksChange([...loreLinks, newLink]);
+      setNewTitle('');
+      toast({
+        title: "File Added",
+        description: `${file.name} has been added successfully.`,
+      });
+    };
+    reader.onerror = () => {
+      toast({
+        title: "Error reading file",
+        description: "Could not read the uploaded file",
+        variant: "destructive",
+      });
+    };
+    reader.readAsText(file);
+
+    if (loreFileInputRef.current) {
+      loreFileInputRef.current.value = '';
+    }
+  };
+
   const addLink = () => {
     if (!newTitle.trim() || !newUrl.trim()) {
       toast({
@@ -162,6 +214,7 @@ export const AdvancedOptions = ({
       id: Date.now().toString(),
       title: newTitle.trim(),
       url: newUrl.trim(),
+      sourceType: 'url',
     };
 
     onLinksChange([...loreLinks, newLink]);
@@ -290,14 +343,36 @@ export const AdvancedOptions = ({
               
               {showLoreHelp && (
                 <p className="text-sm text-muted-foreground bg-muted/10 p-3 rounded-lg border border-border/20">
-                  Add links to key lore documents to tie your generated adventure into an existing campaign.
+                  Add links to online documents or upload local files to tie your generated adventure into an existing campaign.
                 </p>
               )}
+              
+              {/* Add Mode Toggle */}
+              <div className="flex gap-2">
+                <Button
+                  variant={addMode === 'url' ? 'default' : 'outline'}
+                  size="sm"
+                  onClick={() => setAddMode('url')}
+                  className="flex-1 gap-1"
+                >
+                  <Link className="h-3 w-3" />
+                  Add URL
+                </Button>
+                <Button
+                  variant={addMode === 'file' ? 'default' : 'outline'}
+                  size="sm"
+                  onClick={() => setAddMode('file')}
+                  className="flex-1 gap-1"
+                >
+                  <Upload className="h-3 w-3" />
+                  Upload File
+                </Button>
+              </div>
               
               <div className="grid grid-cols-1 gap-3">
                 <div>
                   <Label htmlFor="link-title" className="text-sm font-medium text-white">
-                    Document Title
+                    Document Title {addMode === 'file' && <span className="text-muted-foreground">(optional)</span>}
                   </Label>
                   <Input
                     id="link-title"
@@ -307,27 +382,51 @@ export const AdvancedOptions = ({
                     className="mt-1"
                   />
                 </div>
-                <div>
-                  <Label htmlFor="link-url" className="text-sm font-medium text-white">
-                    Document URL
-                  </Label>
-                  <Input
-                    id="link-url"
-                    placeholder="https://docs.google.com/document/..."
-                    value={newUrl}
-                    onChange={(e) => setNewUrl(e.target.value)}
-                    className="mt-1"
-                  />
-                </div>
-                <Button
-                  onClick={addLink}
-                  disabled={loreLinks.length >= 10}
-                  className="w-full"
-                  variant="secondary"
-                >
-                  <Plus className="h-4 w-4 mr-2" />
-                  Add Lore Document
-                </Button>
+                
+                {addMode === 'url' ? (
+                  <>
+                    <div>
+                      <Label htmlFor="link-url" className="text-sm font-medium text-white">
+                        Document URL
+                      </Label>
+                      <Input
+                        id="link-url"
+                        placeholder="https://docs.google.com/document/..."
+                        value={newUrl}
+                        onChange={(e) => setNewUrl(e.target.value)}
+                        className="mt-1"
+                      />
+                    </div>
+                    <Button
+                      onClick={addLink}
+                      disabled={loreLinks.length >= 10}
+                      className="w-full"
+                      variant="secondary"
+                    >
+                      <Plus className="h-4 w-4 mr-2" />
+                      Add URL
+                    </Button>
+                  </>
+                ) : (
+                  <>
+                    <input
+                      type="file"
+                      accept=".txt,.md,.csv,.json"
+                      className="hidden"
+                      ref={loreFileInputRef}
+                      onChange={handleLoreFileUpload}
+                    />
+                    <Button
+                      onClick={() => loreFileInputRef.current?.click()}
+                      disabled={loreLinks.length >= 10}
+                      className="w-full"
+                      variant="secondary"
+                    >
+                      <Upload className="h-4 w-4 mr-2" />
+                      Choose File (.txt, .md, .csv, .json)
+                    </Button>
+                  </>
+                )}
               </div>
 
               {loreLinks.length > 0 && (
@@ -341,13 +440,17 @@ export const AdvancedOptions = ({
                       >
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center gap-2">
-                            <ExternalLink className="h-4 w-4 text-muted-foreground flex-shrink-0" />
+                            {link.sourceType === 'file' ? (
+                              <FileText className="h-4 w-4 text-muted-foreground flex-shrink-0" />
+                            ) : (
+                              <ExternalLink className="h-4 w-4 text-muted-foreground flex-shrink-0" />
+                            )}
                             <span className="font-medium text-white truncate">
                               {link.title}
                             </span>
                           </div>
                           <p className="text-xs text-muted-foreground truncate mt-1">
-                            {link.url}
+                            {link.sourceType === 'file' ? link.fileName : link.url}
                           </p>
                         </div>
                         <Button
@@ -368,7 +471,7 @@ export const AdvancedOptions = ({
                 <div className="text-center py-4 text-muted-foreground">
                   <BookOpen className="h-6 w-6 mx-auto mb-2 opacity-50" />
                   <p className="text-sm">No lore documents added yet</p>
-                  <p className="text-xs mt-1">Add links to Google Docs, Notion pages, or other reference materials</p>
+                  <p className="text-xs mt-1">Add URLs or upload local files (.txt, .md, .csv, .json)</p>
                 </div>
               )}
             </div>

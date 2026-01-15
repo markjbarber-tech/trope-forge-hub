@@ -1,11 +1,11 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
-import { Copy, ChevronDown, ChevronUp, Sparkles, Plus, Trash2, Link } from 'lucide-react';
+import { Copy, ChevronDown, ChevronUp, Sparkles, Plus, Trash2, Link, Upload, FileText } from 'lucide-react';
 import { GeneratedEncounter } from '@/types/encounter';
 import { useToast } from '@/hooks/use-toast';
 
@@ -13,6 +13,9 @@ interface LoreLink {
   id: string;
   title: string;
   url: string;
+  sourceType: 'url' | 'file';
+  fileContent?: string;
+  fileName?: string;
 }
 
 interface EncounterExportPanelProps {
@@ -28,26 +31,64 @@ export const EncounterExportPanel = ({ encounter, disabled }: EncounterExportPan
   const [loreAlignmentMode, setLoreAlignmentMode] = useState<'strict' | 'optional' | 'ignore'>('optional');
   const { toast } = useToast();
 
-  const addLoreLink = () => {
-    setLoreLinks([...loreLinks, { id: crypto.randomUUID(), title: '', url: '' }]);
+  const fileInputRefs = useRef<{ [key: string]: HTMLInputElement | null }>({});
+
+  const addLoreLink = (sourceType: 'url' | 'file' = 'url') => {
+    setLoreLinks([...loreLinks, { id: crypto.randomUUID(), title: '', url: '', sourceType }]);
   };
 
   const removeLoreLink = (id: string) => {
     setLoreLinks(loreLinks.filter(link => link.id !== id));
   };
 
-  const updateLoreLink = (id: string, field: 'title' | 'url', value: string) => {
+  const updateLoreLink = (id: string, field: 'title' | 'url' | 'sourceType', value: string) => {
     setLoreLinks(loreLinks.map(link => 
       link.id === id ? { ...link, [field]: value } : link
     ));
   };
 
+  const handleFileUpload = (id: string, event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const content = e.target?.result as string;
+      setLoreLinks(loreLinks.map(link => 
+        link.id === id ? { 
+          ...link, 
+          fileContent: content, 
+          fileName: file.name,
+          title: link.title || file.name.replace(/\.[^/.]+$/, '') 
+        } : link
+      ));
+      toast({
+        title: "File loaded",
+        description: `${file.name} has been loaded successfully.`,
+      });
+    };
+    reader.onerror = () => {
+      toast({
+        title: "Error reading file",
+        description: "Could not read the uploaded file",
+        variant: "destructive",
+      });
+    };
+    reader.readAsText(file);
+  };
+
   const generatePromptContent = (): string => {
     if (!encounter) return '';
 
-    const loreLinkSection = loreLinks.length > 0 && loreLinks.some(l => l.url.trim()) 
+    const hasValidLinks = loreLinks.some(l => l.sourceType === 'url' ? l.url.trim() : l.fileContent);
+    const loreLinkSection = loreLinks.length > 0 && hasValidLinks
       ? `**World Lore Documents:**
-${loreLinks.filter(l => l.url.trim()).map(link => `- ${link.title || 'Untitled'}: ${link.url}`).join('\n')}
+${loreLinks.filter(l => l.sourceType === 'url' ? l.url.trim() : l.fileContent).map(link => {
+  if (link.sourceType === 'file' && link.fileContent) {
+    return `- ${link.title || link.fileName || 'Untitled'} (Local File):\n\`\`\`\n${link.fileContent.substring(0, 5000)}${link.fileContent.length > 5000 ? '\n... (truncated)' : ''}\n\`\`\``;
+  }
+  return `- ${link.title || 'Untitled'}: ${link.url}`;
+}).join('\n')}
 ` : '';
 
     return `🎲 LOVABLE SYSTEM PROMPT  
@@ -353,8 +394,8 @@ ${loreLinkSection}
               </div>
             </div>
 
-            {/* Lore Alignment Mode - Only show when lore links exist */}
-            {loreLinks.length > 0 && loreLinks.some(l => l.url.trim()) && (
+            {/* Lore Alignment Mode - Only show when lore links exist with content */}
+            {loreLinks.length > 0 && loreLinks.some(l => l.sourceType === 'url' ? l.url.trim() : l.fileContent) && (
               <div className="space-y-2">
                 <Label htmlFor="lore-alignment">Lore Alignment Mode</Label>
                 <select
@@ -378,52 +419,94 @@ ${loreLinkSection}
               <div className="flex items-center justify-between">
                 <Label className="flex items-center gap-2">
                   <Link className="h-4 w-4" />
-                  World Lore Links (Optional)
+                  World Lore Documents (Optional)
                 </Label>
-                <Button
-                  type="button"
-                  variant="outline"
-                  size="sm"
-                  onClick={addLoreLink}
-                  className="gap-1"
-                >
-                  <Plus className="h-3 w-3" />
-                  Add Link
-                </Button>
+                <div className="flex gap-1">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    onClick={() => addLoreLink('url')}
+                    className="gap-1"
+                  >
+                    <Link className="h-3 w-3" />
+                    Add URL
+                  </Button>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    onClick={() => addLoreLink('file')}
+                    className="gap-1"
+                  >
+                    <Upload className="h-3 w-3" />
+                    Add File
+                  </Button>
+                </div>
               </div>
               
               {loreLinks.length > 0 && (
-                <div className="space-y-2">
+                <div className="space-y-3">
                   {loreLinks.map((link) => (
-                    <div key={link.id} className="flex gap-2 items-start">
-                      <Input
-                        placeholder="Title (e.g., 'Campaign Setting')"
-                        value={link.title}
-                        onChange={(e) => updateLoreLink(link.id, 'title', e.target.value)}
-                        className="flex-1"
-                      />
-                      <Input
-                        placeholder="URL (Google Docs, etc.)"
-                        value={link.url}
-                        onChange={(e) => updateLoreLink(link.id, 'url', e.target.value)}
-                        className="flex-[2]"
-                      />
-                      <Button
-                        type="button"
-                        variant="ghost"
-                        size="icon"
-                        onClick={() => removeLoreLink(link.id)}
-                        className="shrink-0"
-                      >
-                        <Trash2 className="h-4 w-4 text-destructive" />
-                      </Button>
+                    <div key={link.id} className="p-3 bg-muted/20 rounded-lg border border-border/30 space-y-2">
+                      <div className="flex gap-2 items-center">
+                        <Input
+                          placeholder="Title (e.g., 'Campaign Setting')"
+                          value={link.title}
+                          onChange={(e) => updateLoreLink(link.id, 'title', e.target.value)}
+                          className="flex-1"
+                        />
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="icon"
+                          onClick={() => removeLoreLink(link.id)}
+                          className="shrink-0"
+                        >
+                          <Trash2 className="h-4 w-4 text-destructive" />
+                        </Button>
+                      </div>
+                      
+                      {link.sourceType === 'url' ? (
+                        <Input
+                          placeholder="URL (Google Docs, Notion, etc.)"
+                          value={link.url}
+                          onChange={(e) => updateLoreLink(link.id, 'url', e.target.value)}
+                        />
+                      ) : (
+                        <div className="flex gap-2 items-center">
+                          <input
+                            type="file"
+                            accept=".txt,.md,.csv,.json"
+                            className="hidden"
+                            ref={(el) => { fileInputRefs.current[link.id] = el; }}
+                            onChange={(e) => handleFileUpload(link.id, e)}
+                          />
+                          <Button
+                            type="button"
+                            variant="secondary"
+                            size="sm"
+                            onClick={() => fileInputRefs.current[link.id]?.click()}
+                            className="gap-1"
+                          >
+                            <Upload className="h-3 w-3" />
+                            {link.fileName ? 'Change File' : 'Choose File'}
+                          </Button>
+                          {link.fileName && (
+                            <span className="text-sm text-muted-foreground flex items-center gap-1">
+                              <FileText className="h-3 w-3" />
+                              {link.fileName}
+                            </span>
+                          )}
+                        </div>
+                      )}
                     </div>
                   ))}
                 </div>
               )}
               
               <p className="text-xs text-muted-foreground">
-                Add links to Google Docs or other documents containing your campaign's world lore. The LLM will use these to ground the encounter in your setting.
+                Add URLs to online documents (Google Docs, Notion) or upload local files (.txt, .md, .csv, .json) containing your campaign's world lore.
               </p>
             </div>
 

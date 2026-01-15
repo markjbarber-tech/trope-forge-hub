@@ -16,6 +16,9 @@ interface LoreLink {
   id: string;
   title: string;
   url: string;
+  sourceType: 'url' | 'file';
+  fileContent?: string;
+  fileName?: string;
 }
 
 export const DnDGenerator = () => {
