@@ -6,6 +6,8 @@ import { TropeDisplay } from '@/components/TropeDisplay';
 import { TropeSearch } from '@/components/TropeSearch';
 import { ExportPanel } from '@/components/ExportPanel';
 import { AdvancedOptions } from '@/components/AdvancedOptions';
+import { GeneratorTabs } from '@/components/GeneratorTabs';
+import { EncounterGenerator } from '@/pages/EncounterGenerator';
 import { useTropeGenerator } from '@/hooks/useTropeGenerator';
 import { useKeyboardShortcuts } from '@/hooks/useKeyboardShortcuts';
 import { exportTropesToText } from '@/utils/exportUtils';
@@ -21,6 +23,7 @@ export const DnDGenerator = () => {
   const [isOnline, setIsOnline] = useState(navigator.onLine);
   const [loadTime, setLoadTime] = useState<string>('');
   const [loreLinks, setLoreLinks] = useState<LoreLink[]>([]);
+  const [activeTab, setActiveTab] = useState<'adventure' | 'encounter'>('adventure');
   const navigate = useNavigate();
 
   console.log('DnDGenerator: About to call useTropeGenerator hook');
@@ -94,11 +97,21 @@ export const DnDGenerator = () => {
     isInitialLoad 
   });
 
+  // If encounter tab is active, render EncounterGenerator
+  if (activeTab === 'encounter') {
+    return <EncounterGenerator isOnline={isOnline} onTabChange={setActiveTab} />;
+  }
+
   return (
     <div className="min-h-screen bg-background">
       <AppHeader isOnline={isOnline} />
       
       <div className="container mx-auto px-6 py-8">
+        {/* Tab Navigation */}
+        <div className="mb-8">
+          <GeneratorTabs activeTab="adventure" onTabChange={setActiveTab} />
+        </div>
+
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
           {/* Sidebar - Controls */}
           <div className="lg:col-span-1 space-y-6">
