@@ -353,23 +353,25 @@ ${loreLinkSection}
               </div>
             </div>
 
-            {/* Lore Alignment Mode */}
-            <div className="space-y-2">
-              <Label htmlFor="lore-alignment">Lore Alignment Mode</Label>
-              <select
-                id="lore-alignment"
-                value={loreAlignmentMode}
-                onChange={(e) => setLoreAlignmentMode(e.target.value as 'strict' | 'optional' | 'ignore')}
-                className="w-full h-10 px-3 rounded-md border border-input bg-background text-foreground"
-              >
-                <option value="strict">Strict - Must align to lore documents</option>
-                <option value="optional">Optional - Prefer lore but allow expansion</option>
-                <option value="ignore">Ignore - Generate standalone encounter</option>
-              </select>
-              <p className="text-xs text-muted-foreground">
-                Controls how strictly the encounter should follow your world lore documents.
-              </p>
-            </div>
+            {/* Lore Alignment Mode - Only show when lore links exist */}
+            {loreLinks.length > 0 && loreLinks.some(l => l.url.trim()) && (
+              <div className="space-y-2">
+                <Label htmlFor="lore-alignment">Lore Alignment Mode</Label>
+                <select
+                  id="lore-alignment"
+                  value={loreAlignmentMode}
+                  onChange={(e) => setLoreAlignmentMode(e.target.value as 'strict' | 'optional' | 'ignore')}
+                  className="w-full h-10 px-3 rounded-md border border-input bg-background text-foreground"
+                >
+                  <option value="strict">Strict - Must align to lore documents</option>
+                  <option value="optional">Optional - Prefer lore but allow expansion</option>
+                  <option value="ignore">Ignore - Generate standalone encounter</option>
+                </select>
+                <p className="text-xs text-muted-foreground">
+                  Controls how strictly the encounter should follow your world lore documents.
+                </p>
+              </div>
+            )}
 
             {/* World Lore Links */}
             <div className="space-y-3">
