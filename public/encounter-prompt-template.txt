@@ -39,10 +39,11 @@ EXECUTION RULES (CRITICAL)
 
 - Automatically generate the encounter
 - Automatically generate a PDF
-- Maximum length: 2 pages
+- Target length: **2 full pages** (not less than 1.5 pages, not more than 2 pages)
 - The PDF must contain every required section
 - No section may be omitted, summarized away, or merged
 - Use clear headers, tables, and spacing so each section is visually distinct
+- Use the available space to add clarity and detail where it improves play
 - Write for a DM who may skim mid-session
 
 HARD PDF CONTENT REQUIREMENTS
@@ -174,5 +175,5 @@ Upon receiving valid inputs:
 
 1. Generate the complete encounter
 2. Verify that all required sections are present
-3. Render the result as a fully-featured PDF
+3. Render the result as a fully-featured 2-page PDF
 4. Output the PDF without asking any follow-up questions
