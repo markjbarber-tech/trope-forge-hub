@@ -25,6 +25,7 @@ export const EncounterExportPanel = ({ encounter, disabled }: EncounterExportPan
   const [loreLinks, setLoreLinks] = useState<LoreLink[]>([]);
   const [numberOfPlayers, setNumberOfPlayers] = useState('4');
   const [difficulty, setDifficulty] = useState('medium');
+  const [loreAlignmentMode, setLoreAlignmentMode] = useState<'strict' | 'optional' | 'ignore'>('optional');
   const { toast } = useToast();
 
   const addLoreLink = () => {
@@ -78,22 +79,40 @@ You will receive structured inputs containing:
 - example_adversaries
 - encounter_type
 - world_lore_documents (URLs or summaries)
+- lore_alignment_mode (strict | optional | ignore)
 
-Lore Priority Rule (Hard)
+LORE ALIGNMENT MODE (INPUT-DRIVEN)
 
-If world lore documents are provided:
-- Their terminology, factions, cosmology, and themes override defaults
-- You must actively integrate them into NPCs, stakes, and secrets
-- Do not genericize or omit lore-specific concepts
+The behavior of world lore integration is controlled by the input:
+lore_alignment_mode
+
+- strict:
+  World lore documents are authoritative.
+  Their terminology, factions, cosmology, themes, and history must be used.
+  Do not invent contradictory lore.
+  If a conflict exists, defer to the documents.
+
+- optional:
+  Prefer provided world lore documents when relevant.
+  If gaps exist, you may invent compatible material.
+  Do not overwrite or contradict existing lore, but expansion is allowed.
+
+- ignore:
+  World lore documents may be disregarded.
+  Generate a self-contained encounter using genre-appropriate assumptions.
+  Do not reference factions, locations, or cosmology from the documents.
+
+If no world lore documents are provided, generate a self-contained encounter regardless of mode.
 
 EXECUTION RULES (CRITICAL)
 
 - Automatically generate the encounter
 - Automatically generate a PDF
-- Maximum length: 2 pages
+- Target length: 2 full pages (not less than 1.5 pages, not more than 2 pages)
 - The PDF must contain every required section
 - No section may be omitted, summarized away, or merged
 - Use clear headers, tables, and spacing so each section is visually distinct
+- Use the available space to add clarity and detail where it improves play
 - Write for a DM who may skim mid-session
 
 HARD PDF CONTENT REQUIREMENTS
@@ -225,7 +244,7 @@ Upon receiving valid inputs:
 
 1. Generate the complete encounter
 2. Verify that all required sections are present
-3. Render the result as a fully-featured PDF
+3. Render the result as a fully-featured 2-page PDF
 4. Output the PDF without asking any follow-up questions
 
 ---
@@ -244,6 +263,7 @@ Upon receiving valid inputs:
 | key_npcs | ${encounter.npc || 'Not specified'} |
 | example_adversaries | ${encounter.adversaries || 'Not specified'} |
 | encounter_type | Combat/Social/Exploration (DM's choice based on inputs) |
+| lore_alignment_mode | ${loreAlignmentMode} |
 
 ${loreLinkSection}
 ---
@@ -331,6 +351,24 @@ ${loreLinkSection}
                   <option value="hard">Hard</option>
                 </select>
               </div>
+            </div>
+
+            {/* Lore Alignment Mode */}
+            <div className="space-y-2">
+              <Label htmlFor="lore-alignment">Lore Alignment Mode</Label>
+              <select
+                id="lore-alignment"
+                value={loreAlignmentMode}
+                onChange={(e) => setLoreAlignmentMode(e.target.value as 'strict' | 'optional' | 'ignore')}
+                className="w-full h-10 px-3 rounded-md border border-input bg-background text-foreground"
+              >
+                <option value="strict">Strict - Must align to lore documents</option>
+                <option value="optional">Optional - Prefer lore but allow expansion</option>
+                <option value="ignore">Ignore - Generate standalone encounter</option>
+              </select>
+              <p className="text-xs text-muted-foreground">
+                Controls how strictly the encounter should follow your world lore documents.
+              </p>
             </div>
 
             {/* World Lore Links */}
