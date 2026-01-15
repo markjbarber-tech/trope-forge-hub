@@ -3,24 +3,26 @@ import { GeneratorTabs } from '@/components/GeneratorTabs';
 import { EncounterExportPanel } from '@/components/EncounterExportPanel';
 import { EncounterCategorySearch } from '@/components/EncounterCategorySearch';
 import { useEncounterGenerator } from '@/hooks/useEncounterGenerator';
+import { useCustomEncounterInputs } from '@/hooks/useCustomEncounterInputs';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { Dices, Trash2, Loader2, MapPin, Sparkles, Building, Swords, AlertTriangle, User, Skull, RefreshCw } from 'lucide-react';
-import { GeneratedEncounter } from '@/types/encounter';
+import { Dices, Trash2, Loader2, MapPin, Sparkles, Building, Swords, AlertTriangle, User, Skull, RefreshCw, Download, Star } from 'lucide-react';
+import { GeneratedEncounter, EncounterCategory } from '@/types/encounter';
+import { toast } from 'sonner';
 
 interface EncounterGeneratorProps {
   isOnline: boolean;
   onTabChange: (tab: 'adventure' | 'encounter') => void;
 }
 
-const categoryConfig = [
-  { key: 'location' as const, title: 'Location', icon: MapPin, color: 'text-emerald-500' },
-  { key: 'fantasticalNature' as const, title: 'Fantastical Nature', icon: Sparkles, color: 'text-purple-500' },
-  { key: 'currentState' as const, title: 'Current State', icon: Building, color: 'text-blue-500' },
-  { key: 'situation' as const, title: 'Situation', icon: Swords, color: 'text-orange-500' },
-  { key: 'complication' as const, title: 'Complication', icon: AlertTriangle, color: 'text-red-500' },
-  { key: 'npc' as const, title: 'NPC', icon: User, color: 'text-cyan-500' },
-  { key: 'adversaries' as const, title: 'Adversaries', icon: Skull, color: 'text-rose-500' },
+const categoryConfig: { key: EncounterCategory; title: string; icon: React.ElementType; color: string }[] = [
+  { key: 'location', title: 'Location', icon: MapPin, color: 'text-emerald-500' },
+  { key: 'fantasticalNature', title: 'Fantastical Nature', icon: Sparkles, color: 'text-purple-500' },
+  { key: 'currentState', title: 'Current State', icon: Building, color: 'text-blue-500' },
+  { key: 'situation', title: 'Situation', icon: Swords, color: 'text-orange-500' },
+  { key: 'complication', title: 'Complication', icon: AlertTriangle, color: 'text-red-500' },
+  { key: 'npc', title: 'NPC', icon: User, color: 'text-cyan-500' },
+  { key: 'adversaries', title: 'Adversaries', icon: Skull, color: 'text-rose-500' },
 ];
 
 export const EncounterGenerator = ({ isOnline, onTabChange }: EncounterGeneratorProps) => {
@@ -33,6 +35,22 @@ export const EncounterGenerator = ({ isOnline, onTabChange }: EncounterGenerator
     randomizeField,
     clearEncounter 
   } = useEncounterGenerator();
+
+  const {
+    addCustomInput,
+    getCustomInputsForCategory,
+    exportCustomInputs,
+    totalCount: customInputCount,
+  } = useCustomEncounterInputs();
+
+  const handleExportCustomInputs = () => {
+    if (customInputCount === 0) {
+      toast.error('No custom inputs to export');
+      return;
+    }
+    exportCustomInputs();
+    toast.success(`Exported ${customInputCount} custom inputs`);
+  };
 
   return (
     <div className="min-h-screen bg-background">
@@ -71,6 +89,19 @@ export const EncounterGenerator = ({ isOnline, onTabChange }: EncounterGenerator
               Clear
             </Button>
           )}
+
+          {customInputCount > 0 && (
+            <Button
+              onClick={handleExportCustomInputs}
+              variant="outline"
+              size="lg"
+              className="gap-2"
+            >
+              <Download className="h-5 w-5" />
+              <Star className="h-4 w-4 text-amber-500" />
+              Export Custom ({customInputCount})
+            </Button>
+          )}
         </div>
 
         {/* Generated Encounter Output */}
@@ -84,6 +115,7 @@ export const EncounterGenerator = ({ isOnline, onTabChange }: EncounterGenerator
                 {categoryConfig.map(({ key, title, icon: Icon, color }) => {
                   const value = generatedEncounter?.[key] || '';
                   const options = categoryData?.[key] || [];
+                  const customOptions = getCustomInputsForCategory(key);
                   
                   return (
                     <div key={key} className="flex flex-col gap-2 p-3 rounded-lg bg-muted/30">
@@ -93,14 +125,23 @@ export const EncounterGenerator = ({ isOnline, onTabChange }: EncounterGenerator
                           <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
                             {title}
                           </p>
+                          {customOptions.length > 0 && (
+                            <span className="flex items-center gap-0.5 text-xs text-amber-500">
+                              <Star className="h-3 w-3" />
+                              {customOptions.length}
+                            </span>
+                          )}
                         </div>
                         <div className="flex items-center gap-1">
                           <EncounterCategorySearch
                             options={options}
+                            customOptions={customOptions}
                             value={value}
                             onSelect={(v) => setEncounterField(key, v)}
+                            onAddCustom={(v) => addCustomInput(key, v)}
                             placeholder={`Search ${title.toLowerCase()}...`}
                             disabled={isLoading || options.length === 0}
+                            categoryName={title.toLowerCase()}
                           />
                           <Button
                             variant="ghost"
