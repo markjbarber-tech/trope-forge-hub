@@ -2,8 +2,10 @@ import { AppHeader } from '@/components/AppHeader';
 import { GeneratorTabs } from '@/components/GeneratorTabs';
 import { EncounterExportPanel } from '@/components/EncounterExportPanel';
 import { EncounterCategorySearch } from '@/components/EncounterCategorySearch';
+import { EncounterPersonalTropes } from '@/components/EncounterPersonalTropes';
 import { useEncounterGenerator } from '@/hooks/useEncounterGenerator';
 import { useCustomEncounterInputs } from '@/hooks/useCustomEncounterInputs';
+import { useEncounterPersonalTropes } from '@/hooks/useEncounterPersonalTropes';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Dices, Trash2, Loader2, MapPin, Sparkles, Building, Swords, AlertTriangle, User, Skull, RefreshCw, Download, Star } from 'lucide-react';
@@ -42,6 +44,20 @@ export const EncounterGenerator = ({ isOnline, onTabChange }: EncounterGenerator
     exportCustomInputs,
     totalCount: customInputCount,
   } = useCustomEncounterInputs();
+
+  const {
+    allPersonalTropes,
+    selectedTropes: personalTropes,
+    tropeCount: personalTropeCount,
+    isLoading: isLoadingPersonalTropes,
+    hasPersonalTropes,
+    setTropeCount: setPersonalTropeCount,
+    regenerateTropes: regeneratePersonalTropes,
+    addTrope: addPersonalTrope,
+    removeTrope: removePersonalTrope,
+    clearTropes: clearPersonalTropes,
+    randomizeTrope: randomizePersonalTrope,
+  } = useEncounterPersonalTropes();
 
   const handleExportCustomInputs = () => {
     if (customInputCount === 0) {
@@ -170,6 +186,23 @@ export const EncounterGenerator = ({ isOnline, onTabChange }: EncounterGenerator
               </div>
             </CardContent>
           </Card>
+
+          {/* Personal Tropes Section */}
+          <div className="mt-6">
+            <EncounterPersonalTropes
+              allTropes={allPersonalTropes}
+              selectedTropes={personalTropes}
+              tropeCount={personalTropeCount}
+              isLoading={isLoadingPersonalTropes}
+              hasPersonalTropes={hasPersonalTropes}
+              onCountChange={setPersonalTropeCount}
+              onRegenerate={regeneratePersonalTropes}
+              onAddTrope={addPersonalTrope}
+              onRemoveTrope={removePersonalTrope}
+              onRandomizeTrope={randomizePersonalTrope}
+              onClearTropes={clearPersonalTropes}
+            />
+          </div>
           
           {/* Export Panel - only show when at least one field has a value */}
           {generatedEncounter && Object.values(generatedEncounter).some(v => v) && (
