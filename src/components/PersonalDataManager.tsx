@@ -182,8 +182,9 @@ export const PersonalDataManager = ({
               </div>
               
               <PersonalTropesSearch 
-                personalTropes={personalTropes} 
-                onAddTrope={onAddTrope}
+                allTropes={personalTropes}
+                selectedTropes={[]}
+                onSelect={onAddTrope || (() => {})}
               />
             </>
           )}
