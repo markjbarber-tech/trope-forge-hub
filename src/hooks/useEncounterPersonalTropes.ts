@@ -4,6 +4,7 @@ import { parseTropeCSV } from '@/utils/csvDataSource';
 import { toast } from 'sonner';
 
 const PERSONAL_TROPES_CSV_URL = 'https://raw.githubusercontent.com/markjbarber-tech/DnD-Story-Generator/main/Personal-data-template.csv';
+const LOCAL_FALLBACK_URL = '/Personal-data-template.csv';
 const CACHE_KEY = 'encounter-personal-tropes-cache';
 
 export const useEncounterPersonalTropes = () => {
@@ -80,21 +81,42 @@ export const useEncounterPersonalTropes = () => {
       }
     }
 
-    // All methods failed - try cache
-    console.warn('All fetch methods failed, trying cache...');
+    // All remote methods failed - try localStorage cache first
+    console.warn('All remote methods failed, trying cache...');
     try {
       const cached = localStorage.getItem(CACHE_KEY);
       if (cached) {
         const tropes = JSON.parse(cached) as Trope[];
         setAllPersonalTropes(tropes);
-        toast.info('Using cached personal tropes');
-      } else {
-        toast.error(`Could not load personal tropes: ${lastError?.message || 'Network error'}`);
+        toast.info('Using cached personal tropes (offline)');
+        setIsLoading(false);
+        return;
       }
     } catch {
-      toast.error('Could not load personal tropes');
+      console.warn('Cache read failed');
     }
-    
+
+    // Finally try local fallback file
+    console.log('Trying local fallback file...');
+    try {
+      const response = await fetch(LOCAL_FALLBACK_URL);
+      if (response.ok) {
+        const csvText = await response.text();
+        if (csvText.length > 50) {
+          const tropes = parseTropeCSV(csvText);
+          console.log(`Loaded ${tropes.length} personal tropes from local fallback`);
+          localStorage.setItem(CACHE_KEY, JSON.stringify(tropes));
+          setAllPersonalTropes(tropes);
+          toast.info('Using local personal tropes data');
+          setIsLoading(false);
+          return;
+        }
+      }
+    } catch (error) {
+      console.warn('Local fallback failed:', error);
+    }
+
+    toast.error(`Could not load personal tropes: ${lastError?.message || 'Network error'}`);
     setIsLoading(false);
   }, []);
 
