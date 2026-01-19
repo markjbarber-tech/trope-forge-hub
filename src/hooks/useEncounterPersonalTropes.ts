@@ -96,10 +96,14 @@ export const useEncounterPersonalTropes = () => {
       console.warn('Cache read failed');
     }
 
-    // Finally try local fallback file
+    // Finally try local fallback file (use import.meta.env.BASE_URL for correct path)
     console.log('Trying local fallback file...');
     try {
-      const response = await fetch(LOCAL_FALLBACK_URL);
+      const baseUrl = import.meta.env.BASE_URL || '/';
+      const fallbackPath = `${baseUrl}Personal-data-template.csv`.replace(/\/\//g, '/');
+      console.log('Local fallback path:', fallbackPath);
+      
+      const response = await fetch(fallbackPath);
       if (response.ok) {
         const csvText = await response.text();
         if (csvText.length > 50) {
