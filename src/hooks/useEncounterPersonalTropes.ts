@@ -12,13 +12,29 @@ export const useEncounterPersonalTropes = () => {
   const [selectedTropes, setSelectedTropes] = useState<Trope[]>([]);
   const [tropeCount, setTropeCount] = useState(3);
   const [isLoading, setIsLoading] = useState(true);
+  const [isRefreshing, setIsRefreshing] = useState(false);
 
-  const fetchPersonalTropes = useCallback(async () => {
-    setIsLoading(true);
-    
+  // Load from cache immediately
+  const loadFromCache = useCallback((): Trope[] | null => {
+    try {
+      const cached = localStorage.getItem(CACHE_KEY);
+      if (cached) {
+        const tropes = JSON.parse(cached) as Trope[];
+        if (tropes.length > 0) {
+          console.log(`Loaded ${tropes.length} personal tropes from cache`);
+          return tropes;
+        }
+      }
+    } catch {
+      console.warn('Cache read failed');
+    }
+    return null;
+  }, []);
+
+  // Fetch fresh data from remote
+  const fetchRemoteData = useCallback(async (): Promise<Trope[] | null> => {
     console.log('Fetching personal tropes from:', PERSONAL_TROPES_CSV_URL);
     
-    // Try multiple approaches to fetch the CSV data (same as csvDataSource)
     const fetchMethods = [
       // Method 1: Direct fetch
       async () => {
@@ -52,8 +68,6 @@ export const useEncounterPersonalTropes = () => {
       },
     ];
 
-    let lastError: Error | null = null;
-
     for (let i = 0; i < fetchMethods.length; i++) {
       try {
         console.log(`Trying fetch method ${i + 1} for personal tropes...`);
@@ -65,43 +79,22 @@ export const useEncounterPersonalTropes = () => {
 
         const tropes = parseTropeCSV(csvText);
         console.log(`Successfully parsed ${tropes.length} personal tropes via method ${i + 1}`);
-        
-        // Cache the data
-        localStorage.setItem(CACHE_KEY, JSON.stringify(tropes));
-        
-        setAllPersonalTropes(tropes);
-        toast.success(`Loaded ${tropes.length} personal tropes`);
-        setIsLoading(false);
-        return;
+        return tropes;
         
       } catch (error) {
         console.warn(`Fetch method ${i + 1} failed:`, error);
-        lastError = error instanceof Error ? error : new Error('Unknown error');
         continue;
       }
     }
+    return null;
+  }, []);
 
-    // All remote methods failed - try localStorage cache first
-    console.warn('All remote methods failed, trying cache...');
-    try {
-      const cached = localStorage.getItem(CACHE_KEY);
-      if (cached) {
-        const tropes = JSON.parse(cached) as Trope[];
-        setAllPersonalTropes(tropes);
-        toast.info('Using cached personal tropes (offline)');
-        setIsLoading(false);
-        return;
-      }
-    } catch {
-      console.warn('Cache read failed');
-    }
-
-    // Finally try local fallback file (use import.meta.env.BASE_URL for correct path)
-    console.log('Trying local fallback file...');
+  // Load from local fallback file
+  const loadFromLocalFallback = useCallback(async (): Promise<Trope[] | null> => {
     try {
       const baseUrl = import.meta.env.BASE_URL || '/';
       const fallbackPath = `${baseUrl}${LOCAL_FALLBACK_FILENAME}`.replace(/\/\//g, '/');
-      console.log('Local fallback path:', fallbackPath);
+      console.log('Trying local fallback path:', fallbackPath);
       
       const response = await fetch(fallbackPath);
       if (response.ok) {
@@ -109,25 +102,80 @@ export const useEncounterPersonalTropes = () => {
         if (csvText.length > 50) {
           const tropes = parseTropeCSV(csvText);
           console.log(`Loaded ${tropes.length} personal tropes from local fallback`);
-          localStorage.setItem(CACHE_KEY, JSON.stringify(tropes));
-          setAllPersonalTropes(tropes);
-          toast.info('Using local personal tropes data');
-          setIsLoading(false);
-          return;
+          return tropes;
         }
       }
     } catch (error) {
       console.warn('Local fallback failed:', error);
     }
-
-    toast.error(`Could not load personal tropes: ${lastError?.message || 'Network error'}`);
-    setIsLoading(false);
+    return null;
   }, []);
 
-  // Initial load
+  // Background refresh - fetch latest and update if different
+  const backgroundRefresh = useCallback(async () => {
+    setIsRefreshing(true);
+    
+    const remoteTropes = await fetchRemoteData();
+    
+    if (remoteTropes && remoteTropes.length > 0) {
+      // Cache the fresh data
+      localStorage.setItem(CACHE_KEY, JSON.stringify(remoteTropes));
+      
+      // Update state with new data
+      setAllPersonalTropes(prev => {
+        if (prev.length !== remoteTropes.length) {
+          toast.success(`Updated to ${remoteTropes.length} personal tropes`);
+          return remoteTropes;
+        }
+        return remoteTropes;
+      });
+    }
+    
+    setIsRefreshing(false);
+  }, [fetchRemoteData]);
+
+  // Initial load: cache first, then background refresh
   useEffect(() => {
-    fetchPersonalTropes();
-  }, [fetchPersonalTropes]);
+    const initializeData = async () => {
+      setIsLoading(true);
+      
+      // Step 1: Try cache first for instant load
+      const cachedTropes = loadFromCache();
+      if (cachedTropes) {
+        setAllPersonalTropes(cachedTropes);
+        setIsLoading(false);
+        
+        // Step 2: Background refresh for latest data
+        backgroundRefresh();
+        return;
+      }
+      
+      // Step 3: No cache - try remote
+      const remoteTropes = await fetchRemoteData();
+      if (remoteTropes && remoteTropes.length > 0) {
+        localStorage.setItem(CACHE_KEY, JSON.stringify(remoteTropes));
+        setAllPersonalTropes(remoteTropes);
+        toast.success(`Loaded ${remoteTropes.length} personal tropes`);
+        setIsLoading(false);
+        return;
+      }
+      
+      // Step 4: No remote - try local fallback
+      const localTropes = await loadFromLocalFallback();
+      if (localTropes && localTropes.length > 0) {
+        localStorage.setItem(CACHE_KEY, JSON.stringify(localTropes));
+        setAllPersonalTropes(localTropes);
+        toast.info('Using local personal tropes data');
+        setIsLoading(false);
+        return;
+      }
+      
+      toast.error('Could not load personal tropes');
+      setIsLoading(false);
+    };
+    
+    initializeData();
+  }, [loadFromCache, fetchRemoteData, loadFromLocalFallback, backgroundRefresh]);
 
   // Generate random selection of tropes based on count
   const generateRandomTropes = useCallback((count: number) => {
@@ -207,6 +255,7 @@ export const useEncounterPersonalTropes = () => {
     removeTrope,
     clearTropes,
     randomizeTrope,
-    refreshData: fetchPersonalTropes,
+    refreshData: backgroundRefresh,
+    isRefreshing,
   };
 };
