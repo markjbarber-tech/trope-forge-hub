@@ -15,55 +15,87 @@ export const useEncounterPersonalTropes = () => {
   const fetchPersonalTropes = useCallback(async () => {
     setIsLoading(true);
     
-    try {
-      // Try fetching from GitHub
-      console.log('Fetching personal tropes from:', PERSONAL_TROPES_CSV_URL);
-      const response = await fetch(PERSONAL_TROPES_CSV_URL, {
-        method: 'GET',
-        mode: 'cors',
-        headers: {
-          'Accept': 'text/csv,text/plain,*/*',
-          'Cache-Control': 'no-cache',
-        },
-      });
+    console.log('Fetching personal tropes from:', PERSONAL_TROPES_CSV_URL);
+    
+    // Try multiple approaches to fetch the CSV data (same as csvDataSource)
+    const fetchMethods = [
+      // Method 1: Direct fetch
+      async () => {
+        const response = await fetch(PERSONAL_TROPES_CSV_URL, {
+          method: 'GET',
+          mode: 'cors',
+          headers: {
+            'Accept': 'text/csv,text/plain,*/*',
+            'Cache-Control': 'no-cache',
+          },
+        });
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        return await response.text();
+      },
+      
+      // Method 2: AllOrigins proxy
+      async () => {
+        const response = await fetch(`https://api.allorigins.win/get?url=${encodeURIComponent(PERSONAL_TROPES_CSV_URL)}`);
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        const data = await response.json();
+        return data.contents;
+      },
+      
+      // Method 3: CORS Anywhere proxy
+      async () => {
+        const response = await fetch(`https://cors-anywhere.herokuapp.com/${PERSONAL_TROPES_CSV_URL}`, {
+          headers: { 'X-Requested-With': 'XMLHttpRequest' }
+        });
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        return await response.text();
+      },
+    ];
 
-      if (!response.ok) {
-        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-      }
+    let lastError: Error | null = null;
 
-      const csvText = await response.text();
-      
-      if (csvText.length < 50) {
-        throw new Error('CSV data too short');
-      }
-
-      const tropes = parseTropeCSV(csvText);
-      console.log(`Successfully parsed ${tropes.length} personal tropes`);
-      
-      // Cache the data
-      localStorage.setItem(CACHE_KEY, JSON.stringify(tropes));
-      
-      setAllPersonalTropes(tropes);
-      toast.success(`Loaded ${tropes.length} personal tropes`);
-    } catch (error) {
-      console.warn('Failed to fetch personal tropes from GitHub:', error);
-      
-      // Try loading from cache
+    for (let i = 0; i < fetchMethods.length; i++) {
       try {
-        const cached = localStorage.getItem(CACHE_KEY);
-        if (cached) {
-          const tropes = JSON.parse(cached) as Trope[];
-          setAllPersonalTropes(tropes);
-          toast.info('Using cached personal tropes');
-        } else {
-          toast.error('Could not load personal tropes');
+        console.log(`Trying fetch method ${i + 1} for personal tropes...`);
+        const csvText = await fetchMethods[i]();
+        
+        if (csvText.length < 50) {
+          throw new Error('CSV data too short');
         }
-      } catch {
-        toast.error('Could not load personal tropes');
+
+        const tropes = parseTropeCSV(csvText);
+        console.log(`Successfully parsed ${tropes.length} personal tropes via method ${i + 1}`);
+        
+        // Cache the data
+        localStorage.setItem(CACHE_KEY, JSON.stringify(tropes));
+        
+        setAllPersonalTropes(tropes);
+        toast.success(`Loaded ${tropes.length} personal tropes`);
+        setIsLoading(false);
+        return;
+        
+      } catch (error) {
+        console.warn(`Fetch method ${i + 1} failed:`, error);
+        lastError = error instanceof Error ? error : new Error('Unknown error');
+        continue;
       }
-    } finally {
-      setIsLoading(false);
     }
+
+    // All methods failed - try cache
+    console.warn('All fetch methods failed, trying cache...');
+    try {
+      const cached = localStorage.getItem(CACHE_KEY);
+      if (cached) {
+        const tropes = JSON.parse(cached) as Trope[];
+        setAllPersonalTropes(tropes);
+        toast.info('Using cached personal tropes');
+      } else {
+        toast.error(`Could not load personal tropes: ${lastError?.message || 'Network error'}`);
+      }
+    } catch {
+      toast.error('Could not load personal tropes');
+    }
+    
+    setIsLoading(false);
   }, []);
 
   // Initial load
