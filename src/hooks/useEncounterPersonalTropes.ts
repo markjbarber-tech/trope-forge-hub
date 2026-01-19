@@ -3,8 +3,8 @@ import { Trope } from '@/types/trope';
 import { parseTropeCSV } from '@/utils/csvDataSource';
 import { toast } from 'sonner';
 
-const PERSONAL_TROPES_CSV_URL = 'https://raw.githubusercontent.com/markjbarber-tech/DnD-Story-Generator/main/Personal-data-template.csv';
-const LOCAL_FALLBACK_URL = '/Personal-data-template.csv';
+const PERSONAL_TROPES_CSV_URL = 'https://raw.githubusercontent.com/markjbarber-tech/DnD-Story-Generator/main/Personal%20data.csv';
+const LOCAL_FALLBACK_FILENAME = 'Personal-data.csv';
 const CACHE_KEY = 'encounter-personal-tropes-cache';
 
 export const useEncounterPersonalTropes = () => {
@@ -100,7 +100,7 @@ export const useEncounterPersonalTropes = () => {
     console.log('Trying local fallback file...');
     try {
       const baseUrl = import.meta.env.BASE_URL || '/';
-      const fallbackPath = `${baseUrl}Personal-data-template.csv`.replace(/\/\//g, '/');
+      const fallbackPath = `${baseUrl}${LOCAL_FALLBACK_FILENAME}`.replace(/\/\//g, '/');
       console.log('Local fallback path:', fallbackPath);
       
       const response = await fetch(fallbackPath);
