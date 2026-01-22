@@ -59,17 +59,45 @@ serve(async (req) => {
     if (!response.ok) {
       const errorText = await response.text();
       console.error('OpenAI API error:', response.status, errorText);
-      
-      if (response.status === 429) {
+
+      // Try to extract a helpful message from OpenAI's error payload
+      let openAiMessage: string | null = null;
+      let openAiCode: string | null = null;
+      try {
+        const parsed = JSON.parse(errorText);
+        openAiMessage = parsed?.error?.message ?? null;
+        openAiCode = parsed?.error?.code ?? null;
+      } catch {
+        // ignore JSON parse errors
+      }
+
+      // Provide user-friendly messages for common failure modes
+      if (response.status === 401) {
         return new Response(
-          JSON.stringify({ error: 'Rate limit exceeded. Please try again in a moment.' }),
+          JSON.stringify({
+            error: 'Invalid OpenAI API key. Please update your API key and try again.',
+          }),
+          { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        );
+      }
+
+      if (response.status === 429) {
+        const msg =
+          openAiCode === 'insufficient_quota'
+            ? 'OpenAI quota exceeded. Please add billing/credits to your OpenAI account, or switch to the built-in AI provider.'
+            : (openAiMessage ?? 'Rate limit exceeded. Please try again in a moment.');
+
+        return new Response(
+          JSON.stringify({ error: msg }),
           { status: 429, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
         );
       }
-      
+
+      // Pass through a best-effort message for other statuses
+      const msg = openAiMessage ?? 'Failed to generate encounter';
       return new Response(
-        JSON.stringify({ error: 'Failed to generate encounter' }),
-        { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        JSON.stringify({ error: msg }),
+        { status: response.status || 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
 

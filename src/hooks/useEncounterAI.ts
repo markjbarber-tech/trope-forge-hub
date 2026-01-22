@@ -13,6 +13,37 @@ export const useEncounterAI = (): UseEncounterAIReturn => {
   const [error, setError] = useState<string | null>(null);
   const { toast } = useToast();
 
+  const getInvokeErrorMessage = async (functionError: unknown): Promise<string> => {
+    const fallback = functionError instanceof Error
+      ? functionError.message
+      : 'Failed to generate encounter';
+
+    // supabase-js throws a FunctionsHttpError for non-2xx responses.
+    // It contains a Response in `context.response`, which holds the JSON error body.
+    try {
+      const ctx = (functionError as any)?.context;
+      const res: Response | undefined = ctx?.response;
+      const status: number | undefined = ctx?.status;
+
+      if (!res) return fallback;
+
+      const text = await res.text();
+      if (!text) return status ? `${fallback} (HTTP ${status})` : fallback;
+
+      try {
+        const parsed = JSON.parse(text);
+        const bodyMessage = parsed?.error || parsed?.message;
+        if (typeof bodyMessage === 'string' && bodyMessage.trim()) return bodyMessage;
+      } catch {
+        // not json
+      }
+
+      return status ? `${fallback} (HTTP ${status})` : fallback;
+    } catch {
+      return fallback;
+    }
+  };
+
   const generateEncounter = async (prompt: string): Promise<string | null> => {
     setIsGenerating(true);
     setError(null);
@@ -26,7 +57,8 @@ export const useEncounterAI = (): UseEncounterAIReturn => {
 
       if (functionError) {
         console.error('Edge function error:', functionError);
-        throw new Error(functionError.message || 'Failed to generate encounter');
+        const msg = await getInvokeErrorMessage(functionError);
+        throw new Error(msg);
       }
 
       if (data?.error) {
