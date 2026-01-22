@@ -1,14 +1,15 @@
 import { useState, useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
-import { Copy, ChevronDown, ChevronUp, Sparkles, Plus, Trash2, Link, Upload, FileText } from 'lucide-react';
+import { Copy, ChevronDown, ChevronUp, Sparkles, Trash2, Link, Upload, FileText, Download, Loader2, Wand2 } from 'lucide-react';
 import { GeneratedEncounter } from '@/types/encounter';
 import { useToast } from '@/hooks/use-toast';
 import { usePromptTemplate } from '@/hooks/usePromptTemplate';
+import { useEncounterAI } from '@/hooks/useEncounterAI';
+import { generateEncounterPDF, extractEncounterTitle } from '@/utils/pdfGenerator';
 
 interface LoreLink {
   id: string;
@@ -30,8 +31,10 @@ export const EncounterExportPanel = ({ encounter, disabled }: EncounterExportPan
   const [numberOfPlayers, setNumberOfPlayers] = useState('4');
   const [difficulty, setDifficulty] = useState('medium');
   const [loreAlignmentMode, setLoreAlignmentMode] = useState<'strict' | 'optional' | 'ignore'>('optional');
+  const [generatedContent, setGeneratedContent] = useState<string | null>(null);
   const { toast } = useToast();
-  const { template: promptTemplate, isLoading: templateLoading, source: templateSource } = usePromptTemplate();
+  const { template: promptTemplate, isLoading: templateLoading } = usePromptTemplate();
+  const { generateEncounter: generateAIEncounter, isGenerating } = useEncounterAI();
 
   const fileInputRefs = useRef<{ [key: string]: HTMLInputElement | null }>({});
 
@@ -93,7 +96,6 @@ ${loreLinks.filter(l => l.sourceType === 'url' ? l.url.trim() : l.fileContent).m
 }).join('\n')}
 ` : '';
 
-    // Use the dynamically loaded template
     const encounterInputs = `
 ---
 
@@ -149,6 +151,55 @@ ${loreLinkSection}
     }
   };
 
+  const handleGenerateWithAI = async () => {
+    if (!encounter) {
+      toast({
+        title: 'No encounter generated',
+        description: 'Please generate an encounter first.',
+        variant: 'destructive',
+      });
+      return;
+    }
+
+    const prompt = generatePromptContent();
+    const content = await generateAIEncounter(prompt);
+    
+    if (content) {
+      setGeneratedContent(content);
+      toast({
+        title: 'Encounter Generated!',
+        description: 'Your AI-generated encounter is ready. Click "Download PDF" to save it.',
+      });
+    }
+  };
+
+  const handleDownloadPDF = () => {
+    if (!generatedContent) {
+      toast({
+        title: 'No content to download',
+        description: 'Please generate an encounter with AI first.',
+        variant: 'destructive',
+      });
+      return;
+    }
+
+    try {
+      const title = extractEncounterTitle(generatedContent);
+      generateEncounterPDF(generatedContent, title);
+      toast({
+        title: 'PDF Downloaded!',
+        description: 'Your encounter PDF has been saved.',
+      });
+    } catch (error) {
+      console.error('Failed to generate PDF:', error);
+      toast({
+        title: 'PDF Generation Failed',
+        description: 'Could not create the PDF. Please try again.',
+        variant: 'destructive',
+      });
+    }
+  };
+
   return (
     <Card className="bg-card/50 backdrop-blur-sm border-border/50">
       <Collapsible open={isOpen} onOpenChange={setIsOpen}>
@@ -171,7 +222,7 @@ ${loreLinkSection}
         <CollapsibleContent>
           <CardContent className="space-y-6">
             <p className="text-sm text-muted-foreground">
-              Configure your encounter parameters, then copy the prompt to paste into ChatGPT or your preferred LLM to generate a complete, DM-ready encounter PDF.
+              Configure your encounter parameters, then generate with ChatGPT to create a complete, DM-ready encounter PDF.
             </p>
 
             {/* Basic Settings */}
@@ -319,20 +370,68 @@ ${loreLinkSection}
               </p>
             </div>
 
-            {/* Copy Button */}
-            <Button
-              onClick={handleCopyPrompt}
-              disabled={disabled || !encounter}
-              className="w-full gap-2"
-              size="lg"
-            >
-              <Copy className="h-4 w-4" />
-              Copy Encounter Prompt
-            </Button>
+            {/* Action Buttons */}
+            <div className="space-y-3">
+              {/* Generate with AI Button */}
+              <Button
+                onClick={handleGenerateWithAI}
+                disabled={disabled || !encounter || isGenerating || templateLoading}
+                className="w-full gap-2"
+                size="lg"
+              >
+                {isGenerating ? (
+                  <>
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                    Generating with ChatGPT...
+                  </>
+                ) : (
+                  <>
+                    <Wand2 className="h-4 w-4" />
+                    Generate with ChatGPT
+                  </>
+                )}
+              </Button>
+
+              {/* Download PDF Button - Only show after generation */}
+              {generatedContent && (
+                <Button
+                  onClick={handleDownloadPDF}
+                  variant="secondary"
+                  className="w-full gap-2"
+                  size="lg"
+                >
+                  <Download className="h-4 w-4" />
+                  Download Encounter PDF
+                </Button>
+              )}
+
+              {/* Copy Prompt Button */}
+              <Button
+                onClick={handleCopyPrompt}
+                disabled={disabled || !encounter}
+                variant="outline"
+                className="w-full gap-2"
+                size="sm"
+              >
+                <Copy className="h-4 w-4" />
+                Copy Prompt (Manual Mode)
+              </Button>
+            </div>
+
+            {/* Generated Content Preview */}
+            {generatedContent && (
+              <div className="mt-4 p-4 bg-muted/30 rounded-lg border border-border/50 max-h-64 overflow-y-auto">
+                <h4 className="text-sm font-semibold mb-2 text-foreground">Generated Encounter Preview:</h4>
+                <div className="text-xs text-muted-foreground whitespace-pre-wrap font-mono">
+                  {generatedContent.substring(0, 1000)}
+                  {generatedContent.length > 1000 && '...'}
+                </div>
+              </div>
+            )}
 
             {!encounter && (
               <p className="text-xs text-center text-muted-foreground">
-                Generate an encounter above first, then copy the prompt.
+                Generate an encounter above first, then create it with AI.
               </p>
             )}
           </CardContent>
