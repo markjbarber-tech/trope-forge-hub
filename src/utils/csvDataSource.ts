@@ -215,10 +215,10 @@ export const parseTropeCSV = (csvText: string): Trope[] => {
 
   console.log('Normalized header map:', Array.from(headerMap.entries()));
 
-  // Strict header matching for required columns
+  // Strict header matching for required columns (support both singular and plural)
   const idHeader = headerMap.get('#') || headerMap.get('number') || headerMap.get('no') || null;
   const nameHeader = headerMap.get('trope name');
-  const detailHeader = headerMap.get('trope detail');
+  const detailHeader = headerMap.get('trope detail') || headerMap.get('trope details');
 
   console.log('Mapped headers:', {
     id: idHeader || '(auto-generated)',
