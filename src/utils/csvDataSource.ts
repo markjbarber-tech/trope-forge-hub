@@ -1,8 +1,9 @@
 import Papa from 'papaparse';
 import { Trope } from '@/types/trope';
 
-const CSV_URL = 'https://raw.githubusercontent.com/markjbarber-tech/DnD-Story-Generator/main/default-data.csv';
-const FALLBACK_CSV_URL = '/default-data.csv'; // Local fallback
+const CSV_URL = 'https://raw.githubusercontent.com/markjbarber-tech/DnD-Story-Generator/main/Story%20Tropes%20Data%20-%20Sheet1.csv';
+const LOCAL_CSV_URL = 'story-tropes-data.csv'; // Local fallback in public folder
+const CACHE_KEY = 'adventure-story-tropes-cache';
 
 // Normalize headers for case-insensitive matching
 const normalizeHeader = (header: string): string => {
@@ -14,7 +15,35 @@ const normalizeHeader = (header: string): string => {
     .replace(/\s+/g, ' ');
 };
 
-export const fetchTropeData = async (): Promise<Trope[]> => {
+// Load from localStorage cache
+export const loadTropesFromCache = (): Trope[] | null => {
+  try {
+    const cached = localStorage.getItem(CACHE_KEY);
+    if (cached) {
+      const tropes = JSON.parse(cached) as Trope[];
+      if (Array.isArray(tropes) && tropes.length > 0) {
+        console.log(`Loaded ${tropes.length} tropes from cache`);
+        return tropes;
+      }
+    }
+  } catch (error) {
+    console.warn('Failed to load tropes from cache:', error);
+  }
+  return null;
+};
+
+// Save tropes to localStorage cache
+export const saveTropesToCache = (tropes: Trope[]): void => {
+  try {
+    localStorage.setItem(CACHE_KEY, JSON.stringify(tropes));
+    console.log(`Cached ${tropes.length} tropes to localStorage`);
+  } catch (error) {
+    console.warn('Failed to cache tropes:', error);
+  }
+};
+
+// Fetch tropes from remote GitHub
+export const fetchRemoteTropeData = async (): Promise<Trope[] | null> => {
   console.log('Fetching CSV data from:', CSV_URL);
   
   // Try multiple approaches to fetch the CSV data
@@ -46,8 +75,6 @@ export const fetchTropeData = async (): Promise<Trope[]> => {
     () => fetch(`https://jsonp.afeld.me/?url=${encodeURIComponent(CSV_URL)}`),
   ];
 
-  let lastError: Error | null = null;
-
   for (let i = 0; i < fetchMethods.length; i++) {
     try {
       console.log(`Trying fetch method ${i + 1}...`);
@@ -74,9 +101,9 @@ export const fetchTropeData = async (): Promise<Trope[]> => {
       }
 
       const tropes = parseTropeCSV(csvText);
-      console.log(`Successfully parsed ${tropes.length} tropes`);
+      console.log(`Successfully parsed ${tropes.length} tropes from remote`);
       
-      if (tropes.length > 6) { // Only accept if we got more than fallback data
+      if (tropes.length > 6) {
         return tropes;
       } else {
         throw new Error('Parsed data seems incomplete');
@@ -84,51 +111,81 @@ export const fetchTropeData = async (): Promise<Trope[]> => {
       
     } catch (error) {
       console.warn(`Fetch method ${i + 1} failed:`, error);
-      lastError = error instanceof Error ? error : new Error('Unknown error');
       continue;
     }
   }
 
-  // If all methods fail, try one more direct approach without CORS
-  console.log('All proxy methods failed, trying raw GitHub content...');
-  try {
-    const rawUrl = CSV_URL.replace('github.io', 'githubusercontent.com').replace('/blob/', '/');
-    const response = await fetch(rawUrl);
-    if (response.ok) {
-      const csvText = await response.text();
-      if (csvText.length > 100) {
-        const tropes = parseTropeCSV(csvText);
-        if (tropes.length > 6) {
-          console.log(`Raw GitHub method succeeded! Got ${tropes.length} tropes`);
-          return tropes;
-        }
-      }
-    }
-  } catch (error) {
-    console.warn('Raw GitHub method also failed:', error);
-  }
+  console.warn('All remote fetch methods failed');
+  return null;
+};
 
-  // If all methods fail, try local fallback CSV
-  console.log('All remote methods failed, trying local fallback...');
+// Fetch tropes from local fallback file
+export const fetchLocalTropeData = async (): Promise<Trope[] | null> => {
+  console.log('Trying local fallback CSV...');
   try {
-    const response = await fetch(FALLBACK_CSV_URL);
+    const baseUrl = import.meta.env.BASE_URL || '/';
+    const response = await fetch(`${baseUrl}${LOCAL_CSV_URL}?v=${Date.now()}`);
     if (response.ok) {
       const csvText = await response.text();
       if (csvText.length > 100) {
         const tropes = parseTropeCSV(csvText);
         if (tropes.length > 6) {
-          console.log(`Local fallback method succeeded! Got ${tropes.length} tropes`);
+          console.log(`Local fallback succeeded! Got ${tropes.length} tropes`);
           return tropes;
         }
       }
     }
   } catch (error) {
-    console.warn('Local fallback method also failed:', error);
+    console.warn('Local fallback method failed:', error);
+  }
+  return null;
+};
+
+// Main fetch function - tries cache first, then remote, then local
+export const fetchTropeData = async (): Promise<Trope[]> => {
+  // Try cache first for instant load
+  const cachedTropes = loadTropesFromCache();
+  if (cachedTropes) {
+    // Return cached data immediately, but trigger background refresh
+    backgroundRefreshTropes();
+    return cachedTropes;
   }
   
-  // Last resort: return fallback data but with warning
+  // No cache - try remote
+  const remoteTropes = await fetchRemoteTropeData();
+  if (remoteTropes) {
+    saveTropesToCache(remoteTropes);
+    return remoteTropes;
+  }
+  
+  // No remote - try local fallback
+  const localTropes = await fetchLocalTropeData();
+  if (localTropes) {
+    saveTropesToCache(localTropes);
+    return localTropes;
+  }
+  
+  // Last resort: return fallback data
   console.warn('All fetch methods failed, using fallback data');
-  throw new Error(`Network error: ${lastError?.message || 'Unable to fetch CSV data'}. Using demo tropes.`);
+  throw new Error('Unable to fetch CSV data. Using demo tropes.');
+};
+
+// Background refresh function - updates cache silently
+export const backgroundRefreshTropes = async (): Promise<void> => {
+  console.log('Starting background refresh of tropes...');
+  
+  const remoteTropes = await fetchRemoteTropeData();
+  if (remoteTropes && remoteTropes.length > 0) {
+    const cachedTropes = loadTropesFromCache();
+    if (!cachedTropes || remoteTropes.length !== cachedTropes.length) {
+      saveTropesToCache(remoteTropes);
+      console.log(`Background refresh: updated cache with ${remoteTropes.length} tropes`);
+    } else {
+      console.log('Background refresh: data unchanged');
+    }
+  } else {
+    console.log('Background refresh: remote fetch failed, keeping cached data');
+  }
 };
 
 export const parseTropeCSV = (csvText: string): Trope[] => {
