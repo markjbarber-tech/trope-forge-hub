@@ -379,15 +379,15 @@ ${loreLinkSection}
                 className="w-full gap-2"
                 size="lg"
               >
-                {isGenerating ? (
+              {isGenerating ? (
                   <>
                     <Loader2 className="h-4 w-4 animate-spin" />
-                    Generating with ChatGPT...
+                    Generating...
                   </>
                 ) : (
                   <>
                     <Wand2 className="h-4 w-4" />
-                    Generate with ChatGPT
+                    Generate encounter
                   </>
                 )}
               </Button>
