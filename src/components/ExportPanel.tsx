@@ -16,6 +16,9 @@ interface LoreLink {
   id: string;
   title: string;
   url: string;
+  sourceType?: 'url' | 'file';
+  fileContent?: string;
+  fileName?: string;
 }
 
 interface ExportPanelProps {
@@ -75,7 +78,9 @@ export const ExportPanel = ({ tropes, loreLinks = [], disabled = false, onExport
     const loreLinkSection = loreLinks.length > 0 ? `
 
 **Optional World Lore Links:**  
-${loreLinks.map((link) => `- ${link.title}: ${link.url}`).join('  \n')}  
+${loreLinks.map((link) => link.sourceType === 'file' && link.fileContent
+  ? `### ${link.title || link.fileName || 'Uploaded lore'} (Uploaded document)\n${link.fileContent}`
+  : `- ${link.title}: ${link.url}`).join('  \n')}  
 
 ${type === 'campaign'
   ? 'Read and incorporate relevant information from these lore documents to ground the adventure in the established world. If a document is inaccessible, state this clearly rather than claiming to have read it. Distinguish established lore from newly invented campaign details.'

@@ -11,6 +11,7 @@ import { EncounterGenerator } from '@/pages/EncounterGenerator';
 import { useTropeGenerator } from '@/hooks/useTropeGenerator';
 import { useKeyboardShortcuts } from '@/hooks/useKeyboardShortcuts';
 import { exportTropesToText } from '@/utils/exportUtils';
+import { useLoreMemory } from '@/hooks/useLoreMemory';
 
 interface LoreLink {
   id: string;
@@ -25,7 +26,7 @@ export const DnDGenerator = () => {
   console.log('DnDGenerator component rendering...');
   const [isOnline, setIsOnline] = useState(navigator.onLine);
   const [loadTime, setLoadTime] = useState<string>('');
-  const [loreLinks, setLoreLinks] = useState<LoreLink[]>([]);
+  const { loreLinks, setLoreLinks, loreSaveError } = useLoreMemory('adventure');
   const [activeTab, setActiveTab] = useState<'adventure' | 'encounter'>('adventure');
   const navigate = useNavigate();
 
@@ -165,6 +166,7 @@ export const DnDGenerator = () => {
               onAddTrope={addSpecificTrope}
               loreLinks={loreLinks}
               onLinksChange={setLoreLinks}
+              loreSaveError={loreSaveError}
               isLoading={isLoading}
               balancePercentage={balancePercentage}
               onBalanceChange={setBalancePercentage}

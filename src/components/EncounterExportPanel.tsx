@@ -10,6 +10,7 @@ import { useToast } from '@/hooks/use-toast';
 import { usePromptTemplate } from '@/hooks/usePromptTemplate';
 import { useEncounterAI } from '@/hooks/useEncounterAI';
 import { generateEncounterPDF, extractEncounterTitle } from '@/utils/pdfGenerator';
+import { useLoreMemory } from '@/hooks/useLoreMemory';
 
 interface LoreLink {
   id: string;
@@ -27,7 +28,7 @@ interface EncounterExportPanelProps {
 
 export const EncounterExportPanel = ({ encounter, disabled }: EncounterExportPanelProps) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [loreLinks, setLoreLinks] = useState<LoreLink[]>([]);
+  const { loreLinks, setLoreLinks, loreSaveError } = useLoreMemory('encounter');
   const [numberOfPlayers, setNumberOfPlayers] = useState('4');
   const [difficulty, setDifficulty] = useState('medium');
   const [loreAlignmentMode, setLoreAlignmentMode] = useState<'strict' | 'optional' | 'ignore'>('optional');
@@ -276,6 +277,7 @@ ${loreLinkSection}
 
             {/* World Lore Links */}
             <div className="space-y-3">
+              {loreSaveError && <p role="alert" className="text-sm text-destructive">{loreSaveError}</p>}
               <div className="flex items-center justify-between">
                 <Label className="flex items-center gap-2">
                   <Link className="h-4 w-4" />
@@ -321,6 +323,7 @@ ${loreLinkSection}
                           variant="ghost"
                           size="icon"
                           onClick={() => removeLoreLink(link.id)}
+                          aria-label={`Remove lore ${link.title || link.fileName || 'document'}`}
                           className="shrink-0"
                         >
                           <Trash2 className="h-4 w-4 text-destructive" />
