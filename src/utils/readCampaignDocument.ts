@@ -11,7 +11,8 @@ export const readCampaignDocument = async (file: File): Promise<string> => {
     const pdfjs = await import('pdfjs-dist');
     const worker = await import('pdfjs-dist/build/pdf.worker.min.mjs?url');
     pdfjs.GlobalWorkerOptions.workerSrc = worker.default;
-    const pdf = await pdfjs.getDocument({ data: new Uint8Array(await file.arrayBuffer()) }).promise;
+    const loadingTask = pdfjs.getDocument({ data: new Uint8Array(await file.arrayBuffer()) });
+    const pdf = await loadingTask.promise;
     try {
       const pages: string[] = [];
       for (let index = 1; index <= pdf.numPages; index++) {
@@ -21,7 +22,7 @@ export const readCampaignDocument = async (file: File): Promise<string> => {
       }
       text = pages.join('\n\n');
     } finally {
-      await pdf.destroy();
+      await loadingTask.destroy();
     }
   } else {
     throw new Error('Choose a TXT, MD, CSV, JSON, PDF or DOCX document.');
