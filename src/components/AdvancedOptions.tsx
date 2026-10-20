@@ -135,8 +135,7 @@ export const AdvancedOptions = ({
 
   const isValidUrl = (url: string) => {
     try {
-      new URL(url);
-      return true;
+      return new URL(url).protocol === 'https:';
     } catch {
       return false;
     }
@@ -200,7 +199,7 @@ export const AdvancedOptions = ({
     if (!isValidUrl(newUrl)) {
       toast({
         title: "Invalid URL",
-        description: "Please provide a valid URL",
+        description: "Please provide a valid HTTPS document URL",
         variant: "destructive",
       });
       return;
