@@ -1,3 +1,4 @@
+/// <reference types="node" />
 import { describe, it as test } from 'node:test';
 import { strict as assert } from 'node:assert';
 import { buildCampaignContext } from './campaignContext';
