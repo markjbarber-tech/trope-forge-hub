@@ -13,9 +13,12 @@ interface Props {
   onDocumentsChange: (documents: CampaignDocument[]) => void;
   onReadingChange: (reading: boolean) => void;
   disabled?: boolean;
+  kind?: 'history' | 'characters';
 }
 
-export const CampaignContextInput = ({ history, documents, onHistoryChange, onDocumentsChange, onReadingChange, disabled }: Props) => {
+export const CampaignContextInput = ({ history, documents, onHistoryChange, onDocumentsChange, onReadingChange, disabled, kind = 'history' }: Props) => {
+  const isCharacters = kind === 'characters';
+  const fieldId = isCharacters ? 'player-characters' : 'campaign-history';
   const input = useRef<HTMLInputElement>(null);
   const [reading, setReading] = useState(false);
   const [error, setError] = useState('');
@@ -45,10 +48,10 @@ export const CampaignContextInput = ({ history, documents, onHistoryChange, onDo
 
   return (
     <div className="space-y-3 border-t border-border/40 pt-3">
-      <Label htmlFor="campaign-history">Campaign / encounter so far (optional)</Label>
+      <Label htmlFor={fieldId}>{isCharacters ? 'Existing player characters (optional)' : 'Campaign / encounter so far (optional)'}</Label>
       <Textarea
-        id="campaign-history"
-        placeholder="What has happened so far? Include characters, decisions, discoveries and the current situation…"
+        id={fieldId}
+        placeholder={isCharacters ? 'Names, classes, levels, backgrounds, goals, relationships and important possessions…' : 'What has happened so far? Include characters, decisions, discoveries and the current situation…'}
         value={history}
         onChange={event => onHistoryChange(event.target.value)}
         disabled={disabled}
@@ -60,12 +63,13 @@ export const CampaignContextInput = ({ history, documents, onHistoryChange, onDo
         accept=".txt,.md,.csv,.json,.pdf,.docx"
         multiple
         className="hidden"
-        aria-label="Upload campaign history documents"
+        aria-label={isCharacters ? 'Upload player character documents' : 'Upload campaign history documents'}
+        disabled={disabled || reading}
         onChange={event => { void upload(Array.from(event.target.files ?? [])); }}
       />
       <Button variant="outline" className="w-full gap-2" disabled={disabled || reading} onClick={() => input.current?.click()}>
         {reading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Upload className="h-4 w-4" />}
-        {reading ? 'Reading documents…' : 'Upload campaign notes'}
+        {reading ? 'Reading documents…' : isCharacters ? 'Upload character details' : 'Upload campaign notes'}
       </Button>
       <p className="text-xs text-muted-foreground">TXT, MD, CSV, JSON, text-based PDF or DOCX</p>
       {documents.map(document => (
