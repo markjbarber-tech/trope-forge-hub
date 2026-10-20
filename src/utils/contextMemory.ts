@@ -1,11 +1,12 @@
 import { z } from 'zod';
+import { CampaignDocument } from './campaignContext';
 
 const MemorySchema = z.object({
   text: z.string(),
   documents: z.array(z.object({ id: z.string(), name: z.string(), text: z.string() })),
 });
 
-export type ContextMemory = z.infer<typeof MemorySchema>;
+export interface ContextMemory { text: string; documents: CampaignDocument[]; }
 export const emptyContextMemory = (): ContextMemory => ({ text: '', documents: [] });
 
 export function loadContextMemory(storage: Pick<Storage, 'getItem'>, key: string): ContextMemory {
@@ -13,7 +14,7 @@ export function loadContextMemory(storage: Pick<Storage, 'getItem'>, key: string
   if (!raw) return emptyContextMemory();
   const parsed = MemorySchema.safeParse(JSON.parse(raw));
   if (!parsed.success) throw new Error('Saved context is invalid.');
-  return parsed.data;
+  return { text: parsed.data.text ?? '', documents: parsed.data.documents.map(document => ({ id: document.id ?? '', name: document.name ?? '', text: document.text ?? '' })) };
 }
 
 export function saveContextMemory(storage: Pick<Storage, 'setItem'>, key: string, value: ContextMemory): void {
