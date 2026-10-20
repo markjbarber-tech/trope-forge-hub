@@ -46,6 +46,7 @@ interface AdvancedOptionsProps {
   isLoading?: boolean;
   balancePercentage?: number;
   onBalanceChange?: (percentage: number) => void;
+  loreSaveError?: string;
 }
 
 export const AdvancedOptions = ({ 
@@ -59,7 +60,8 @@ export const AdvancedOptions = ({
   onLinksChange,
   isLoading = false,
   balancePercentage = 50,
-  onBalanceChange
+  onBalanceChange,
+  loreSaveError
 }: AdvancedOptionsProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const [newTitle, setNewTitle] = useState('');
@@ -328,6 +330,7 @@ export const AdvancedOptions = ({
 
             {/* Lore Documents Section */}
             <div className="space-y-4 border-t border-border/30 pt-4">
+              {loreSaveError && <p role="alert" className="text-sm text-destructive">{loreSaveError}</p>}
               <div className="flex items-center gap-2">
                 <BookOpen className="h-4 w-4 text-white" />
                 <h3 className="text-white font-medium">Lore Documents ({loreLinks.length}/10)</h3>
@@ -454,6 +457,7 @@ export const AdvancedOptions = ({
                           </p>
                         </div>
                         <Button
+                          aria-label={`Remove lore ${link.title}`}
                           onClick={() => removeLink(link.id)}
                           variant="ghost"
                           size="sm"

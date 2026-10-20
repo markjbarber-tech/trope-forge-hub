@@ -9,12 +9,16 @@ import { useToast } from '@/hooks/use-toast';
 import { useAdventureAI } from '@/hooks/useAdventureAI';
 import { generateAdventurePDF, extractAdventureTitle } from '@/utils/pdfGenerator';
 import { CampaignContextInput } from '@/components/CampaignContextInput';
-import { buildCampaignContext, CampaignDocument } from '@/utils/campaignContext';
+import { buildCampaignContext } from '@/utils/campaignContext';
+import { useContextMemory } from '@/hooks/useContextMemory';
 
 interface LoreLink {
   id: string;
   title: string;
   url: string;
+  sourceType?: 'url' | 'file';
+  fileContent?: string;
+  fileName?: string;
 }
 
 interface ExportPanelProps {
@@ -30,11 +34,9 @@ export const ExportPanel = ({ tropes, loreLinks = [], disabled = false, onExport
   const [showClipboardMessage, setShowClipboardMessage] = useState(false);
   const [showExportHelp, setShowExportHelp] = useState(false);
   const [generatedContent, setGeneratedContent] = useState<string | null>(null);
-  const [campaignHistory, setCampaignHistory] = useState('');
-  const [campaignDocuments, setCampaignDocuments] = useState<CampaignDocument[]>([]);
+  const { text: campaignHistory, setText: setCampaignHistory, documents: campaignDocuments, setDocuments: setCampaignDocuments, saveError: historySaveError } = useContextMemory('history');
   const [isReadingDocuments, setIsReadingDocuments] = useState(false);
-  const [characterDetails, setCharacterDetails] = useState('');
-  const [characterDocuments, setCharacterDocuments] = useState<CampaignDocument[]>([]);
+  const { text: characterDetails, setText: setCharacterDetails, documents: characterDocuments, setDocuments: setCharacterDocuments, saveError: characterSaveError } = useContextMemory('characters');
   const [isReadingCharacters, setIsReadingCharacters] = useState(false);
   const isReadingContext = isReadingDocuments || isReadingCharacters;
   const { generateAdventure, isGenerating, error } = useAdventureAI();
@@ -76,7 +78,9 @@ export const ExportPanel = ({ tropes, loreLinks = [], disabled = false, onExport
     const loreLinkSection = loreLinks.length > 0 ? `
 
 **Optional World Lore Links:**  
-${loreLinks.map((link) => `- ${link.title}: ${link.url}`).join('  \n')}  
+${loreLinks.map((link) => link.sourceType === 'file' && link.fileContent
+  ? `### ${link.title || link.fileName || 'Uploaded lore'} (Uploaded document)\n${link.fileContent}`
+  : `- ${link.title}: ${link.url}`).join('  \n')}  
 
 ${type === 'campaign'
   ? 'Read and incorporate relevant information from these lore documents to ground the adventure in the established world. If a document is inaccessible, state this clearly rather than claiming to have read it. Distinguish established lore from newly invented campaign details.'
@@ -339,6 +343,7 @@ Generate a one-shot adventure that:
             onHistoryChange={setCampaignHistory}
             onDocumentsChange={setCampaignDocuments}
             onReadingChange={setIsReadingDocuments}
+            saveError={historySaveError}
             disabled={isGenerating}
           />
 
@@ -349,6 +354,7 @@ Generate a one-shot adventure that:
             onHistoryChange={setCharacterDetails}
             onDocumentsChange={setCharacterDocuments}
             onReadingChange={setIsReadingCharacters}
+            saveError={characterSaveError}
             disabled={isGenerating}
           />
 

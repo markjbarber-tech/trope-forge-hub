@@ -2,7 +2,7 @@ import { useRef, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { FileText, Loader2, Upload, X } from 'lucide-react';
+import { FileText, Loader2, Upload, X, Pencil } from 'lucide-react';
 import { CampaignDocument } from '@/utils/campaignContext';
 import { readCampaignDocument } from '@/utils/readCampaignDocument';
 
@@ -14,14 +14,16 @@ interface Props {
   onReadingChange: (reading: boolean) => void;
   disabled?: boolean;
   kind?: 'history' | 'characters';
+  saveError?: string;
 }
 
-export const CampaignContextInput = ({ history, documents, onHistoryChange, onDocumentsChange, onReadingChange, disabled, kind = 'history' }: Props) => {
+export const CampaignContextInput = ({ history, documents, onHistoryChange, onDocumentsChange, onReadingChange, disabled, kind = 'history', saveError }: Props) => {
   const isCharacters = kind === 'characters';
   const fieldId = isCharacters ? 'player-characters' : 'campaign-history';
   const input = useRef<HTMLInputElement>(null);
   const [reading, setReading] = useState(false);
   const [error, setError] = useState('');
+  const [editingId, setEditingId] = useState<string | null>(null);
 
   const upload = async (files: File[]) => {
     setReading(true);
@@ -72,13 +74,29 @@ export const CampaignContextInput = ({ history, documents, onHistoryChange, onDo
         {reading ? 'Reading documents…' : isCharacters ? 'Upload character details' : 'Upload campaign notes'}
       </Button>
       <p className="text-xs text-muted-foreground">TXT, MD, CSV, JSON, text-based PDF or DOCX</p>
+      <p role="status" className="text-xs text-muted-foreground">{saveError ? '' : 'Notes retained on this device'}</p>
+      {saveError && <p role="alert" className="text-sm text-destructive">{saveError}</p>}
       {documents.map(document => (
-        <div key={document.id} className="flex min-w-0 items-center gap-2 border-b border-border/40 py-2">
+        <div key={document.id} className="min-w-0 border-b border-border/40 py-2">
+          <div className="flex min-w-0 items-center gap-2">
           <FileText className="h-4 w-4 shrink-0 text-muted-foreground" />
           <span className="min-w-0 flex-1 break-words text-sm">{document.name}</span>
+          <Button variant="ghost" size="icon" className="h-8 w-8 shrink-0" title={`Edit ${document.name}`} aria-label={`Edit ${document.name}`} disabled={disabled || reading} onClick={() => setEditingId(editingId === document.id ? null : document.id)}>
+            <Pencil className="h-4 w-4" />
+          </Button>
           <Button variant="ghost" size="icon" className="h-8 w-8 shrink-0" title={`Remove ${document.name}`} aria-label={`Remove ${document.name}`} disabled={disabled || reading} onClick={() => onDocumentsChange(documents.filter(item => item.id !== document.id))}>
             <X className="h-4 w-4" />
           </Button>
+          </div>
+          {editingId === document.id && (
+            <Textarea
+              aria-label={`Contents of ${document.name}`}
+              value={document.text}
+              disabled={disabled || reading}
+              className="mt-2 min-h-40"
+              onChange={event => onDocumentsChange(documents.map(item => item.id === document.id ? { ...item, text: event.target.value } : item))}
+            />
+          )}
         </div>
       ))}
       {error && <p role="alert" className="whitespace-pre-line break-words text-sm text-destructive">{error}</p>}
