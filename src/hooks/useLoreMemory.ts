@@ -4,9 +4,11 @@ import { z } from 'zod';
 const LoreSchema = z.array(z.object({
   id: z.string(), title: z.string(), url: z.string(), sourceType: z.enum(['url', 'file']),
   fileContent: z.string().optional(), fileName: z.string().optional(),
+  autoTitle: z.string().optional(),
 }));
 interface LoreDocument {
   id: string; title: string; url: string; sourceType: 'url' | 'file'; fileContent?: string; fileName?: string;
+  autoTitle?: string;
 }
 
 export function useLoreMemory(kind: 'adventure' | 'encounter') {
@@ -32,6 +34,6 @@ export function useLoreMemory(kind: 'adventure' | 'encounter') {
       setError('Lore could not be saved on this device. Keep a copy before closing.');
     }
   }, [key, loreLinks, changed]);
-  const setLoreLinks = (links: LoreDocument[]) => { setChanged(true); setLinks(links); };
+  const setLoreLinks = (links: LoreDocument[] | ((previous: LoreDocument[]) => LoreDocument[])) => { setChanged(true); setLinks(links); };
   return { loreLinks, setLoreLinks, loreSaveError };
 }
