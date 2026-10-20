@@ -11,6 +11,7 @@ import { usePromptTemplate } from '@/hooks/usePromptTemplate';
 import { useEncounterAI } from '@/hooks/useEncounterAI';
 import { generateEncounterPDF, extractEncounterTitle } from '@/utils/pdfGenerator';
 import { useLoreMemory } from '@/hooks/useLoreMemory';
+import { LoreUrlInput } from './LoreUrlInput';
 
 interface LoreLink {
   id: string;
@@ -19,6 +20,7 @@ interface LoreLink {
   sourceType: 'url' | 'file';
   fileContent?: string;
   fileName?: string;
+  autoTitle?: string;
 }
 
 interface EncounterExportPanelProps {
@@ -312,12 +314,12 @@ ${loreLinkSection}
                   {loreLinks.map((link) => (
                     <div key={link.id} className="p-3 bg-muted/20 rounded-lg border border-border/30 space-y-2">
                       <div className="flex gap-2 items-center">
-                        <Input
+                        {link.sourceType === 'file' && <Input
                           placeholder="Title (e.g., 'Campaign Setting')"
                           value={link.title}
                           onChange={(e) => updateLoreLink(link.id, 'title', e.target.value)}
                           className="flex-1"
-                        />
+                        />}
                         <Button
                           type="button"
                           variant="ghost"
@@ -331,11 +333,8 @@ ${loreLinkSection}
                       </div>
                       
                       {link.sourceType === 'url' ? (
-                        <Input
-                          placeholder="URL (Google Docs, Notion, etc.)"
-                          value={link.url}
-                          onChange={(e) => updateLoreLink(link.id, 'url', e.target.value)}
-                        />
+                        <LoreUrlInput url={link.url} title={link.title} autoTitle={link.autoTitle}
+                          onChange={patch => setLoreLinks(previous => previous.map(item => item.id === link.id ? { ...item, ...patch } : item))} />
                       ) : (
                         <div className="flex gap-2 items-center">
                           <input

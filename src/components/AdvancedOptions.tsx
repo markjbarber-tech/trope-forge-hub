@@ -24,6 +24,7 @@ import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
 import { PersonalDataManager } from './PersonalDataManager';
 import { Trope } from '@/types/trope';
+import { LoreUrlInput } from './LoreUrlInput';
 
 interface LoreLink {
   id: string;
@@ -32,6 +33,7 @@ interface LoreLink {
   sourceType: 'url' | 'file';
   fileContent?: string;
   fileName?: string;
+  autoTitle?: string;
 }
 
 interface AdvancedOptionsProps {
@@ -66,6 +68,7 @@ export const AdvancedOptions = ({
   const [isOpen, setIsOpen] = useState(false);
   const [newTitle, setNewTitle] = useState('');
   const [newUrl, setNewUrl] = useState('');
+  const [autoTitle, setAutoTitle] = useState('');
   const [showLoreHelp, setShowLoreHelp] = useState(false);
   const [showPersonalHelp, setShowPersonalHelp] = useState(false);
   const [showBalanceHelp, setShowBalanceHelp] = useState(false);
@@ -132,8 +135,7 @@ export const AdvancedOptions = ({
 
   const isValidUrl = (url: string) => {
     try {
-      new URL(url);
-      return true;
+      return new URL(url).protocol === 'https:';
     } catch {
       return false;
     }
@@ -185,10 +187,10 @@ export const AdvancedOptions = ({
   };
 
   const addLink = () => {
-    if (!newTitle.trim() || !newUrl.trim()) {
+    if (!newUrl.trim()) {
       toast({
         title: "Missing Information",
-        description: "Please provide both title and URL",
+        description: "Please provide a document URL",
         variant: "destructive",
       });
       return;
@@ -197,7 +199,7 @@ export const AdvancedOptions = ({
     if (!isValidUrl(newUrl)) {
       toast({
         title: "Invalid URL",
-        description: "Please provide a valid URL",
+        description: "Please provide a valid HTTPS document URL",
         variant: "destructive",
       });
       return;
@@ -214,7 +216,8 @@ export const AdvancedOptions = ({
 
     const newLink: LoreLink = {
       id: Date.now().toString(),
-      title: newTitle.trim(),
+      title: newTitle.trim() || autoTitle || new URL(newUrl).hostname,
+      autoTitle,
       url: newUrl.trim(),
       sourceType: 'url',
     };
@@ -222,6 +225,7 @@ export const AdvancedOptions = ({
     onLinksChange([...loreLinks, newLink]);
     setNewTitle('');
     setNewUrl('');
+    setAutoTitle('');
     
     toast({
       title: "Link Added",
@@ -373,7 +377,7 @@ export const AdvancedOptions = ({
               </div>
               
               <div className="grid grid-cols-1 gap-3">
-                <div>
+                {addMode === 'file' && <div>
                   <Label htmlFor="link-title" className="text-sm font-medium text-white">
                     Document Title {addMode === 'file' && <span className="text-muted-foreground">(optional)</span>}
                   </Label>
@@ -384,22 +388,15 @@ export const AdvancedOptions = ({
                     onChange={(e) => setNewTitle(e.target.value)}
                     className="mt-1"
                   />
-                </div>
+                </div>}
                 
                 {addMode === 'url' ? (
                   <>
-                    <div>
-                      <Label htmlFor="link-url" className="text-sm font-medium text-white">
-                        Document URL
-                      </Label>
-                      <Input
-                        id="link-url"
-                        placeholder="https://docs.google.com/document/..."
-                        value={newUrl}
-                        onChange={(e) => setNewUrl(e.target.value)}
-                        className="mt-1"
-                      />
-                    </div>
+                    <LoreUrlInput url={newUrl} title={newTitle} autoTitle={autoTitle} onChange={patch => {
+                      if (patch.url !== undefined) setNewUrl(patch.url);
+                      if (patch.title !== undefined) setNewTitle(patch.title);
+                      if (patch.autoTitle !== undefined) setAutoTitle(patch.autoTitle);
+                    }} />
                     <Button
                       onClick={addLink}
                       disabled={loreLinks.length >= 10}
