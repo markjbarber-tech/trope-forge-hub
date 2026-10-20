@@ -8,6 +8,8 @@ import { Trope } from '@/types/trope';
 import { useToast } from '@/hooks/use-toast';
 import { useAdventureAI } from '@/hooks/useAdventureAI';
 import { generateAdventurePDF, extractAdventureTitle } from '@/utils/pdfGenerator';
+import { CampaignContextInput } from '@/components/CampaignContextInput';
+import { buildCampaignContext, CampaignDocument } from '@/utils/campaignContext';
 
 interface LoreLink {
   id: string;
@@ -28,6 +30,13 @@ export const ExportPanel = ({ tropes, loreLinks = [], disabled = false, onExport
   const [showClipboardMessage, setShowClipboardMessage] = useState(false);
   const [showExportHelp, setShowExportHelp] = useState(false);
   const [generatedContent, setGeneratedContent] = useState<string | null>(null);
+  const [campaignHistory, setCampaignHistory] = useState('');
+  const [campaignDocuments, setCampaignDocuments] = useState<CampaignDocument[]>([]);
+  const [isReadingDocuments, setIsReadingDocuments] = useState(false);
+  const [characterDetails, setCharacterDetails] = useState('');
+  const [characterDocuments, setCharacterDocuments] = useState<CampaignDocument[]>([]);
+  const [isReadingCharacters, setIsReadingCharacters] = useState(false);
+  const isReadingContext = isReadingDocuments || isReadingCharacters;
   const { generateAdventure, isGenerating, error } = useAdventureAI();
   const hasNoElements = tropes.length === 0;
 
@@ -84,6 +93,8 @@ Create a complete D&D 5e campaign arc based on the following story tropes.
 |---|------------|-------------------|
 ${elementTable}
 ${loreLinkSection}
+${buildCampaignContext(campaignHistory, campaignDocuments)}
+${buildCampaignContext(characterDetails, characterDocuments, 'characters')}
 
 ## REQUIREMENTS
 
@@ -215,6 +226,8 @@ Create a complete D&D 5e one-shot adventure based on the following story tropes.
 |---|------------|-------------------|
 ${elementTable}
 ${loreLinkSection}
+${buildCampaignContext(campaignHistory, campaignDocuments)}
+${buildCampaignContext(characterDetails, characterDocuments, 'characters')}
 
 ## REQUIREMENTS
 
@@ -237,7 +250,7 @@ Generate a one-shot adventure that:
   };
 
   const handleExportTemplate = async () => {
-    if (hasNoElements) return;
+    if (hasNoElements || isReadingContext) return;
     
     try {
       const promptContent = generateTemplateContent(templateType, tropes);
@@ -253,7 +266,7 @@ Generate a one-shot adventure that:
   };
 
   const handleGenerateAdventure = async () => {
-    if (hasNoElements) return;
+    if (hasNoElements || isReadingContext) return;
 
     const prompt = generateTemplateContent(templateType, tropes);
     const content = await generateAdventure(prompt, templateType);
@@ -320,11 +333,30 @@ Generate a one-shot adventure that:
             </RadioGroup>
           </div>
 
+          <CampaignContextInput
+            history={campaignHistory}
+            documents={campaignDocuments}
+            onHistoryChange={setCampaignHistory}
+            onDocumentsChange={setCampaignDocuments}
+            onReadingChange={setIsReadingDocuments}
+            disabled={isGenerating}
+          />
+
+          <CampaignContextInput
+            kind="characters"
+            history={characterDetails}
+            documents={characterDocuments}
+            onHistoryChange={setCharacterDetails}
+            onDocumentsChange={setCharacterDocuments}
+            onReadingChange={setIsReadingCharacters}
+            disabled={isGenerating}
+          />
+
           {/* Generate Adventure Button */}
           <Button
             variant="mystical"
             onClick={handleGenerateAdventure}
-            disabled={disabled || hasNoElements || isGenerating}
+            disabled={disabled || hasNoElements || isGenerating || isReadingContext}
             className="w-full justify-center text-center gap-2"
           >
             {isGenerating ? (
@@ -373,7 +405,7 @@ Generate a one-shot adventure that:
           <Button
             variant="outline"
             onClick={handleExportTemplate}
-            disabled={disabled || hasNoElements}
+            disabled={disabled || hasNoElements || isReadingContext}
             className="w-full justify-center text-center gap-2"
           >
             <FileText className="h-4 w-4" />
