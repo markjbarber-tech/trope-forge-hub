@@ -9,3 +9,4 @@
 - [x] Retain history and character text/document contents across sessions on this device, with editing and removal.
 - [x] Retain uploaded lore documents across sessions.
 - [x] Verify entered lore URLs persist across sessions for both generators.
+- [ ] Automatically read accessible lore URL titles in both generators with an optional override; disclose inaccessible titles.
