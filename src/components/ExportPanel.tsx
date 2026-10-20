@@ -9,7 +9,8 @@ import { useToast } from '@/hooks/use-toast';
 import { useAdventureAI } from '@/hooks/useAdventureAI';
 import { generateAdventurePDF, extractAdventureTitle } from '@/utils/pdfGenerator';
 import { CampaignContextInput } from '@/components/CampaignContextInput';
-import { buildCampaignContext, CampaignDocument } from '@/utils/campaignContext';
+import { buildCampaignContext } from '@/utils/campaignContext';
+import { useContextMemory } from '@/hooks/useContextMemory';
 
 interface LoreLink {
   id: string;
@@ -30,11 +31,9 @@ export const ExportPanel = ({ tropes, loreLinks = [], disabled = false, onExport
   const [showClipboardMessage, setShowClipboardMessage] = useState(false);
   const [showExportHelp, setShowExportHelp] = useState(false);
   const [generatedContent, setGeneratedContent] = useState<string | null>(null);
-  const [campaignHistory, setCampaignHistory] = useState('');
-  const [campaignDocuments, setCampaignDocuments] = useState<CampaignDocument[]>([]);
+  const { text: campaignHistory, setText: setCampaignHistory, documents: campaignDocuments, setDocuments: setCampaignDocuments, saveError: historySaveError } = useContextMemory('history');
   const [isReadingDocuments, setIsReadingDocuments] = useState(false);
-  const [characterDetails, setCharacterDetails] = useState('');
-  const [characterDocuments, setCharacterDocuments] = useState<CampaignDocument[]>([]);
+  const { text: characterDetails, setText: setCharacterDetails, documents: characterDocuments, setDocuments: setCharacterDocuments, saveError: characterSaveError } = useContextMemory('characters');
   const [isReadingCharacters, setIsReadingCharacters] = useState(false);
   const isReadingContext = isReadingDocuments || isReadingCharacters;
   const { generateAdventure, isGenerating, error } = useAdventureAI();
@@ -339,6 +338,7 @@ Generate a one-shot adventure that:
             onHistoryChange={setCampaignHistory}
             onDocumentsChange={setCampaignDocuments}
             onReadingChange={setIsReadingDocuments}
+            saveError={historySaveError}
             disabled={isGenerating}
           />
 
@@ -349,6 +349,7 @@ Generate a one-shot adventure that:
             onHistoryChange={setCharacterDetails}
             onDocumentsChange={setCharacterDocuments}
             onReadingChange={setIsReadingCharacters}
+            saveError={characterSaveError}
             disabled={isGenerating}
           />
 
