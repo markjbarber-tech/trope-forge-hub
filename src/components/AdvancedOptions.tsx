@@ -25,6 +25,7 @@ import { useToast } from '@/hooks/use-toast';
 import { PersonalDataManager } from './PersonalDataManager';
 import { Trope } from '@/types/trope';
 import { LoreUrlInput } from './LoreUrlInput';
+import { resolveLoreLinkTitle } from '@/utils/loreLinkTitle';
 
 interface LoreLink {
   id: string;
@@ -216,7 +217,7 @@ export const AdvancedOptions = ({
 
     const newLink: LoreLink = {
       id: Date.now().toString(),
-      title: newTitle.trim() || autoTitle || new URL(newUrl).hostname,
+      title: resolveLoreLinkTitle(newUrl, newTitle, autoTitle),
       autoTitle,
       url: newUrl.trim(),
       sourceType: 'url',
