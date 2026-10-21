@@ -17,8 +17,10 @@ export const readCampaignDocument = async (file: File): Promise<string> => {
         return { promise, resolve, reject };
       };
     }
-    const pdfjs = await import('pdfjs-dist');
-    const worker = await import('pdfjs-dist/build/pdf.worker.min.mjs?url');
+    // The legacy build supports older browsers (e.g. Safari) that lack the
+    // newest JavaScript features the standard build requires.
+    const pdfjs = await import('pdfjs-dist/legacy/build/pdf.min.mjs');
+    const worker = await import('pdfjs-dist/legacy/build/pdf.worker.min.mjs?url');
     pdfjs.GlobalWorkerOptions.workerSrc = worker.default;
     const loadingTask = pdfjs.getDocument({ data: new Uint8Array(await file.arrayBuffer()) });
     const pdf = await loadingTask.promise;
