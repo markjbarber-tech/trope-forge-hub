@@ -9,4 +9,5 @@
 - [x] Retain history and character text/document contents across sessions on this device, with editing and removal.
 - [x] Retain uploaded lore documents across sessions.
 - [x] Verify entered lore URLs persist across sessions for both generators.
-- [x] Automatically read accessible lore URL titles in both generators with an optional override; disclose inaccessible titles.
+- [x] Automatically read accessible lore URL titles in both generators with an optional override; disclose inaccessible titles.- [ ] Fix "story so far" PDF upload error: "undefined is not a function (near '...i of e...')" in the document reader.
+- [ ] Verify lore URL submissions get their name from the document itself in both generators (adventure verified; encounter pending).
