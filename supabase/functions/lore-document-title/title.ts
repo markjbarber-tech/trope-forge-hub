@@ -23,6 +23,49 @@ export function isPublicIPv4(ip: string): boolean {
     (a === 198 && (b === 18 || b === 19)));
 }
 
+// Derive a human-readable name from the final path segment, e.g.
+// "Taeleran_AI_Campaign_Continuity.pdf" -> "Taeleran AI Campaign Continuity".
+export function filenameFromUrl(url: URL): string {
+  const segment = url.pathname.split('/').filter(Boolean).pop() ?? '';
+  if (!segment || !/\.[a-z0-9]{2,5}$/i.test(segment)) return '';
+  try {
+    return decodeURIComponent(segment).replace(/\.[a-z0-9]{2,5}$/i, '').replace(/[-_+]+/g, ' ').trim().slice(0, 300);
+  } catch {
+    return '';
+  }
+}
+
+// Read the /Title entry from a PDF's document information dictionary.
+export function extractPdfTitle(bytes: Uint8Array): string {
+  const text = new TextDecoder('latin1').decode(bytes);
+  const literal = text.match(/\/Title\s*\((?:\\.|[^\\()])*\)/)?.[0];
+  if (literal) {
+    const inner = literal.slice(literal.indexOf('(') + 1, -1);
+    const decoded = inner.replace(/\\([nrtbf()\\]|\d{1,3})/g, (_m, esc: string) => {
+      const map: Record<string, string> = { n: '\n', r: '\r', t: '\t', b: '\b', f: '\f', '(': '(', ')': ')', '\\': '\\' };
+      return map[esc] ?? String.fromCharCode(parseInt(esc, 8));
+    });
+    if (decoded.charCodeAt(0) === 0xfe && decoded.charCodeAt(1) === 0xff) {
+      let out = '';
+      for (let i = 2; i + 1 < decoded.length; i += 2) out += String.fromCharCode((decoded.charCodeAt(i) << 8) | decoded.charCodeAt(i + 1));
+      return out.trim().slice(0, 300);
+    }
+    return decoded.trim().slice(0, 300);
+  }
+  const hex = text.match(/\/Title\s*<([0-9a-fA-F\s]+)>/)?.[1];
+  if (hex) {
+    const clean = hex.replace(/\s+/g, '');
+    let out = '';
+    if (/^feff/i.test(clean)) {
+      for (let i = 4; i + 3 < clean.length; i += 4) out += String.fromCharCode(parseInt(clean.slice(i, i + 4), 16));
+    } else {
+      for (let i = 0; i + 1 < clean.length; i += 2) out += String.fromCharCode(parseInt(clean.slice(i, i + 2), 16));
+    }
+    return out.trim().slice(0, 300);
+  }
+  return '';
+}
+
 export function extractDocumentTitle(html: string): string {
   const title = html.match(/<title\b[^>]*>([\s\S]*?)<\/title\s*>/i)?.[1] ?? '';
   return title.replace(/<[^>]*>/g, '').replace(/&#(x[\da-f]+|\d+);/gi, (_, n: string) => {

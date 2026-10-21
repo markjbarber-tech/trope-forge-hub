@@ -11,3 +11,6 @@ test('uses the automatically read document title without an override', () => {
 test('an optional override takes precedence over the automatically read title', () => {
   assert.equal(resolveLoreLinkTitle('https://example.org/lore', ' My Campaign ', 'World History'), 'My Campaign');
 });
+test('names a document from its file name when no title could be read', () => {
+  assert.equal(resolveLoreLinkTitle('https://example.org/files/Taeleran_AI_Campaign_Continuity.pdf', ''), 'Taeleran AI Campaign Continuity');
+});

@@ -1,5 +1,5 @@
 import { corsHeaders } from 'npm:@supabase/supabase-js@2/cors';
-import { validateDocumentUrl, isPublicIPv4, extractDocumentTitle } from './title.ts';
+import { validateDocumentUrl, isPublicIPv4, extractDocumentTitle, extractPdfTitle, filenameFromUrl } from './title.ts';
 
 // Public metadata only: no account credentials or document contents are returned.
 Deno.serve(async req => {
@@ -34,12 +34,37 @@ Deno.serve(async req => {
           await response.body?.cancel();
           return respond({ error: `The document could not be read (${response.status}). Enter an optional title or check sharing access.` }, 200);
         }
-        if (!response.headers.get('content-type')?.includes('text/html')) {
-          await response.body?.cancel();
-          throw new Error('No readable page title was found. Enter an optional title.');
-        }
+        const contentType = response.headers.get('content-type') ?? '';
         const reader = response.body?.getReader();
         if (!reader) throw new Error('The document could not be read.');
+        if (contentType.includes('application/pdf') || url.pathname.toLowerCase().endsWith('.pdf')) {
+          // Read the start of the PDF and take its name from its own title
+          // metadata, falling back to the file name in the address.
+          const chunks: Uint8Array[] = [];
+          let pdfBytes = 0;
+          try {
+            while (pdfBytes < 1048576) {
+              const { value, done } = await reader.read();
+              if (done) break;
+              chunks.push(value);
+              pdfBytes += value.length;
+            }
+          } finally { await reader.cancel(); }
+          const merged = new Uint8Array(pdfBytes);
+          let offset = 0;
+          for (const chunk of chunks) { merged.set(chunk, offset); offset += chunk.length; }
+          const pdfTitle = extractPdfTitle(merged);
+          if (pdfTitle) return respond({ title: pdfTitle });
+          const name = filenameFromUrl(url);
+          if (name) return respond({ title: name });
+          throw new Error('No readable document title was found. Enter an optional title.');
+        }
+        if (!contentType.includes('text/html')) {
+          await reader.cancel();
+          const name = filenameFromUrl(url);
+          if (name) return respond({ title: name });
+          throw new Error('No readable page title was found. Enter an optional title.');
+        }
         const decoder = new TextDecoder();
         let html = '', bytes = 0;
         try {
@@ -52,7 +77,12 @@ Deno.serve(async req => {
           }
         } finally { await reader.cancel(); }
         const title = extractDocumentTitle(html);
-        if (!title || /^(sign in|login|log in|access denied|just a moment)/i.test(title)) {
+        if (!title) {
+          const name = filenameFromUrl(url);
+          if (name) return respond({ title: name });
+          throw new Error('The document title is unavailable. Enter an optional title or check sharing access.');
+        }
+        if (/^(sign in|login|log in|access denied|just a moment)/i.test(title)) {
           throw new Error('The document title is unavailable. Enter an optional title or check sharing access.');
         }
         return respond({ title });

@@ -8,8 +8,19 @@ export const readCampaignDocument = async (file: File): Promise<string> => {
     const result = await mammoth.extractRawText({ arrayBuffer: await file.arrayBuffer() });
     text = result.value;
   } else if (extension === 'pdf') {
-    const pdfjs = await import('pdfjs-dist');
-    const worker = await import('pdfjs-dist/build/pdf.worker.min.mjs?url');
+    // Older browsers (e.g. Safari before 17.4) lack Promise.withResolvers, which pdfjs requires.
+    if (typeof (Promise as unknown as { withResolvers?: unknown }).withResolvers !== 'function') {
+      (Promise as unknown as { withResolvers: <T>() => { promise: Promise<T>; resolve: (value: T) => void; reject: (reason?: unknown) => void } }).withResolvers = function <T>() {
+        let resolve!: (value: T) => void;
+        let reject!: (reason?: unknown) => void;
+        const promise = new Promise<T>((res, rej) => { resolve = res; reject = rej; });
+        return { promise, resolve, reject };
+      };
+    }
+    // The legacy build supports older browsers (e.g. Safari) that lack the
+    // newest JavaScript features the standard build requires.
+    const pdfjs = await import('pdfjs-dist/legacy/build/pdf.min.mjs');
+    const worker = await import('pdfjs-dist/legacy/build/pdf.worker.min.mjs?url');
     pdfjs.GlobalWorkerOptions.workerSrc = worker.default;
     const loadingTask = pdfjs.getDocument({ data: new Uint8Array(await file.arrayBuffer()) });
     const pdf = await loadingTask.promise;
