@@ -1,10 +1,11 @@
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { BookOpen, Plus, X, ExternalLink } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { LoreUrlInput } from './LoreUrlInput';
+import { resolveLoreLinkTitle } from '@/utils/loreLinkTitle';
 
 interface LoreLink {
   id: string;
@@ -21,21 +22,21 @@ export const LoreLinksManager = ({ loreLinks, onLinksChange }: LoreLinksManagerP
   const { toast } = useToast();
   const [newTitle, setNewTitle] = useState('');
   const [newUrl, setNewUrl] = useState('');
+  const [autoTitle, setAutoTitle] = useState('');
 
   const isValidUrl = (url: string) => {
     try {
-      new URL(url);
-      return true;
+      return new URL(url).protocol === 'https:';
     } catch {
       return false;
     }
   };
 
   const addLink = () => {
-    if (!newTitle.trim() || !newUrl.trim()) {
+    if (!newUrl.trim()) {
       toast({
         title: "Missing Information",
-        description: "Please provide both title and URL",
+        description: "Please provide a document URL",
         variant: "destructive",
       });
       return;
@@ -61,13 +62,14 @@ export const LoreLinksManager = ({ loreLinks, onLinksChange }: LoreLinksManagerP
 
     const newLink: LoreLink = {
       id: Date.now().toString(),
-      title: newTitle.trim(),
+      title: resolveLoreLinkTitle(newUrl, newTitle, autoTitle),
       url: newUrl.trim(),
     };
 
     onLinksChange([...loreLinks, newLink]);
     setNewTitle('');
     setNewUrl('');
+    setAutoTitle('');
     
     toast({
       title: "Link Added",
@@ -93,30 +95,11 @@ export const LoreLinksManager = ({ loreLinks, onLinksChange }: LoreLinksManagerP
       </CardHeader>
       <CardContent className="space-y-4">
         <div className="grid grid-cols-1 gap-3">
-          <div>
-            <Label htmlFor="link-title" className="text-sm font-medium text-white">
-              Document Title
-            </Label>
-            <Input
-              id="link-title"
-              placeholder="e.g., World History, Character Backgrounds..."
-              value={newTitle}
-              onChange={(e) => setNewTitle(e.target.value)}
-              className="mt-1"
-            />
-          </div>
-          <div>
-            <Label htmlFor="link-url" className="text-sm font-medium text-white">
-              Document URL
-            </Label>
-            <Input
-              id="link-url"
-              placeholder="https://docs.google.com/document/..."
-              value={newUrl}
-              onChange={(e) => setNewUrl(e.target.value)}
-              className="mt-1"
-            />
-          </div>
+          <LoreUrlInput url={newUrl} title={newTitle} autoTitle={autoTitle} onChange={patch => {
+            if (patch.url !== undefined) setNewUrl(patch.url);
+            if (patch.title !== undefined) setNewTitle(patch.title);
+            if (patch.autoTitle !== undefined) setAutoTitle(patch.autoTitle);
+          }} />
           <Button
             onClick={addLink}
             disabled={loreLinks.length >= 10}
