@@ -1,5 +1,5 @@
 # Campaign context
-- [ ] Add and verify a small header timestamp sourced from the latest code commit included in the deployed version.
+- [x] Add and verify a small header timestamp sourced from the latest code commit included in the deployed version.
 - [x] Restore live-site asset loading and verify a sample campaign PDF upload, extracted text, and persistence on the published site, including missing newer browser features; original campaign PDF is not attached.
 - [x] Add optional typed campaign history and readable document uploads.
 - [x] Include history as the foundation in copied and generated adventure prompts; preserve normal behavior without history.
