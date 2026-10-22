@@ -22,11 +22,13 @@ const installPdfCompat = () => {
       return undefined;
     };
   }
-  if (typeof Object.hasOwn !== 'function') {
-    (Object as unknown as { hasOwn: (obj: object, key: PropertyKey) => boolean }).hasOwn = (obj, key) => Object.prototype.hasOwnProperty.call(obj, key);
+  const objectCtor = Object as unknown as { hasOwn?: (obj: object, key: PropertyKey) => boolean };
+  if (typeof objectCtor.hasOwn !== 'function') {
+    objectCtor.hasOwn = (obj, key) => Object.prototype.hasOwnProperty.call(obj, key);
   }
-  if (typeof String.prototype.replaceAll !== 'function') {
-    String.prototype.replaceAll = function (search: string | RegExp, replacement: string) {
+  const stringProto = String.prototype as unknown as { replaceAll?: (search: string | RegExp, replacement: string) => string };
+  if (typeof stringProto.replaceAll !== 'function') {
+    stringProto.replaceAll = function (this: string, search: string | RegExp, replacement: string) {
       if (search instanceof RegExp) {
         const flags = search.global ? search.flags : `${search.flags}g`;
         return this.replace(new RegExp(search.source, flags), replacement);
