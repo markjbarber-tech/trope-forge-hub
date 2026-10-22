@@ -6,6 +6,13 @@ import { FileText, Loader2, Upload, X, Pencil } from 'lucide-react';
 import { CampaignDocument } from '@/utils/campaignContext';
 import { readCampaignDocument } from '@/utils/readCampaignDocument';
 
+// crypto.randomUUID is unavailable on older iPhones/Safari.
+const newDocumentId = (): string =>
+  typeof crypto.randomUUID === 'function'
+    ? crypto.randomUUID()
+    : '10000000-1000-4000-8000-100000000000'.replace(/[018]/g, c =>
+        (Number(c) ^ (Math.random() * 16 >> (Number(c) / 4))).toString(16));
+
 interface Props {
   history: string;
   documents: CampaignDocument[];
@@ -34,7 +41,7 @@ export const CampaignContextInput = ({ history, documents, onHistoryChange, onDo
     try {
       for (const file of files) {
         try {
-          added.push({ id: crypto.randomUUID(), name: file.name, text: await readCampaignDocument(file) });
+          added.push({ id: newDocumentId(), name: file.name, text: await readCampaignDocument(file) });
         } catch (cause) {
           errors.push(`${file.name}: ${cause instanceof Error ? cause.message : 'Unable to read this document.'}`);
         }
