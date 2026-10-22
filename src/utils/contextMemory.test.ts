@@ -22,4 +22,11 @@ describe('context retained across sessions', () => {
     storage.setItem('bad', '{"text":"notes","documents":[{"name":"missing text"}]}');
     assert.throws(() => loadContextMemory(storage, 'bad'));
   });
+  it('retains submitted document URLs and notes for both sections', () => {
+    for (const key of ['url-history', 'url-characters']) {
+      const memory = { text: 'Context', documents: [{ id: 'url-1', name: 'Campaign notes', text: 'Mira rescued Torin.', url: 'https://example.com/notes.pdf' }] };
+      saveContextMemory(storage, key, memory);
+      assert.deepEqual(loadContextMemory(storage, key), memory);
+    }
+  });
 });

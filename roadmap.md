@@ -1,4 +1,5 @@
 # Campaign context
+- [x] Allow saved online document URLs alongside uploads in history and character sections; verified reload persistence, editable notes and copied prompt inclusion. Links are explicitly marked as not imported; automatic private Google reading remains blocked below.
 - [x] Add and verify a small header timestamp sourced from the latest code commit included in the deployed version.
 - [x] Restore live-site asset loading and verify a sample campaign PDF upload, extracted text, and persistence on the published site, including missing newer browser features; original campaign PDF is not attached.
 - [x] Add optional typed campaign history and readable document uploads.

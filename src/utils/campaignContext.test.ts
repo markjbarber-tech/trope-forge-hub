@@ -30,4 +30,12 @@ describe('optional campaign history', () => {
     assert.ok(section.includes('Torin seeks his missing sister.'));
     assert.ok(section.includes('EXISTING PLAYER CHARACTERS'));
   });
+  test('submitted URLs are included in both kinds of context without claiming their contents were read', () => {
+    for (const kind of ['history', 'characters'] as const) {
+      const section = buildCampaignContext('', [{ id: 'url-1', name: 'Notes', text: '', url: 'https://example.com/notes.pdf' }], kind);
+      assert.ok(section.includes('https://example.com/notes.pdf'));
+      assert.ok(section.includes('contents have not been imported'));
+      assert.ok(section.includes('explicitly disclose that it was not read'));
+    }
+  });
 });
