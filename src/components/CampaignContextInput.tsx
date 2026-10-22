@@ -34,7 +34,7 @@ export const CampaignContextInput = ({ history, documents, onHistoryChange, onDo
     try {
       for (const file of files) {
         try {
-          added.push({ id: crypto.randomUUID(), name: file.name, text: await readCampaignDocument(file) });
+          added.push({ id: newDocumentId(), name: file.name, text: await readCampaignDocument(file) });
         } catch (cause) {
           errors.push(`${file.name}: ${cause instanceof Error ? cause.message : 'Unable to read this document.'}`);
         }
