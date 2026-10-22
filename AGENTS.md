@@ -1,4 +1,5 @@
 # Architecture
+- Select the deployment base through GITHUB_PAGES in CI; Lovable uses the root while GitHub Pages uses the repository path so published assets load on both hosts.
 - Optional campaign history is assembled by a pure prompt helper shared by copied prompts and direct generation, so both paths use identical continuity.
 - Campaign document text is extracted in the browser with lazy-loaded PDF and DOCX readers, avoiding document storage or new backend services.
 - History and character context use separate validated localStorage memories containing text and extracted document contents; edits and removals persist on the same browser without account or cross-device syncing.
