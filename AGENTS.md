@@ -2,6 +2,7 @@
 - Embed the latest code commit's committer timestamp through Vite for the header; this tracks the displayed version on both hosts without confusing external CSV updates with app updates or depending on GitHub API access.
 - Select the deployment base through GITHUB_PAGES in CI; Lovable uses the root while GitHub Pages uses the repository path so published assets load on both hosts.
 - Optional campaign history is assembled by a pure prompt helper shared by copied prompts and direct generation, so both paths use identical continuity.
+- Keep one-shot reference requirements in a raw-imported Markdown source, assembled by a pure helper with live elements and optional context; clipboard and direct generation share that helper to prevent prompt drift.
 - Campaign document text is extracted in the browser with lazy-loaded PDF and DOCX readers, avoiding document storage or new backend services.
 - pdfjs-dist is pinned to 3.11.174 with its legacy build plus small compatibility shims in readCampaignDocument.ts, because the user is on an older iPhone/Safari that lacks newer JavaScript features (Promise.withResolvers, Map.getOrInsert, etc.) used by pdfjs 6.x.
 - History and character context use separate validated localStorage memories containing text and extracted document contents; edits and removals persist on the same browser without account or cross-device syncing.

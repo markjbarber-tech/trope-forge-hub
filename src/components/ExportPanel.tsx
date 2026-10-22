@@ -11,6 +11,7 @@ import { generateAdventurePDF, extractAdventureTitle } from '@/utils/pdfGenerato
 import { CampaignContextInput } from '@/components/CampaignContextInput';
 import { buildCampaignContext } from '@/utils/campaignContext';
 import { useContextMemory } from '@/hooks/useContextMemory';
+import { buildOneShotPrompt } from '@/utils/oneShotPrompt';
 
 interface LoreLink {
   id: string;
@@ -84,7 +85,7 @@ ${loreLinks.map((link) => link.sourceType === 'file' && link.fileContent
 
 ${type === 'campaign'
   ? 'Read and incorporate relevant information from these lore documents to ground the adventure in the established world. If a document is inaccessible, state this clearly rather than claiming to have read it. Distinguish established lore from newly invented campaign details.'
-  : '*Note: Please read and incorporate relevant information from these lore documents to ground the adventure in the established world setting.*'}` : '';
+  : 'Read and incorporate relevant information from these lore documents to ground the adventure in the established world. If a document is inaccessible, state this clearly rather than claiming to have read it. Distinguish established lore from newly invented adventure details.'}` : '';
 
     if (type === 'campaign') {
       return `# 🎯 PROMPT: SINGLE-ARC CAMPAIGN BUILDER
@@ -220,36 +221,14 @@ Check that:
 
 Conclude with a brief DM Readiness Summary identifying any assumptions, remaining optional decisions, and where the answers to the campaign’s central mysteries are explained. Do not merely declare that the check passed: provide specific references to the relevant sections. If an essential issue cannot be resolved without user input, identify the exact missing information and provide a clearly labelled provisional solution.`;
     } else {
-      return `# 🎯 PROMPT: ONE-SHOT ADVENTURE BUILDER
-
-Create a complete D&D 5e one-shot adventure based on the following story tropes.
-
-## TROPES TABLE
-
-| # | Trope Name | Trope Description |
-|---|------------|-------------------|
-${elementTable}
-${loreLinkSection}
-${buildCampaignContext(campaignHistory, campaignDocuments)}
-${buildCampaignContext(characterDetails, characterDocuments, 'characters')}
-
-## REQUIREMENTS
-
-Generate a one-shot adventure that:
-- Can be completed in a single session (3-6 hours)
-- Uses ALL provided tropes naturally
-- Has personal stakes and local consequences (not world-ending)
-
-## OUTPUT STRUCTURE
-
-1. **Adventure Title and Premise** - Title and 1-2 paragraph summary
-2. **Adventure Hooks** - 3 hooks drawing PCs into the quest
-3. **BBEG & Henchmen** - Main villain, 1-2 supporters, thematic creatures
-4. **Main Locations** - 4 important locations with descriptions
-5. **Major NPCs** - 2-3 supporting NPCs with motives and ties
-6. **Core Scenes** - 3-4 major scenes with conflicts
-7. **Rewards & Outcomes** - 2-3 resolutions depending on PC choices
-8. **Recurring Themes** - 1-2 key themes`;
+      return buildOneShotPrompt({
+        tropes: elementList,
+        loreSection: loreLinkSection,
+        history: campaignHistory,
+        historyDocuments: campaignDocuments,
+        characters: characterDetails,
+        characterDocuments,
+      });
     }
   };
 
