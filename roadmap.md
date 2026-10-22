@@ -1,4 +1,5 @@
 # Campaign context
+- [ ] Restore live-site asset loading and verify a sample campaign PDF upload, extracted text, and persistence; original campaign PDF is not attached.
 - [x] Add optional typed campaign history and readable document uploads.
 - [x] Include history as the foundation in copied and generated adventure prompts; preserve normal behavior without history.
 - [x] Verify uploads, removal, typed context and no-context behavior.

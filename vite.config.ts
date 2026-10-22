@@ -9,8 +9,8 @@ export default defineConfig(({ mode }) => ({
     host: "::",
     port: 8080,
   },
-  // Set base path for GitHub Pages deployment
-  base: '/trope-forge-hub/',
+  // Lovable serves at the root; GitHub Pages sets its repository path in CI.
+  base: process.env.GITHUB_PAGES === 'true' ? '/trope-forge-hub/' : '/',
   plugins: [
     react(),
     mode === 'development' &&

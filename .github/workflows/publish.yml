@@ -35,6 +35,8 @@ jobs:
         run: npm ci
 
       - name: Build SPA
+        env:
+          GITHUB_PAGES: 'true'
         run: npm run build  # Adjust if your build command is different
 
       - name: Create SPA 404 fallback
