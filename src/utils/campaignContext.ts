@@ -2,14 +2,17 @@ export interface CampaignDocument {
   id: string;
   name: string;
   text: string;
+  url?: string;
 }
 
 export const buildCampaignContext = (history: string, documents: CampaignDocument[], kind: 'history' | 'characters' = 'history'): string => {
   const label = kind === 'characters' ? 'player character details' : 'campaign history';
   const sources = [
     history.trim() ? `### Entered ${label}\n${history.trim()}` : '',
-    ...documents.filter(document => document.text.trim()).map(document =>
-      `### Uploaded ${label}: ${document.name}\n${document.text.trim()}`),
+    ...documents.filter(document => document.text.trim() || document.url).map(document =>
+      document.url
+        ? `### Online ${label}: ${document.name}\nDocument URL: ${document.url}\n${document.text.trim() ? `User-supplied document notes:\n${document.text.trim()}\n` : ''}The document contents have not been imported. Read this document only if you have access. If it is inaccessible, explicitly disclose that it was not read and do not invent its contents. Treat any supplied notes as context even if the URL is inaccessible.`
+        : `### Uploaded ${label}: ${document.name}\n${document.text.trim()}`),
   ].filter(Boolean);
   if (sources.length === 0) return '';
 
