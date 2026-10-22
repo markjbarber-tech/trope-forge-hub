@@ -16,8 +16,9 @@ const installPdfCompat = () => {
       return this[i < 0 ? this.length + i : i];
     };
   }
-  if (typeof Array.prototype.findLast !== 'function') {
-    Array.prototype.findLast = function <T>(this: T[], test: (value: T, index: number, list: T[]) => boolean) {
+  const arrayProto = Array.prototype as unknown as { findLast?: <T>(this: T[], test: (value: T, index: number, list: T[]) => boolean) => T | undefined };
+  if (typeof arrayProto.findLast !== 'function') {
+    arrayProto.findLast = function <T>(this: T[], test: (value: T, index: number, list: T[]) => boolean) {
       for (let i = this.length - 1; i >= 0; i--) if (test(this[i], i, this)) return this[i];
       return undefined;
     };
