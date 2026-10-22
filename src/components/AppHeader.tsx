@@ -3,6 +3,13 @@ import { Badge } from '@/components/ui/badge';
 import { Dice6, Download, Wifi, WifiOff } from 'lucide-react';
 import { usePWA } from '@/hooks/usePWA';
 import { useState, useEffect } from 'react';
+import { parseCodeUpdateDate } from '@/utils/codeUpdate';
+
+const codeUpdatedAt = parseCodeUpdateDate(import.meta.env.VITE_CODE_UPDATED_AT);
+const codeUpdateLabel = codeUpdatedAt?.toLocaleString(undefined, {
+  day: 'numeric', month: 'short', year: 'numeric',
+  hour: '2-digit', minute: '2-digit', timeZoneName: 'short',
+});
 
 interface AppHeaderProps {
   isOnline?: boolean;
@@ -20,8 +27,8 @@ export const AppHeader = ({ isOnline = true }: AppHeaderProps) => {
   return (
     <header className="bg-card/95 backdrop-blur-md border-b border-border/50 shadow-lg sticky top-0 z-50">
       <div className="container mx-auto px-6 py-4">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-4">
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <div className="min-w-0 flex items-center gap-4">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-lg bg-white/10 flex items-center justify-center p-1">
                 <img 
@@ -36,6 +43,11 @@ export const AppHeader = ({ isOnline = true }: AppHeaderProps) => {
                 </h1>
                 <p className="text-xs text-muted-foreground italic">
                   Supercharge story brainstorming
+                </p>
+                <p className="mt-1 text-xs text-muted-foreground" title="Date of the latest code commit included in this version">
+                  Last updated: {codeUpdatedAt && codeUpdateLabel
+                    ? <time dateTime={codeUpdatedAt.toISOString()}>{codeUpdateLabel}</time>
+                    : 'Unavailable'}
                 </p>
               </div>
             </div>
