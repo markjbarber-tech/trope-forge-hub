@@ -1,4 +1,5 @@
 # Campaign context
+- [ ] Add Google Sheet URL imports alongside personal story element uploads, including private sheets authorized by each user.
 - [x] Replace the one-shot prompt with Mark's supplied eleven-section version; verified all sections, saved context and identical copied/direct-generation requests using a mocked AI response.
 - [x] Allow saved online document URLs alongside uploads in history and character sections; verified reload persistence, editable notes and copied prompt inclusion. Links are explicitly marked as not imported; automatic private Google reading remains blocked below.
 - [x] Add and verify a small header timestamp sourced from the latest code commit included in the deployed version.
