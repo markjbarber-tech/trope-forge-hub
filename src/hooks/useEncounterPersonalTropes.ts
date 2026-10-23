@@ -6,6 +6,7 @@ import { toast } from 'sonner';
 const PERSONAL_TROPES_CSV_URL = 'https://raw.githubusercontent.com/markjbarber-tech/DnD-Story-Generator/main/Personal%20data.csv';
 const LOCAL_FALLBACK_FILENAME = 'Personal-data.csv';
 const CACHE_KEY = 'encounter-personal-tropes-cache';
+const IMPORT_KEY = 'encounter-personal-tropes-import';
 
 export const useEncounterPersonalTropes = () => {
   const [allPersonalTropes, setAllPersonalTropes] = useState<Trope[]>([]);
@@ -113,11 +114,12 @@ export const useEncounterPersonalTropes = () => {
 
   // Background refresh - fetch latest and update if different
   const backgroundRefresh = useCallback(async () => {
+    if (localStorage.getItem(IMPORT_KEY)) return;
     setIsRefreshing(true);
     
     const remoteTropes = await fetchRemoteData();
     
-    if (remoteTropes && remoteTropes.length > 0) {
+    if (remoteTropes && remoteTropes.length > 0 && !localStorage.getItem(IMPORT_KEY)) {
       // Cache the fresh data
       localStorage.setItem(CACHE_KEY, JSON.stringify(remoteTropes));
       
@@ -138,6 +140,14 @@ export const useEncounterPersonalTropes = () => {
   useEffect(() => {
     const initializeData = async () => {
       setIsLoading(true);
+      const imported = localStorage.getItem(IMPORT_KEY);
+      if (imported) {
+        try {
+          setAllPersonalTropes(parseTropeCSV(imported));
+          setIsLoading(false);
+          return;
+        } catch { localStorage.removeItem(IMPORT_KEY); }
+      }
       
       // Step 1: Try cache first for instant load
       const cachedTropes = loadFromCache();
@@ -152,6 +162,7 @@ export const useEncounterPersonalTropes = () => {
       
       // Step 3: No cache - try remote
       const remoteTropes = await fetchRemoteData();
+      if (localStorage.getItem(IMPORT_KEY)) { setIsLoading(false); return; }
       if (remoteTropes && remoteTropes.length > 0) {
         localStorage.setItem(CACHE_KEY, JSON.stringify(remoteTropes));
         setAllPersonalTropes(remoteTropes);
@@ -162,6 +173,7 @@ export const useEncounterPersonalTropes = () => {
       
       // Step 4: No remote - try local fallback
       const localTropes = await loadFromLocalFallback();
+      if (localStorage.getItem(IMPORT_KEY)) { setIsLoading(false); return; }
       if (localTropes && localTropes.length > 0) {
         localStorage.setItem(CACHE_KEY, JSON.stringify(localTropes));
         setAllPersonalTropes(localTropes);
@@ -243,7 +255,15 @@ export const useEncounterPersonalTropes = () => {
     });
   }, [allPersonalTropes]);
 
+  const importPersonalData = useCallback((csv: string) => {
+    const tropes = parseTropeCSV(csv);
+    localStorage.setItem(IMPORT_KEY, csv);
+    setAllPersonalTropes(tropes);
+    setSelectedTropes([]);
+  }, []);
+
   return {
+    importPersonalData,
     allPersonalTropes,
     selectedTropes,
     tropeCount,

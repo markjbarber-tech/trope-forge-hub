@@ -57,6 +57,7 @@ export const EncounterGenerator = ({ isOnline, onTabChange }: EncounterGenerator
     removeTrope: removePersonalTrope,
     clearTropes: clearPersonalTropes,
     randomizeTrope: randomizePersonalTrope,
+    importPersonalData,
   } = useEncounterPersonalTropes();
 
   const handleExportCustomInputs = () => {
@@ -201,6 +202,7 @@ export const EncounterGenerator = ({ isOnline, onTabChange }: EncounterGenerator
               onRemoveTrope={removePersonalTrope}
               onRandomizeTrope={randomizePersonalTrope}
               onClearTropes={clearPersonalTropes}
+              onPersonalUpload={importPersonalData}
             />
           </div>
           
