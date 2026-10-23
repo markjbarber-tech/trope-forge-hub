@@ -6,6 +6,7 @@ import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
 import { PersonalTropesSearch } from './PersonalTropesSearch';
 import { Trope } from '@/types/trope';
+import { PersonalSheetImport } from './PersonalSheetImport';
 
 interface PersonalDataManagerProps {
   personalTropeCount: number;
@@ -113,13 +114,13 @@ export const PersonalDataManager = ({
           
           {hasPersonalData ? (
             <>
-              <div className="flex gap-2">
+              <div className="flex flex-wrap gap-2">
                 <Button
                   variant="outline"
                   size="sm"
                   onClick={() => fileInputRef.current?.click()}
                   disabled={isLoading}
-                  className="flex-1"
+                  className="flex-1 whitespace-normal h-auto min-h-10"
                 >
                   <Upload className="h-4 w-4 mr-2" />
                   Replace
@@ -170,6 +171,7 @@ export const PersonalDataManager = ({
             onChange={handleFileChange}
             className="hidden"
           />
+          <PersonalSheetImport onImport={onPersonalUpload} disabled={isLoading} />
           
           {hasPersonalData && (
             <>
