@@ -37,10 +37,10 @@ export function PersonalSheetImport({ onImport, disabled = false }: {
   };
   return <div className="space-y-2">
     <Label htmlFor={id}>Public Google Sheet URL</Label>
-    <div className="flex flex-col sm:flex-row gap-2">
+    <div className="flex flex-col gap-2">
       <Input id={id} type="url" value={url} onChange={event => { setUrl(event.target.value); setError(''); setSuccess(''); }}
-        placeholder="https://docs.google.com/spreadsheets/d/…" disabled={disabled || busy} className="min-w-0 flex-1" />
-      <Button variant="outline" disabled={disabled || busy || !url.trim()} onClick={importSheet} className="gap-2 shrink-0">
+        placeholder="https://docs.google.com/spreadsheets/d/…" disabled={disabled || busy} className="min-w-0 w-full" />
+      <Button variant="outline" disabled={disabled || busy || !url.trim()} onClick={importSheet} className="gap-2 self-start">
         {busy ? <Loader2 className="h-4 w-4 animate-spin" /> : <Link className="h-4 w-4" />} Import Sheet
       </Button>
     </div>
