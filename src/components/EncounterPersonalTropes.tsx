@@ -3,7 +3,10 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Slider } from '@/components/ui/slider';
 import { PersonalTropesSearch } from '@/components/PersonalTropesSearch';
-import { Dices, X, RefreshCw, User, Loader2 } from 'lucide-react';
+import { Dices, X, RefreshCw, User, Loader2, Upload } from 'lucide-react';
+import { useRef } from 'react';
+import { PersonalSheetImport } from './PersonalSheetImport';
+import { toast } from 'sonner';
 
 interface EncounterPersonalTropesProps {
   allTropes: Trope[];
@@ -17,6 +20,7 @@ interface EncounterPersonalTropesProps {
   onRemoveTrope: (tropeId: string) => void;
   onRandomizeTrope: (tropeId: string) => void;
   onClearTropes: () => void;
+  onPersonalUpload: (csv: string) => void;
 }
 
 export const EncounterPersonalTropes = ({
@@ -31,18 +35,9 @@ export const EncounterPersonalTropes = ({
   onRemoveTrope,
   onRandomizeTrope,
   onClearTropes,
+  onPersonalUpload,
 }: EncounterPersonalTropesProps) => {
-  if (!hasPersonalTropes && !isLoading) {
-    return (
-      <Card className="bg-card/50 backdrop-blur-sm border-border/50">
-        <CardContent className="py-6 text-center text-muted-foreground">
-          <User className="h-8 w-8 mx-auto mb-2 opacity-50" />
-          <p>No personal tropes available</p>
-          <p className="text-xs mt-1">Personal data could not be loaded</p>
-        </CardContent>
-      </Card>
-    );
-  }
+  const fileRef = useRef<HTMLInputElement>(null);
 
   return (
     <Card className="bg-card/50 backdrop-blur-sm border-border/50">
@@ -101,10 +96,27 @@ export const EncounterPersonalTropes = ({
       </CardHeader>
 
       <CardContent className="pt-0">
+        <div className="space-y-3 mb-4">
+          <input ref={fileRef} type="file" accept=".csv" className="hidden" onChange={async event => {
+            const file = event.target.files?.[0];
+            event.target.value = '';
+            if (!file) return;
+            try {
+              onPersonalUpload(await file.text());
+              toast.success('Personal story elements uploaded');
+            } catch (error) { toast.error(error instanceof Error ? error.message : 'Could not read the CSV file.'); }
+          }} />
+          <Button variant="outline" onClick={() => fileRef.current?.click()} disabled={isLoading} className="gap-2">
+            <Upload className="h-4 w-4" /> Upload CSV
+          </Button>
+          <PersonalSheetImport onImport={onPersonalUpload} disabled={isLoading} />
+        </div>
         {isLoading ? (
           <div className="flex items-center justify-center py-8">
             <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
           </div>
+        ) : !hasPersonalTropes ? (
+          <p className="text-sm text-muted-foreground">No personal story elements available</p>
         ) : selectedTropes.length === 0 ? (
           <div className="text-center py-6 text-muted-foreground">
             <p className="text-sm">

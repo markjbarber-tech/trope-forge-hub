@@ -1,4 +1,5 @@
 # Architecture
+- Import public personal Google Sheets through a bounded, Google-host-only CSV download function shared by both generators; imported encounter data is a persistent override so background defaults cannot replace it.
 - Embed the latest code commit's committer timestamp through Vite for the header; this tracks the displayed version on both hosts without confusing external CSV updates with app updates or depending on GitHub API access.
 - Select the deployment base through GITHUB_PAGES in CI; Lovable uses the root while GitHub Pages uses the repository path so published assets load on both hosts.
 - Optional campaign history is assembled by a pure prompt helper shared by copied prompts and direct generation, so both paths use identical continuity.
