@@ -3,7 +3,8 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Label } from '@/components/ui/label';
-import { Printer, HelpCircle, X, Wand2, Loader2, FileText, Download } from 'lucide-react';
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
+import { Printer, HelpCircle, X, Wand2, Loader2, FileText, Download, ChevronDown, ChevronUp } from 'lucide-react';
 import { Trope } from '@/types/trope';
 import { useToast } from '@/hooks/use-toast';
 import { useAdventureAI } from '@/hooks/useAdventureAI';
@@ -30,9 +31,25 @@ interface ExportPanelProps {
   onExportTemplate?: (templateType: 'campaign' | 'oneshot') => void;
 }
 
+// The story-context panel keeps its own open/closed memory so a DM's preferred
+// layout survives a reload. Storage can be full or blocked, so both directions
+// are guarded and the panel simply falls back to being open.
+const CONTEXT_PANEL_KEY = 'story-copilot-adventure-context-open-v1';
+
+const readContextPanelOpen = (): boolean => {
+  try { return localStorage.getItem(CONTEXT_PANEL_KEY) !== 'closed'; }
+  catch { return true; }
+};
+
+const storeContextPanelOpen = (open: boolean) => {
+  try { localStorage.setItem(CONTEXT_PANEL_KEY, open ? 'open' : 'closed'); }
+  catch { /* The panel still toggles for this session. */ }
+};
+
 export const ExportPanel = ({ tropes, loreLinks = [], disabled = false, onExportTemplate }: ExportPanelProps) => {
   const { toast } = useToast();
   const [templateType, setTemplateType] = useState<'campaign' | 'oneshot'>('campaign');
+  const [contextOpen, setContextOpen] = useState(readContextPanelOpen);
   const [showClipboardMessage, setShowClipboardMessage] = useState(false);
   const [showExportHelp, setShowExportHelp] = useState(false);
   const [generatedContent, setGeneratedContent] = useState<string | null>(null);
@@ -43,6 +60,9 @@ export const ExportPanel = ({ tropes, loreLinks = [], disabled = false, onExport
   const isReadingContext = isReadingDocuments || isReadingCharacters;
   const { generateAdventure, isGenerating, error } = useAdventureAI();
   const hasNoElements = tropes.length === 0;
+  const savedContextCount =
+    (campaignHistory.trim() ? 1 : 0) + campaignDocuments.length +
+    (characterDetails.trim() ? 1 : 0) + characterDocuments.length;
 
   const handleExportTable = () => {
     if (hasNoElements) return;
@@ -323,26 +343,53 @@ Conclude with a brief DM Readiness Summary identifying any assumptions, remainin
             </RadioGroup>
           </div>
 
-          <CampaignContextInput
-            history={campaignHistory}
-            documents={campaignDocuments}
-            onHistoryChange={setCampaignHistory}
-            onDocumentsChange={setCampaignDocuments}
-            onReadingChange={setIsReadingDocuments}
-            saveError={historySaveError}
-            disabled={isGenerating}
-          />
+          <Collapsible
+            open={contextOpen}
+            onOpenChange={open => { setContextOpen(open); storeContextPanelOpen(open); }}
+          >
+            <CollapsibleTrigger asChild>
+              <Button variant="outline" className="h-auto w-full justify-between gap-2 whitespace-normal py-2 text-left font-normal">
+                <span className="flex min-w-0 flex-wrap items-center gap-x-2 gap-y-0.5 text-left">
+                  <FileText className="h-4 w-4 shrink-0 text-muted-foreground" />
+                  <span className="min-w-0">Story so far &amp; player characters</span>
+                  <span className="text-xs text-muted-foreground">(optional)</span>
+                </span>
+                {contextOpen
+                  ? <ChevronUp className="h-4 w-4 shrink-0 text-muted-foreground" />
+                  : <ChevronDown className="h-4 w-4 shrink-0 text-muted-foreground" />}
+              </Button>
+            </CollapsibleTrigger>
+            <CollapsibleContent className="space-y-3">
+              <CampaignContextInput
+                history={campaignHistory}
+                documents={campaignDocuments}
+                onHistoryChange={setCampaignHistory}
+                onDocumentsChange={setCampaignDocuments}
+                onReadingChange={setIsReadingDocuments}
+                saveError={historySaveError}
+                disabled={isGenerating}
+              />
 
-          <CampaignContextInput
-            kind="characters"
-            history={characterDetails}
-            documents={characterDocuments}
-            onHistoryChange={setCharacterDetails}
-            onDocumentsChange={setCharacterDocuments}
-            onReadingChange={setIsReadingCharacters}
-            saveError={characterSaveError}
-            disabled={isGenerating}
-          />
+              <CampaignContextInput
+                kind="characters"
+                history={characterDetails}
+                documents={characterDocuments}
+                onHistoryChange={setCharacterDetails}
+                onDocumentsChange={setCharacterDocuments}
+                onReadingChange={setIsReadingCharacters}
+                saveError={characterSaveError}
+                disabled={isGenerating}
+              />
+            </CollapsibleContent>
+          </Collapsible>
+
+          {!contextOpen && (
+            <p className="text-xs text-muted-foreground">
+              {savedContextCount > 0
+                ? `${savedContextCount} saved note${savedContextCount === 1 ? '' : 's'} or document${savedContextCount === 1 ? '' : 's'} will still be used.`
+                : 'No story notes or documents added yet.'}
+            </p>
+          )}
 
           {/* Generate Adventure Button */}
           <Button
