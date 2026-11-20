@@ -32,13 +32,14 @@ interface ExportPanelProps {
 }
 
 // The story-context panel keeps its own open/closed memory so a DM's preferred
-// layout survives a reload. Storage can be full or blocked, so both directions
-// are guarded and the panel simply falls back to being open.
-const CONTEXT_PANEL_KEY = 'story-copilot-adventure-context-open-v1';
+// layout survives a reload. It starts collapsed so the generator stays compact;
+// storage can be full or blocked, so both directions are guarded and the panel
+// simply falls back to being collapsed.
+const CONTEXT_PANEL_KEY = 'story-copilot-adventure-context-open-v2';
 
 const readContextPanelOpen = (): boolean => {
-  try { return localStorage.getItem(CONTEXT_PANEL_KEY) !== 'closed'; }
-  catch { return true; }
+  try { return localStorage.getItem(CONTEXT_PANEL_KEY) === 'open'; }
+  catch { return false; }
 };
 
 const storeContextPanelOpen = (open: boolean) => {
@@ -353,43 +354,58 @@ Conclude with a brief DM Readiness Summary identifying any assumptions, remainin
             open={contextOpen}
             onOpenChange={open => { setContextOpen(open); storeContextPanelOpen(open); }}
           >
-            <CollapsibleTrigger asChild>
-              <Button variant="outline" className="h-auto w-full justify-between gap-2 whitespace-normal border-2 border-primary bg-primary/10 py-3 text-left font-semibold text-foreground hover:bg-primary/20">
-                <span className="flex min-w-0 flex-wrap items-center gap-x-2 gap-y-0.5 text-left">
-                  <FileText className="h-5 w-5 shrink-0 text-primary" />
-                  <span className="min-w-0">Story so far &amp; player characters</span>
-                  <span className="text-xs font-normal text-muted-foreground">(optional)</span>
-                </span>
-                <span className="flex shrink-0 items-center gap-1 rounded-md bg-primary px-2 py-1 text-xs font-semibold text-primary-foreground">
-                  {contextOpen ? 'Hide' : 'Show'}
-                  {contextOpen
-                    ? <ChevronUp className="h-4 w-4" />
-                    : <ChevronDown className="h-4 w-4" />}
-                </span>
-              </Button>
-            </CollapsibleTrigger>
-            <CollapsibleContent className="space-y-3">
-              <CampaignContextInput
-                history={campaignHistory}
-                documents={campaignDocuments}
-                onHistoryChange={setCampaignHistory}
-                onDocumentsChange={setCampaignDocuments}
-                onReadingChange={setIsReadingDocuments}
-                saveError={historySaveError}
-                disabled={isGenerating}
-              />
+            <div className="rounded-lg border-2 border-primary/50 bg-primary/10">
+              <div className="px-3 py-2">
+                <div className="flex items-start gap-2">
+                  <FileText className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
+                  <div className="min-w-0">
+                    <p className="text-sm font-semibold leading-snug text-foreground">
+                      Customize with your story so far and character details
+                    </p>
+                    <p className="text-xs leading-snug text-muted-foreground">
+                      Optional notes, uploads and document links
+                    </p>
+                  </div>
+                </div>
+                <CollapsibleTrigger asChild>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="mt-2 w-full justify-center gap-1.5 border-primary/60 bg-background/70 text-xs hover:bg-background"
+                  >
+                    {contextOpen ? 'Hide' : 'Show'}
+                    {contextOpen
+                      ? <ChevronUp className="h-3.5 w-3.5" />
+                      : <ChevronDown className="h-3.5 w-3.5" />}
+                  </Button>
+                </CollapsibleTrigger>
+              </div>
 
-              <CampaignContextInput
-                kind="characters"
-                history={characterDetails}
-                documents={characterDocuments}
-                onHistoryChange={setCharacterDetails}
-                onDocumentsChange={setCharacterDocuments}
-                onReadingChange={setIsReadingCharacters}
-                saveError={characterSaveError}
-                disabled={isGenerating}
-              />
-            </CollapsibleContent>
+              <CollapsibleContent className="overflow-hidden data-[state=closed]:animate-none">
+                <div className="space-y-3 border-t border-primary/30 px-3 py-3">
+                  <CampaignContextInput
+                    history={campaignHistory}
+                    documents={campaignDocuments}
+                    onHistoryChange={setCampaignHistory}
+                    onDocumentsChange={setCampaignDocuments}
+                    onReadingChange={setIsReadingDocuments}
+                    saveError={historySaveError}
+                    disabled={isGenerating}
+                  />
+
+                  <CampaignContextInput
+                    kind="characters"
+                    history={characterDetails}
+                    documents={characterDocuments}
+                    onHistoryChange={setCharacterDetails}
+                    onDocumentsChange={setCharacterDocuments}
+                    onReadingChange={setIsReadingCharacters}
+                    saveError={characterSaveError}
+                    disabled={isGenerating}
+                  />
+                </div>
+              </CollapsibleContent>
+            </div>
           </Collapsible>
 
           {!contextOpen && (
