@@ -354,15 +354,18 @@ Conclude with a brief DM Readiness Summary identifying any assumptions, remainin
             onOpenChange={open => { setContextOpen(open); storeContextPanelOpen(open); }}
           >
             <CollapsibleTrigger asChild>
-              <Button variant="outline" className="h-auto w-full justify-between gap-2 whitespace-normal py-2 text-left font-normal">
+              <Button variant="outline" className="h-auto w-full justify-between gap-2 whitespace-normal border-2 border-primary bg-primary/10 py-3 text-left font-semibold text-foreground hover:bg-primary/20">
                 <span className="flex min-w-0 flex-wrap items-center gap-x-2 gap-y-0.5 text-left">
-                  <FileText className="h-4 w-4 shrink-0 text-muted-foreground" />
+                  <FileText className="h-5 w-5 shrink-0 text-primary" />
                   <span className="min-w-0">Story so far &amp; player characters</span>
-                  <span className="text-xs text-muted-foreground">(optional)</span>
+                  <span className="text-xs font-normal text-muted-foreground">(optional)</span>
                 </span>
-                {contextOpen
-                  ? <ChevronUp className="h-4 w-4 shrink-0 text-muted-foreground" />
-                  : <ChevronDown className="h-4 w-4 shrink-0 text-muted-foreground" />}
+                <span className="flex shrink-0 items-center gap-1 rounded-md bg-primary px-2 py-1 text-xs font-semibold text-primary-foreground">
+                  {contextOpen ? 'Hide' : 'Show'}
+                  {contextOpen
+                    ? <ChevronUp className="h-4 w-4" />
+                    : <ChevronDown className="h-4 w-4" />}
+                </span>
               </Button>
             </CollapsibleTrigger>
             <CollapsibleContent className="space-y-3">
