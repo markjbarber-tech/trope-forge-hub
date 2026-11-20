@@ -278,18 +278,24 @@ Conclude with a brief DM Readiness Summary identifying any assumptions, remainin
     if (content) {
       setGeneratedContent(content);
       const title = extractAdventureTitle(content);
-      const pdf = generateAdventurePDF(content, title, templateType);
-      
+      // Save online before downloading: on iPhone the download can take over the
+      // page, which previously cut the save off before it reached this device's list.
+      const pdf = generateAdventurePDF(content, title, templateType, false);
+      try {
+        await saveAdventure({
+          kind: templateType, title: title || (templateType === 'campaign' ? 'Untitled campaign' : 'Untitled one-shot'), pdf,
+          elements: tropes.map(t => ({ name: t.name, detail: t.detail ?? undefined })),
+          settings: { type: templateType, loreLinks: loreLinks.map(l => ({ title: l.title, url: l.url })) },
+        });
+        toast({ title: 'Saved to My Adventures' });
+      } catch (e) {
+        toast({ title: "Couldn't save to My Adventures", description: e instanceof Error ? e.message : String(e), variant: 'destructive' });
+      }
+      generateAdventurePDF(content, title, templateType);
       toast({
         title: "Adventure Generated",
         description: `Your ${templateType === 'campaign' ? 'campaign' : 'one-shot'} PDF has been downloaded.`,
       });
-      saveAdventure({
-        kind: templateType, title: title || (templateType === 'campaign' ? 'Untitled campaign' : 'Untitled one-shot'), pdf,
-        elements: tropes.map(t => ({ name: t.name, detail: t.detail })),
-        settings: { type: templateType, loreLinks: loreLinks.map(l => ({ title: l.title, url: l.url })) },
-      }).then(() => toast({ title: 'Saved to My Adventures' }))
-        .catch(e => toast({ title: "Couldn't save to My Adventures", description: e instanceof Error ? e.message : String(e), variant: 'destructive' }));
     }
   };
 
