@@ -70,7 +70,9 @@ export const saveAdventure = async (input: {
   const { id, deleteToken } = await invoke<{ id: string; deleteToken: string }>({
     action: 'save', kind: input.kind, title, elements, settings: input.settings ?? {}, pdfBase64: await blobToBase64(input.pdf),
   });
-  const entry: SavedAdventureEntry = { id, deleteToken, title, kind: input.kind, createdAt: new Date().toISOString(), elements };
+  // Keep only short previews on the device: full element text lives with the saved adventure online.
+  const preview = elements.map(e => ({ name: e.name.slice(0, 120), detail: e.detail?.slice(0, 200) }));
+  const entry: SavedAdventureEntry = { id, deleteToken, title, kind: input.kind, createdAt: new Date().toISOString(), elements: preview };
   storeSavedList(mergeSavedLists(loadSavedList(), [entry]));
   return entry;
 };
