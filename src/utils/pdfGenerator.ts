@@ -15,7 +15,7 @@ const CONTENT_WIDTH = PAGE_WIDTH - MARGIN_LEFT - MARGIN_RIGHT;
 const LINE_HEIGHT = 6;
 const SECTION_SPACING = 8;
 
-export const generateEncounterPDF = (content: string, encounterTitle?: string): void => {
+export const generateEncounterPDF = (content: string, encounterTitle?: string, download = true): Blob => {
   const doc = new jsPDF();
   let yPosition = MARGIN_TOP;
 
@@ -261,7 +261,8 @@ export const generateEncounterPDF = (content: string, encounterTitle?: string): 
     ? `${encounterTitle.replace(/[^a-z0-9]/gi, '_').toLowerCase()}_encounter.pdf`
     : `dnd_encounter_${new Date().toISOString().split('T')[0]}.pdf`;
   
-  doc.save(filename);
+  if (download) doc.save(filename);
+  return doc.output('blob');
 };
 
 // Extract the encounter title from the generated content
@@ -271,7 +272,7 @@ export const extractEncounterTitle = (content: string): string | undefined => {
 };
 
 // Generate adventure PDF - reuses the same parsing logic
-export const generateAdventurePDF = (content: string, adventureTitle?: string, adventureType: 'campaign' | 'oneshot' = 'campaign'): void => {
+export const generateAdventurePDF = (content: string, adventureTitle?: string, adventureType: 'campaign' | 'oneshot' = 'campaign', download = true): Blob => {
   const doc = new jsPDF();
   let yPosition = MARGIN_TOP;
 
@@ -506,7 +507,8 @@ export const generateAdventurePDF = (content: string, adventureTitle?: string, a
     ? `${adventureTitle.replace(/[^a-z0-9]/gi, '_').toLowerCase()}_adventure.pdf`
     : `dnd_${adventureType}_${new Date().toISOString().split('T')[0]}.pdf`;
   
-  doc.save(filename);
+  if (download) doc.save(filename);
+  return doc.output('blob');
 };
 
 // Extract the adventure title from the generated content

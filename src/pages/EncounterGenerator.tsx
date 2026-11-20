@@ -1,5 +1,5 @@
 import { AppHeader } from '@/components/AppHeader';
-import { GeneratorTabs } from '@/components/GeneratorTabs';
+import { GeneratorTabs, type GeneratorTab } from '@/components/GeneratorTabs';
 import { EncounterExportPanel } from '@/components/EncounterExportPanel';
 import { EncounterCategorySearch } from '@/components/EncounterCategorySearch';
 import { EncounterPersonalTropes } from '@/components/EncounterPersonalTropes';
@@ -14,7 +14,7 @@ import { toast } from 'sonner';
 
 interface EncounterGeneratorProps {
   isOnline: boolean;
-  onTabChange: (tab: 'adventure' | 'encounter') => void;
+  onTabChange: (tab: GeneratorTab) => void;
 }
 
 const categoryConfig: { key: EncounterCategory; title: string; icon: React.ElementType; color: string }[] = [

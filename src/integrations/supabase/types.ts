@@ -14,7 +14,39 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      saved_adventures: {
+        Row: {
+          created_at: string
+          delete_token_hash: string
+          elements: Json
+          file_path: string
+          id: string
+          kind: string
+          settings: Json
+          title: string
+        }
+        Insert: {
+          created_at?: string
+          delete_token_hash: string
+          elements?: Json
+          file_path: string
+          id?: string
+          kind: string
+          settings?: Json
+          title: string
+        }
+        Update: {
+          created_at?: string
+          delete_token_hash?: string
+          elements?: Json
+          file_path?: string
+          id?: string
+          kind?: string
+          settings?: Json
+          title?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never

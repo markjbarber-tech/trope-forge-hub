@@ -1,3 +1,4 @@
+import { MyAdventures } from '@/pages/MyAdventures';
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AppHeader } from '@/components/AppHeader';
@@ -6,7 +7,7 @@ import { TropeDisplay } from '@/components/TropeDisplay';
 import { TropeSearch } from '@/components/TropeSearch';
 import { ExportPanel } from '@/components/ExportPanel';
 import { AdvancedOptions } from '@/components/AdvancedOptions';
-import { GeneratorTabs } from '@/components/GeneratorTabs';
+import { GeneratorTabs, type GeneratorTab } from '@/components/GeneratorTabs';
 import { EncounterGenerator } from '@/pages/EncounterGenerator';
 import { useTropeGenerator } from '@/hooks/useTropeGenerator';
 import { useKeyboardShortcuts } from '@/hooks/useKeyboardShortcuts';
@@ -27,7 +28,7 @@ export const DnDGenerator = () => {
   const [isOnline, setIsOnline] = useState(navigator.onLine);
   const [loadTime, setLoadTime] = useState<string>('');
   const { loreLinks, setLoreLinks, loreSaveError } = useLoreMemory('adventure');
-  const [activeTab, setActiveTab] = useState<'adventure' | 'encounter'>('adventure');
+  const [activeTab, setActiveTab] = useState<GeneratorTab>('adventure');
   const navigate = useNavigate();
 
   console.log('DnDGenerator: About to call useTropeGenerator hook');
@@ -102,6 +103,9 @@ export const DnDGenerator = () => {
   });
 
   // If encounter tab is active, render EncounterGenerator
+  if (activeTab === 'library') {
+    return <MyAdventures isOnline={isOnline} onTabChange={setActiveTab} />;
+  }
   if (activeTab === 'encounter') {
     return <EncounterGenerator isOnline={isOnline} onTabChange={setActiveTab} />;
   }

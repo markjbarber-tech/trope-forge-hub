@@ -11,6 +11,7 @@ import { usePromptTemplate } from '@/hooks/usePromptTemplate';
 import { useEncounterAI } from '@/hooks/useEncounterAI';
 import { generateEncounterPDF, extractEncounterTitle } from '@/utils/pdfGenerator';
 import { useLoreMemory } from '@/hooks/useLoreMemory';
+import { saveAdventure } from '@/utils/savedAdventures';
 import { LoreUrlInput } from './LoreUrlInput';
 
 interface LoreLink {
@@ -173,6 +174,13 @@ ${loreLinkSection}
         title: 'Encounter Generated!',
         description: 'Your AI-generated encounter is ready. Click "Download PDF" to save it.',
       });
+      const title = extractEncounterTitle(content) || 'Untitled encounter';
+      saveAdventure({
+        kind: 'encounter', title, pdf: generateEncounterPDF(content, title, false),
+        elements: Object.entries(encounter).map(([name, detail]) => ({ name, detail: String(detail) })),
+        settings: { numberOfPlayers, difficulty, loreAlignmentMode },
+      }).then(() => toast({ title: 'Saved to My Adventures' }))
+        .catch(e => toast({ title: "Couldn't save to My Adventures", description: e instanceof Error ? e.message : String(e), variant: 'destructive' }));
     }
   };
 

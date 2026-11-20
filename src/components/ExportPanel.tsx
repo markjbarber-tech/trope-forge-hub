@@ -12,6 +12,7 @@ import { CampaignContextInput } from '@/components/CampaignContextInput';
 import { buildCampaignContext } from '@/utils/campaignContext';
 import { useContextMemory } from '@/hooks/useContextMemory';
 import { buildOneShotPrompt } from '@/utils/oneShotPrompt';
+import { saveAdventure } from '@/utils/savedAdventures';
 
 interface LoreLink {
   id: string;
@@ -257,12 +258,18 @@ Conclude with a brief DM Readiness Summary identifying any assumptions, remainin
     if (content) {
       setGeneratedContent(content);
       const title = extractAdventureTitle(content);
-      generateAdventurePDF(content, title, templateType);
+      const pdf = generateAdventurePDF(content, title, templateType);
       
       toast({
         title: "Adventure Generated",
         description: `Your ${templateType === 'campaign' ? 'campaign' : 'one-shot'} PDF has been downloaded.`,
       });
+      saveAdventure({
+        kind: templateType, title: title || (templateType === 'campaign' ? 'Untitled campaign' : 'Untitled one-shot'), pdf,
+        elements: tropes.map(t => ({ name: t.name, detail: t.detail })),
+        settings: { type: templateType, loreLinks: loreLinks.map(l => ({ title: l.title, url: l.url })) },
+      }).then(() => toast({ title: 'Saved to My Adventures' }))
+        .catch(e => toast({ title: "Couldn't save to My Adventures", description: e instanceof Error ? e.message : String(e), variant: 'destructive' }));
     }
   };
 
