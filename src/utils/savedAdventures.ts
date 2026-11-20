@@ -33,8 +33,17 @@ export const mergeSavedLists = (current: SavedAdventureEntry[], incoming: SavedA
 export const loadSavedList = (): SavedAdventureEntry[] => {
   try { return parseSavedList(JSON.parse(localStorage.getItem(SAVED_ADVENTURES_KEY) ?? '[]')); } catch { return []; }
 };
+// Re-downloadable caches that may be evicted when browser storage is full.
+const EVICTABLE_CACHE_KEYS = ['adventure-story-tropes-cache', 'dnd-tropes-data', 'encounter-inputs-csv', 'encounter-personal-tropes-cache', 'encounter-prompt-template'];
+
 export const storeSavedList = (list: SavedAdventureEntry[]) => {
-  localStorage.setItem(SAVED_ADVENTURES_KEY, JSON.stringify(list));
+  const value = JSON.stringify(list);
+  try {
+    localStorage.setItem(SAVED_ADVENTURES_KEY, value);
+  } catch {
+    EVICTABLE_CACHE_KEYS.forEach(k => { try { localStorage.removeItem(k); } catch { /* ignore */ } });
+    localStorage.setItem(SAVED_ADVENTURES_KEY, value);
+  }
   window.dispatchEvent(new Event('saved-adventures-changed'));
 };
 
