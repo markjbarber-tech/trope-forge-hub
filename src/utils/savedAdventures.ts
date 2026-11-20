@@ -21,7 +21,11 @@ export const parseSavedList = (raw: unknown): SavedAdventureEntry[] => {
   const out: SavedAdventureEntry[] = [];
   for (const item of raw) {
     const r = EntrySchema.safeParse(item);
-    if (r.success && !seen.has(r.data.id)) { seen.add(r.data.id); out.push(r.data); }
+    if (r.success && !seen.has(r.data.id)) {
+      seen.add(r.data.id);
+      // Short previews keep every entry small enough for phone storage.
+      out.push({ ...r.data, elements: r.data.elements.map(e => ({ name: e.name.slice(0, 120), detail: e.detail?.slice(0, 200) })) });
+    }
   }
   return out;
 };
